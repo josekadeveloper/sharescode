@@ -103,6 +103,8 @@ class UsersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = Users::SCENARIO_UPDATE;
+        $model->password = '';
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
