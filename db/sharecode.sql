@@ -1,3 +1,4 @@
+
 ------------------------------
 -- Archivo de base de datos --
 ------------------------------
@@ -79,4 +80,3 @@ VALUES ('Initiate', 0, null),
        ('Junior', 89, null),
        ('Senior', 150, null),
        ('Programmer', 300, null);
-       
