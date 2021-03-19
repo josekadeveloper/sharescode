@@ -16,6 +16,8 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'is_admin')->checkbox() ?>
 
     <div class="form-group">
