@@ -32,7 +32,7 @@ CREATE TABLE prestige
 (
     id              bigserial    PRIMARY KEY
   , type_prestige   varchar(255) NOT NULL
-  , antiquity       timestamp    NOT NULL
+  , antiquity       timestamp
   , score           smallint     NOT NULL DEFAULT 0
   , portrait_id     bigint       REFERENCES portrait (id)  
 );
