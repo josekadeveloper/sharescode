@@ -94,6 +94,19 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return true;
     }
 
+    public function beforeDelete()
+    {
+        if (!parent::beforeDelete()) {
+            return false;
+        }
+
+        if ($this->getPortrait()->exists()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function findIdentity($id)
     {
         return static::findOne($id);
