@@ -70,8 +70,4 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Reminder::class, ['us_id' => 'id'])->inverseOf('us');
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> master
