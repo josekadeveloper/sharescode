@@ -5,23 +5,24 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "usuarios".
+ * This is the model class for table "users".
  *
  * @property int $id
- * @property string $nombre
+ * @property string $nickname
  * @property string $password
- * @property string $auth_key
- * @property string $telefono
- * @property string $poblacion
+ * @property bool $is_admin
+ *
+ * @property Portrait[] $portraits
+ * @property Reminder[] $reminders
  */
-class Usuarios extends \yii\db\ActiveRecord
+class Users extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'usuarios';
+        return 'users';
     }
 
     /**
@@ -30,9 +31,10 @@ class Usuarios extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'password'], 'required'],
-            [['nombre', 'auth_key', 'telefono', 'poblacion'], 'string', 'max' => 255],
-            [['password'], 'string', 'max' => 60],
+            [['nickname', 'password'], 'required'],
+            [['is_admin'], 'boolean'],
+            [['nickname', 'password'], 'string', 'max' => 255],
+            [['nickname'], 'unique'],
         ];
     }
 
@@ -43,11 +45,29 @@ class Usuarios extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nombre' => 'Nombre',
+            'nickname' => 'Nickname',
             'password' => 'Password',
-            'auth_key' => 'Auth Key',
-            'telefono' => 'Teléfono',
-            'poblacion' => 'Población',
+            'is_admin' => 'Is Admin',
         ];
+    }
+
+    /**
+     * Gets query for [[Portraits]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPortraits()
+    {
+        return $this->hasMany(Portrait::className(), ['us_id' => 'id'])->inverseOf('us');
+    }
+
+    /**
+     * Gets query for [[Reminders]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReminders()
+    {
+        return $this->hasMany(Reminder::className(), ['us_id' => 'id'])->inverseOf('us');
     }
 }
