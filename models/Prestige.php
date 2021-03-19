@@ -45,9 +45,9 @@ class Prestige extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'type_prestige' => 'Prestige',
+            'type_prestige' => 'Type Prestige',
             'score' => 'Score',
-            'portrait_id' => 'Portrait',
+            'portrait_id' => 'Portrait ID',
         ];
     }
 
@@ -58,6 +58,6 @@ class Prestige extends \yii\db\ActiveRecord
      */
     public function getPortrait()
     {
-        return $this->hasOne(Portrait::class, ['id' => 'portrait_id'])->inverseOf('prestiges');
+        return $this->hasOne(Portrait::className(), ['id' => 'portrait_id'])->inverseOf('prestiges');
     }
 }
