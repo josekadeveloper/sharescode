@@ -56,6 +56,7 @@ CREATE TABLE answer
     id              bigserial    PRIMARY KEY
   , content         varchar(255) NOT NULL
   , query_id        bigint       NOT NULL REFERENCES query (id)
+  , us_id           bigint       NOT NULL REFERENCES users (id)  
 );
 
 DROP TABLE IF EXISTS reminder CASCADE;
