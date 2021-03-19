@@ -58,7 +58,7 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getPortraits()
     {
-        return $this->hasMany(Portrait::class, ['us_id' => 'id'])->inverseOf('us');
+        return $this->hasMany(Portrait::className(), ['us_id' => 'id'])->inverseOf('us');
     }
 
     /**
@@ -68,6 +68,6 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getReminders()
     {
-        return $this->hasMany(Reminder::class, ['us_id' => 'id'])->inverseOf('us');
+        return $this->hasMany(Reminder::className(), ['us_id' => 'id'])->inverseOf('us');
     }
 }
