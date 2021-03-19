@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => Html::img('@web/img/sharecode.svg', ['style'=>['height'=>'40px']]) . Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-dark bg-dark navbar-expand-md fixed-top',
@@ -41,7 +41,9 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Inicio', 'url' => ['/query/index']],
+            ['label' => 'Usuarios', 'url' => ['/users/index']],
+            ['label' => 'Mi perfil', 'url' => ['/portrait/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
