@@ -34,7 +34,7 @@ class Prestige extends \yii\db\ActiveRecord
             [['score', 'portrait_id'], 'default', 'value' => null],
             [['score', 'portrait_id'], 'integer'],
             [['type_prestige'], 'string', 'max' => 255],
-            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::class, 'targetAttribute' => ['portrait_id' => 'id']],
+            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::className(), 'targetAttribute' => ['portrait_id' => 'id']],
         ];
     }
 
