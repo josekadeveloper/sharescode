@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\bootstrap4\Html;
 
 /**
  * This is the model class for table "portrait".
@@ -46,7 +47,7 @@ class Portrait extends \yii\db\ActiveRecord
             [['email'], 'unique'],
             [['name_portrait'], 'unique'],
             [['repository'], 'unique'],
-            [['us_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['us_id' => 'id']],
+            [['us_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['us_id' => 'id']],
         ];
     }
 
@@ -66,6 +67,18 @@ class Portrait extends \yii\db\ActiveRecord
             'sex' => 'Sex',
             'us_id' => 'User',
         ];
+    }
+
+    public function devolverImg($model) {
+        $sexo = trim($model->getAttributes()['sex']);
+        if ($sexo !== null) {
+            if ($sexo === 'Men') {
+                $img = Html::img('@web/img/men.svg');
+            } else {
+                $img = Html::img('@web/img/woman.svg');
+            }
+        };
+        return $img;
     }
 
     /**

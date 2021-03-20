@@ -85,7 +85,7 @@ class UsersController extends Controller
         $model = new Users(['scenario' => Users::SCENARIO_REGISTER]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['site/login']);
         }
 
         return $this->render('register', [
