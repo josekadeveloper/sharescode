@@ -7,12 +7,27 @@ use app\models\Portrait;
 use app\models\Users;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
 
 /**
  * PortraitController implements the CRUD actions for Portrait model.
  */
 class PortraitController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
     /**
      * Lists all Portrait models.
      * @return mixed
@@ -87,6 +102,21 @@ class PortraitController extends Controller
             'model' => $model,
             'nickname' => $nickname,
         ]);
+    }
+
+    /**
+     * Deletes an existing Portrait model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+        if ($this->findModel($id)->delete()) {
+            Yii::$app->session->setFlash('success', 'El perfil se ha borrado correctamente.');
+        }
+        return $this->redirect(['portrait/index']); 
     }
 
     /**
