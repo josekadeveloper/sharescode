@@ -22,11 +22,11 @@ $sex = ['Men' => 'Men',
 
     <?= $form->field($model, 'repository')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'prestige_port')->hiddenInput(['maxlength' => true, 'value' => 'Initiate'])->label(false); ?>
+    <?= $form->field($model, 'prestige_port')->hiddenInput(['maxlength' => true, 'value' => 'Initiate'])->label(false) ?>
 
     <?= $form->field($model, 'sex')->textInput(['maxlength' => true])->dropDownList($sex)  ?>
 
-    <?= $form->field($model, 'us_id')->hiddenInput(['value' => $usu_id])->label(false); ?>
+    <?= $form->field($model, 'us_id')->hiddenInput(['value' => $usu_id])->label(false) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

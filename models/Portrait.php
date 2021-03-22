@@ -70,7 +70,8 @@ class Portrait extends \yii\db\ActiveRecord
     }
 
     public function devolverImg($model) {
-        $sexo = trim($model->getAttributes()['sex']);
+        Yii::debug($model->sex);
+        $sexo = trim($model->sex);
         if ($sexo !== null) {
             if ($sexo === 'Men') {
                 $img = Html::img('@web/img/men.svg');

@@ -7,6 +7,7 @@ $log = require __DIR__ . '/log.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
+    'defaultRoute' => 'query',
     'name' => 'ShareCode',
     'bootstrap' => ['log'],
     'aliases' => [
