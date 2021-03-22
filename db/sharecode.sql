@@ -23,7 +23,7 @@ CREATE TABLE portrait
   , email          varchar(255)  NOT NULL UNIQUE
   , repository     varchar(255)  NOT NULL UNIQUE
   , prestige_port  varchar(255)  NOT NULL DEFAULT 'Initiate'
-  , sex            char(6)       NOT NULL
+  , sex            varchar(255)  NOT NULL
   , us_id          bigint        NOT NULL REFERENCES users (id)  
 );
 
