@@ -10,11 +10,10 @@ use yii\widgets\DetailView;
 
 $this->title = 'Mi perfil';
 $this->params['breadcrumbs'][] = $this->title;
-$d = date('Y-m-d H:m:s');
-$date = Yii::$app->formatter->asDate($d); ?>
+?>
     <p>
-        <?= Html::a('Portrait update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Portrait delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Update portrait', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete portrait', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => '¿Estas seguro de querer borrar su perfil?',
@@ -30,10 +29,7 @@ $date = Yii::$app->formatter->asDate($d); ?>
         'attributes' => [
                 'name_portrait',
                 'last_name',
-                [
-                    'label' => 'Date register',
-                    'value' => $date,
-                ],
+                'date_register:date',
                 'email:email',
                 'repository:url',
                 'prestige_port',
