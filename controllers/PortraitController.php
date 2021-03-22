@@ -5,10 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\Portrait;
 use app\models\Users;
-use yii\bootstrap4\ActiveForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
 /**
  * PortraitController implements the CRUD actions for Portrait model.
@@ -20,31 +18,39 @@ class PortraitController extends Controller
      * @return mixed
      */
     public function actionIndex()
+    { 
+        $usu_id = Yii::$app->user->identity->id;
+        $model = Portrait::find()->where(['us_id' => $usu_id])->one();
+        $nickname = Users::find()->where(['id' => $usu_id])->one()->nickname;
+
+        if ($model === null) {
+            return $this->redirect(['create']);
+        } else {
+            return $this->render('index', [
+                'model' => $model,
+                'nickname' => $nickname,
+            ]);
+        }
+    }
+
+    /**
+     * Create a new Portrait model.
+     * If creation is successful, the browser will be redirected to the 'index' page.
+     * @return mixed
+     */
+    public function actionCreate()
     {
         $model = new Portrait();
 
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
-        }
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['portrait/index', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
-        $usu_id = Yii::$app->user->identity->id;
-
-        $model2 = Portrait::find()->where(['us_id' => $usu_id])->one();
-
-        $nickname = Users::find()->where(['id' => $usu_id])->one()->getAttributes()['nickname'];
-        return $this->render('index', [
+        return $this->render('create', [
             'model' => $model,
-            'model2' => $model2,
-            'nickname' => $nickname,
         ]);
-        
-        return $this->redirect(['site/login']); 
     }
+
     /**
      * Displays a single Portrait model.
      * @param integer $id

@@ -43,7 +43,7 @@ class Portrait extends \yii\db\ActiveRecord
             [['us_id'], 'default', 'value' => null],
             [['us_id'], 'integer'],
             [['name_portrait', 'last_name', 'email', 'repository', 'prestige_port'], 'string', 'max' => 255],
-            [['sex'], 'string', 'max' => 6],
+            [['sex'], 'string'],
             [['email'], 'unique'],
             [['name_portrait'], 'unique'],
             [['repository'], 'unique'],
@@ -70,8 +70,7 @@ class Portrait extends \yii\db\ActiveRecord
     }
 
     public function devolverImg($model) {
-        Yii::debug($model->sex);
-        $sexo = trim($model->sex);
+        $sexo = $model->sex;
         if ($sexo !== null) {
             if ($sexo === 'Men') {
                 $img = Html::img('@web/img/men.svg');
