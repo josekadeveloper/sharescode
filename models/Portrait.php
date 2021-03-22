@@ -38,15 +38,14 @@ class Portrait extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name_portrait', 'last_name', 'date_register', 'email', 'repository', 'sex', 'us_id'], 'required'],
-            [['date_register'], 'safe'],
+            [['name_portrait', 'last_name', 'date_register', 'email', 'sex', 'us_id'], 'required'],
+            [['date_register', 'repository'], 'safe'],
             [['us_id'], 'default', 'value' => null],
             [['us_id'], 'integer'],
-            [['name_portrait', 'last_name', 'email', 'repository', 'prestige_port'], 'string', 'max' => 255],
+            [['name_portrait', 'last_name', 'email', 'prestige_port'], 'string', 'max' => 255],
             [['sex'], 'string'],
             [['email'], 'unique'],
             [['name_portrait'], 'unique'],
-            [['repository'], 'unique'],
             [['us_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['us_id' => 'id']],
         ];
     }
