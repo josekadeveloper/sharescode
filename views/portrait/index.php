@@ -13,8 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $d = date('Y-m-d H:m:s');
 $date = Yii::$app->formatter->asDate($d); ?>
     <p>
-        <?= Html::a('Editar perfil', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Eliminar perfil', ['delete', 'id' => $model->id], [
+        <?= Html::a('Portrait update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Portrait delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => '¿Estas seguro de querer borrar su perfil?',

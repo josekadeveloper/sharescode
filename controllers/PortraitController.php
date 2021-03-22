@@ -52,6 +52,27 @@ class PortraitController extends Controller
     }
 
     /**
+     * Updates an existing Portrait model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $nickname = Users::find()->where(['id' => $model->us_id])->one()->nickname;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
      * Displays a single Portrait model.
      * @param integer $id
      * @return mixed
@@ -59,8 +80,12 @@ class PortraitController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $nickname = Users::find()->where(['id' => $model->us_id])->one()->nickname;
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'nickname' => $nickname,
         ]);
     }
 
