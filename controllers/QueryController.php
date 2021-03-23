@@ -8,12 +8,24 @@ use app\models\Query;
 use app\models\QuerySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
 
 /**
  * QueryController implements the CRUD actions for Query model.
  */
 class QueryController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
     /**
      * Lists all Query models.
      * @return mixed
@@ -41,7 +53,13 @@ class QueryController extends Controller
     {
         if (isset(Yii::$app->user->identity->id)) {
             $portrait_id = $this->findPortrait(Yii::$app->user->identity->id)->id;
-            if (Query::find()->where(['portrait_id' => $portrait_id])->one() !== null) {
+            if ($portrait_id === null) {
+                $owner_id = null;
+            }
+            if (Query::find()->where([
+                        'id' => $id,
+                        'portrait_id' => $portrait_id,
+                    ])->one() !== null) {
                 $owner_id = $portrait_id;
             } else {
                 $owner_id = null;
@@ -54,7 +72,7 @@ class QueryController extends Controller
             'model' => $this->findModel($id),
             'owner_id' => $owner_id,
             'name_portrait' => Portrait::find()
-                                ->where(['id' => $id])
+                                ->where(['id' => $this->findModel($id)->portrait_id])
                                 ->one()['name_portrait'],
         ]);
     }
@@ -103,6 +121,23 @@ class QueryController extends Controller
     }
 
     /**
+     * Deletes an existing Query model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+        if ($this->findModel($id)->delete()) {
+            Yii::$app->session->setFlash('success', 'Query has been successfully deleted.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Query is associated with some answers.');
+        }
+        return $this->redirect(['index']);   
+    }
+
+    /**
      * Finds the Query model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -118,7 +153,7 @@ class QueryController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-        /**
+    /**
      * Finds the Portrait model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -133,6 +168,6 @@ class QueryController extends Controller
             ) {
             return $model;
         }
-        throw new NotFoundHttpException('Para crear consultas debe disponer de un Perfil de usuario.');
+        throw new NotFoundHttpException('To carry out the action, a profile must be created on this website.');
     }
 }
