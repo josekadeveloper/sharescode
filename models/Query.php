@@ -40,7 +40,7 @@ class Query extends \yii\db\ActiveRecord
             [['portrait_id'], 'default', 'value' => null],
             [['portrait_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
-            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::className(), 'targetAttribute' => ['portrait_id' => 'id']],
+            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::class, 'targetAttribute' => ['portrait_id' => 'id']],
         ];
     }
 
@@ -57,6 +57,19 @@ class Query extends \yii\db\ActiveRecord
             'is_closed' => 'Is Closed',
             'portrait_id' => 'Portrait',
         ];
+    }
+
+    public function beforeDelete()
+    {
+        if (!parent::beforeDelete()) {
+            return false;
+        }
+
+        if ($this->getAnswers()->exists()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
