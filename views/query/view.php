@@ -14,17 +14,18 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="query-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+<?php if ($owner_id !== null): ?>
     <p>
         <?= Html::a('Update query', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete query', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Are you sure you want to delete this query?',
                 'method' => 'post',
             ],
         ]) ?>
     </p>
+<?php endif ?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -32,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'date_created:date',
             [
                 'attribute' => 'portrait_id',
-                'value' => $nombre_perfil,
+                'value' => $name_portrait,
             ],
         ],
     ]) ?>

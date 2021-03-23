@@ -31,20 +31,33 @@ class QueryController extends Controller
 
     /**
      * Displays a single Query model.
+     * If the user is logged, he has created a profile and is 
+     * the creator of the query, he can modify or delete it
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        if (isset(Yii::$app->user->identity->id)) {
+            $portrait_id = $this->findPortrait(Yii::$app->user->identity->id)->id;
+            if (Query::find()->where(['portrait_id' => $portrait_id])->one() !== null) {
+                $owner_id = $portrait_id;
+            } else {
+                $owner_id = null;
+            }
+        } else {
+            $owner_id = null;
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'nombre_perfil' => Portrait::find()
+            'owner_id' => $owner_id,
+            'name_portrait' => Portrait::find()
                                 ->where(['id' => $id])
-                                ->one()->name_portrait,
+                                ->one()['name_portrait'],
         ]);
     }
-
     /**
      * Creates a new Query model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -61,6 +74,29 @@ class QueryController extends Controller
         }
 
         return $this->render('create', [
+            'model' => $model,
+            'portrait_id' => $portrait_id,
+        ]);
+    }
+
+        /**
+     * Updates an existing Query model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $portrait = $this->findPortrait(Yii::$app->user->identity->id);
+        $portrait_id = $portrait->id;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
             'model' => $model,
             'portrait_id' => $portrait_id,
         ]);
