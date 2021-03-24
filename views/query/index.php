@@ -1,14 +1,13 @@
 <?php
 
 use yii\bootstrap4\Html;
+use yii\grid\ActionColumn;
 use yii\grid\GridView;
-
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\QuerySearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+use yii\helpers\Url;
 
 $this->title = 'Queries';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="query-index">
 
@@ -26,7 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'explanation:ntext',
             'date_created:date',
             'is_closed:boolean',
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view} {create}',
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        return Html::a('view', $url, ['class' => 'btn btn-info']);
+                    },
+                    'create' => function ($url, $model, $key) {
+                        $urlAnswer = Url::toRoute(['query/view', 'id' => $key]);
+                        return Html::a('answer', $urlAnswer, ['class' => 'btn btn-success']);
+                    },
+                ],
+            ],
         ],
     ]); ?>
 
