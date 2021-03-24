@@ -69,6 +69,20 @@ class Portrait extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeDelete()
+    {
+        if (!parent::beforeDelete()) {
+            return false;
+        }
+
+        if ($this->getQueries()->exists()) {
+            Yii::$app->session->setFlash('error', 'User is associated with some queries.');
+            return false;
+        }
+
+        return true;
+    }
+
     public function devolverImg($model) {
         $sexo = $model->sex;
         if ($sexo !== null) {
