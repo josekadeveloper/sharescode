@@ -1,7 +1,6 @@
 
 <?php
 
-use app\models\Portrait;
 use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
 /* @var $this yii\web\View */
@@ -16,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Delete portrait', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => '¿Estas seguro de querer borrar su perfil?',
+                'confirm' => 'Are you sure you want to delete your Portrait?',
                 'method' => 'post',
             ],
         ]) ?>
