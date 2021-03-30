@@ -49,19 +49,15 @@ class QueryController extends Controller
      * the creator of the query, he can modify or delete it
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        if (isset(Yii::$app->user->identity->id)) {
-            $portrait_id = $this->findPortrait(Yii::$app->user->identity->id)->id;
-            if ($portrait_id === null) {
-                $owner_id = null;
-            }
+        if ($this->findPortrait(Yii::$app->user->id)) {
+            $portrait_id = $this->findPortrait(Yii::$app->user->id)->id;
             if (Query::find()->where([
-                        'id' => $id,
-                        'portrait_id' => $portrait_id,
-                    ])->one() !== null) {
+                    'id' => $id,
+                    'portrait_id' => $portrait_id,
+                ])->one() !== null) {
                 $owner_id = $portrait_id;
             } else {
                 $owner_id = null;
@@ -162,10 +158,9 @@ class QueryController extends Controller
 
     /**
      * Finds the Portrait model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
+     * If the model is not found, a null.
      * @param integer $id
-     * @return Portrait the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * @return mixed Portrait || null
      */
     protected function findPortrait($id)
     {
@@ -175,6 +170,6 @@ class QueryController extends Controller
             ) {
             return $model;
         }
-        throw new NotFoundHttpException('To carry out the action, a profile must be created on this website.');
+        return null;
     }
 }
