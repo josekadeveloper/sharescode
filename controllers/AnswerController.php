@@ -64,6 +64,30 @@ class AnswerController extends Controller
         ]);
     }
 
+        /**
+     * Updates an existing Answer model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $portrait = $this->findPortrait(Yii::$app->user->id);
+        $portrait_id = $portrait->id;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'id' => $id,
+            'portrait_id' => $portrait_id,
+        ]);
+    }
+
     /**
      * Finds the Answer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

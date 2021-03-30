@@ -1,8 +1,11 @@
 <?php
 
+use app\models\Answer;
+use app\models\Portrait;
 use yii\bootstrap4\Html;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -54,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'date_created:dateTime',
             [
                 '__class' => ActionColumn::class, 
-                'template' => '{accessto}',
+                'template' => '{accessto} {update}',
                 'buttons' => [
                     'accessto' => function ($url, $model, $key) {
                         return Html::a(
@@ -64,6 +67,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'id' => $model->portrait_id,
                             ],
                         );
+                    },
+                    'update' => function ($url, $model, $key) {
+                        $urlAnswer = Url::toRoute(['answer/update', 'id' => $key]);
+                        $portrait_id = Portrait::findOne(['us_id' => Yii::$app->user->id]);
+                        if ($portrait_id !== null){
+                            $portrait_id = $portrait_id['id'];
+                        }
+                        if (Answer::findOne([
+                                          'id' => $key,
+                                          'portrait_id' => $portrait_id
+                                        ])) {
+                            return Html::a('update', $urlAnswer, ['class' => 'btn btn-info']);
+                        } 
                     },
                 ],
             ],
