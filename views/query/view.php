@@ -1,6 +1,8 @@
 <?php
 
 use yii\bootstrap4\Html;
+use yii\grid\ActionColumn;
+use yii\grid\GridView;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -44,4 +46,27 @@ $this->params['breadcrumbs'][] = $this->title;
             'explanation:ntext',
         ],
     ]) ?>
+<h2>ANSWERS</h2>
+<?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            'content:ntext',
+            'date_created:dateTime',
+            [
+                '__class' => ActionColumn::class, 
+                'template' => '{accessto}',
+                'buttons' => [
+                    'accessto' => function ($url, $model, $key) {
+                        return Html::a(
+                            "Access to user portrait",
+                            [
+                                'portrait/view',
+                                'id' => $model->portrait_id,
+                            ],
+                        );
+                    },
+                ],
+            ],
+        ],
+    ]); ?>
 </div>

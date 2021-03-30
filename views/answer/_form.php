@@ -12,11 +12,13 @@ use yii\bootstrap4\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'content')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'query_id')->textInput() ?>
+    <?= $form->field($model, 'date_created')->hiddenInput(['value' => date('Y-m-d H:m:s')])->label(false) ?>
 
-    <?= $form->field($model, 'us_id')->textInput() ?>
+    <?= $form->field($model, 'query_id')->hiddenInput(['value' => $id])->label(false) ?>
+
+    <?= $form->field($model, 'portrait_id')->hiddenInput(['value' => $portrait_id])->label(false)  ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

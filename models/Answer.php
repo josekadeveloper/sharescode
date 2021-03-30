@@ -9,11 +9,12 @@ use Yii;
  *
  * @property int $id
  * @property string $content
+ * @property string $date_created
  * @property int $query_id
- * @property int $us_id
+ * @property int|null $portrait_id
  *
+ * @property Portrait $portrait
  * @property Query $query
- * @property Users $us
  */
 class Answer extends \yii\db\ActiveRecord
 {
@@ -31,12 +32,13 @@ class Answer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['content', 'query_id', 'us_id'], 'required'],
-            [['query_id', 'us_id'], 'default', 'value' => null],
-            [['query_id', 'us_id'], 'integer'],
+            [['content', 'date_created', 'query_id'], 'required'],
+            [['date_created'], 'safe'],
+            [['query_id', 'portrait_id'], 'default', 'value' => null],
+            [['query_id', 'portrait_id'], 'integer'],
             [['content'], 'string', 'max' => 255],
+            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::class, 'targetAttribute' => ['portrait_id' => 'id']],
             [['query_id'], 'exist', 'skipOnError' => true, 'targetClass' => Query::class, 'targetAttribute' => ['query_id' => 'id']],
-            [['us_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['us_id' => 'id']],
         ];
     }
 
@@ -48,9 +50,20 @@ class Answer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'content' => 'Content',
-            'query_id' => 'Query',
-            'us_id' => 'Us',
+            'date_created' => 'Date Created',
+            'query_id' => 'Query ID',
+            'portrait_id' => 'Portrait ID',
         ];
+    }
+
+    /**
+     * Gets query for [[Portrait]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPortrait()
+    {
+        return $this->hasOne(Portrait::class, ['id' => 'portrait_id'])->inverseOf('answers');
     }
 
     /**
@@ -61,15 +74,5 @@ class Answer extends \yii\db\ActiveRecord
     public function getQuery()
     {
         return $this->hasOne(Query::class, ['id' => 'query_id'])->inverseOf('answers');
-    }
-
-    /**
-     * Gets query for [[Us]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUs()
-    {
-        return $this->hasOne(Users::class, ['id' => 'us_id'])->inverseOf('answers');
     }
 }

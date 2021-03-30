@@ -5,9 +5,9 @@ namespace app\controllers;
 use Yii;
 use app\models\Answer;
 use app\models\AnswerSearch;
+use app\models\Portrait;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * AnswerController implements the CRUD actions for Answer model.
@@ -47,9 +47,11 @@ class AnswerController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
         $model = new Answer();
+        $portrait = $this->findPortrait(Yii::$app->user->id);
+        $portrait_id = $portrait->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -57,6 +59,8 @@ class AnswerController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'id' => $id,
+            'portrait_id' => $portrait_id,
         ]);
     }
 
@@ -74,5 +78,23 @@ class AnswerController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Finds the Portrait model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Portrait the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findPortrait($id)
+    {
+        if (($model = Portrait::find()
+                        ->where(['us_id' => $id])
+                        ->one()) !== null
+            ) {
+            return $model;
+        }
+        throw new NotFoundHttpException('To carry out the action, a profile must be created on this website.');
     }
 }

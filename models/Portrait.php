@@ -75,8 +75,8 @@ class Portrait extends \yii\db\ActiveRecord
             return false;
         }
 
-        if ($this->getQueries()->exists()) {
-            Yii::$app->session->setFlash('error', 'User is associated with some queries.');
+        if ($this->getQueries()->exists() || $this->getAnswers()->exists()) {
+            Yii::$app->session->setFlash('error', 'User is associated with some queries or answers.');
             return false;
         }
 
@@ -123,5 +123,15 @@ class Portrait extends \yii\db\ActiveRecord
     public function getQueries()
     {
         return $this->hasMany(Query::class, ['portrait_id' => 'id'])->inverseOf('portrait');
+    }
+
+    /**
+     * Gets query for [[Answers]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAnswers()
+    {
+        return $this->hasMany(Answer::class, ['portrait_id' => 'id'])->inverseOf('portrait');
     }
 }

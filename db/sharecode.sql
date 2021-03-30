@@ -56,8 +56,9 @@ CREATE TABLE answer
 (
     id              bigserial    PRIMARY KEY
   , content         varchar(255) NOT NULL
+  , date_created    timestamp    NOT NULL
   , query_id        bigint       NOT NULL REFERENCES query (id)
-  , us_id           bigint       NOT NULL REFERENCES users (id)  
+  , portrait_id     bigint       REFERENCES portrait (id)
 );
 
 DROP TABLE IF EXISTS reminder CASCADE;
@@ -66,7 +67,7 @@ CREATE TABLE reminder
 (
     id              bigserial    PRIMARY KEY
   , dispatch        varchar(255) NOT NULL
-  , us_id           bigint       NOT NULL REFERENCES users (id)
+  , portrait_id     bigint       REFERENCES portrait (id)
 );
 
 --- Fixtures ---

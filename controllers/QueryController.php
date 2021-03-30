@@ -2,10 +2,12 @@
 
 namespace app\controllers;
 
-use app\models\Portrait;
+use app\models\Answer;
 use Yii;
+use app\models\Portrait;
 use app\models\Query;
 use app\models\QuerySearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -68,12 +70,17 @@ class QueryController extends Controller
             $owner_id = null;
         }
 
+        $query = Answer::find()->where(['query_id' => $id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
         return $this->render('view', [
             'model' => $this->findModel($id),
             'owner_id' => $owner_id,
             'name_portrait' => Portrait::find()
                                 ->where(['id' => $this->findModel($id)->portrait_id])
                                 ->one()['name_portrait'],
+            'dataProvider' => $dataProvider,
         ]);
     }
     /**
@@ -84,7 +91,7 @@ class QueryController extends Controller
     public function actionCreate()
     {
         $model = new Query();
-        $portrait = $this->findPortrait(Yii::$app->user->identity->id);
+        $portrait = $this->findPortrait(Yii::$app->user->id);
         $portrait_id = $portrait->id;
   
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -107,7 +114,7 @@ class QueryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $portrait = $this->findPortrait(Yii::$app->user->identity->id);
+        $portrait = $this->findPortrait(Yii::$app->user->id);
         $portrait_id = $portrait->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

@@ -18,7 +18,7 @@ class AnswerSearch extends Answer
     {
         return [
             [['id', 'query_id', 'us_id'], 'integer'],
-            [['content'], 'safe'],
+            [['content', 'date_created'], 'safe'],
         ];
     }
 
@@ -59,6 +59,7 @@ class AnswerSearch extends Answer
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'date_created' => $this->date_created,
             'query_id' => $this->query_id,
             'us_id' => $this->us_id,
         ]);

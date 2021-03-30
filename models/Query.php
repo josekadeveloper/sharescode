@@ -91,4 +91,11 @@ class Query extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Portrait::class, ['id' => 'portrait_id'])->inverseOf('queries');
     }
+
+    public function getLastAnswer()
+    {
+        $last_date = $this->getAnswers()->max('date_created');
+        return Answer::findOne(['date_created' => $last_date])['content'] === null ? '' 
+                : Answer::findOne(['date_created' => $last_date])['content'];
+    }    
 }
