@@ -41,10 +41,11 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Inicio', 'url' => ['/query/index']],
-            ['label' => 'Usuarios', 'url' => ['/users/index']],
+            ['label' => 'Home', 'url' => ['/query/index']],
+            ['label' => 'Register', 'url' => ['/users/register']],
+            ['label' => 'Users', 'url' => ['/users/index']],
             Yii::$app->user->isGuest ? ( '' ) :
-            (['label' => 'Mi perfil', 'url' => ['/portrait/index']]),
+            (['label' => 'My Portrait', 'url' => ['/portrait/index']]),
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
