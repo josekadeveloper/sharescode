@@ -6,6 +6,7 @@ use Yii;
 use app\models\Answer;
 use app\models\AnswerSearch;
 use app\models\Portrait;
+use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -23,6 +24,28 @@ class AnswerController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            $user_id = Yii::$app->user->id;
+                            $portrait = $this->findPortrait($user_id);
+                            if ($portrait !== null) {
+                                $portrait_id = $portrait->id;
+                            } else {
+                                $portrait_id = null;
+                                return $this->redirect(['portrait/create', 'id' => $user_id]);
+                            }
+                            return $portrait_id !== null;
+                        },
+                    ],
                 ],
             ],
         ];
@@ -65,7 +88,12 @@ class AnswerController extends Controller
     {
         $model = new Answer();
         $portrait = $this->findPortrait(Yii::$app->user->id);
-        $portrait_id = $portrait->id;
+
+        if ($portrait !== null) {
+            $portrait_id = $portrait->id;
+        } else {
+            $portrait_id = null;
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -89,17 +117,28 @@ class AnswerController extends Controller
     {
         $model = $this->findModel($id);
         $portrait = $this->findPortrait(Yii::$app->user->id);
-        $portrait_id = $portrait->id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($portrait !== null) {
+            $portrait_id = $portrait->id;
+        } else {
+            $portrait_id = null;
         }
 
-        return $this->render('update', [
-            'model' => $model,
-            'id' => $id,
-            'portrait_id' => $portrait_id,
-        ]);
+        $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
+        $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
+        if ($this->findOwnAnswer($id, $portrait_id)) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect($urlAnswer);
+            }
+    
+            return $this->render('update', [
+                'model' => $model,
+                'id' => $id,
+                'portrait_id' => $portrait_id,
+            ]);
+        }
+        Yii::$app->session->setFlash('error', 'You can only update your own answer.');
+        return $this->redirect($urlAnswer); 
     }
 
     /**
@@ -111,12 +150,24 @@ class AnswerController extends Controller
      */
     public function actionDelete($id)
     {
-        $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
-        if ($this->findModel($id)->delete()) {
-            Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
+        $portrait = $this->findPortrait(Yii::$app->user->id);
+
+        if ($portrait !== null) {
+            $portrait_id = $portrait->id;
+        } else {
+            $portrait_id = null;
         }
+
+        $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
-        return $this->redirect($urlAnswer);   
+        if ($this->findOwnAnswer($id, $portrait_id)) {
+            if ($this->findModel($id)->delete()) {
+                Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
+            }
+            return $this->redirect($urlAnswer);   
+        }
+        Yii::$app->session->setFlash('error', 'You can only delete your own answer.');
+        return $this->redirect($urlAnswer);  
     }
 
     /**
@@ -150,6 +201,25 @@ class AnswerController extends Controller
             ) {
             return $model;
         }
-        throw new NotFoundHttpException('To carry out the action, a profile must be created on this website.');
+        return null;
+    }
+
+    /**
+     * Finds the Answer model based on its primary key value and portrait_id.
+     * If the model is not found, a null.
+     * @param integer $id && $portrait_id
+     * @return mixed Answer || null
+     */
+    protected function findOwnAnswer($id, $portrait_id)
+    {
+        if (($model = Answer::find()
+                        ->where([
+                            'id' => $id,
+                            'portrait_id' => $portrait_id,
+                      ])->one()) !== null
+            ){
+            return $model;
+        }
+        return null;
     }
 }

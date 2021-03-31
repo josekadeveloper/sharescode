@@ -8,6 +8,7 @@ use app\models\Portrait;
 use app\models\Query;
 use app\models\QuerySearch;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -24,6 +25,28 @@ class QueryController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            $user_id = Yii::$app->user->id;
+                            $portrait = $this->findPortrait($user_id);
+                            if ($portrait !== null) {
+                                $portrait_id = $portrait->id;
+                            } else {
+                                $portrait_id = null;
+                                return $this->redirect(['portrait/create', 'id' => $user_id]);
+                            }
+                            return $portrait_id !== null;
+                        },
+                    ],
                 ],
             ],
         ];
@@ -54,10 +77,7 @@ class QueryController extends Controller
     {
         if ($this->findPortrait(Yii::$app->user->id)) {
             $portrait_id = $this->findPortrait(Yii::$app->user->id)->id;
-            if (Query::find()->where([
-                    'id' => $id,
-                    'portrait_id' => $portrait_id,
-                ])->one() !== null) {
+            if ($this->findOwnQuery($id, $portrait_id)) {
                 $owner_id = $portrait_id;
             } else {
                 $owner_id = null;
@@ -88,7 +108,12 @@ class QueryController extends Controller
     {
         $model = new Query();
         $portrait = $this->findPortrait(Yii::$app->user->id);
-        $portrait_id = $portrait->id;
+
+        if ($portrait !== null) {
+            $portrait_id = $portrait->id;
+        } else {
+            $portrait_id = null;
+        }
   
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -111,16 +136,25 @@ class QueryController extends Controller
     {
         $model = $this->findModel($id);
         $portrait = $this->findPortrait(Yii::$app->user->id);
-        $portrait_id = $portrait->id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($portrait !== null) {
+            $portrait_id = $portrait->id;
+        } else {
+            $portrait_id = null;
         }
 
-        return $this->render('update', [
-            'model' => $model,
-            'portrait_id' => $portrait_id,
-        ]);
+        if ($this->findOwnQuery($id, $portrait_id)) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+    
+            return $this->render('update', [
+                'model' => $model,
+                'portrait_id' => $portrait_id,
+            ]);
+        }
+        Yii::$app->session->setFlash('error', 'You can only update your own query.');
+        return $this->redirect(['view', 'id' => $model->id]); 
     }
 
     /**
@@ -132,12 +166,24 @@ class QueryController extends Controller
      */
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete()) {
-            Yii::$app->session->setFlash('success', 'Query has been successfully deleted.');
+        $portrait = $this->findPortrait(Yii::$app->user->id);
+
+        if ($portrait !== null) {
+            $portrait_id = $portrait->id;
         } else {
-            Yii::$app->session->setFlash('error', 'Query is associated with some answers.');
+            $portrait_id = null;
         }
-        return $this->redirect(['index']);   
+
+        if ($this->findOwnQuery($id, $portrait_id)) {
+            if ($this->findModel($id)->delete()) {
+                Yii::$app->session->setFlash('success', 'Query has been successfully deleted.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Query is associated with some answers.');
+            }
+            return $this->redirect(['index']);
+        }
+        Yii::$app->session->setFlash('error', 'You can only delete your own query.');
+        return $this->redirect(['view', 'id' => $id]);    
     }
 
     /**
@@ -168,6 +214,25 @@ class QueryController extends Controller
                         ->where(['us_id' => $id])
                         ->one()) !== null
             ) {
+            return $model;
+        }
+        return null;
+    }
+
+    /**
+     * Finds the Query model based on its primary key value and portrait_id.
+     * If the model is not found, a null.
+     * @param integer $id && $portrait_id
+     * @return mixed Query || null
+     */
+    protected function findOwnQuery($id, $portrait_id)
+    {
+        if (($model = Query::find()
+                        ->where([
+                            'id' => $id,
+                            'portrait_id' => $portrait_id,
+                      ])->one()) !== null
+            ){
             return $model;
         }
         return null;
