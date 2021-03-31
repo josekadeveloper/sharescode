@@ -6,14 +6,28 @@ use Yii;
 use app\models\Answer;
 use app\models\AnswerSearch;
 use app\models\Portrait;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
 
 /**
  * AnswerController implements the CRUD actions for Answer model.
  */
 class AnswerController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
+
     /**
      * Lists all Answer models.
      * @return mixed
@@ -86,6 +100,23 @@ class AnswerController extends Controller
             'id' => $id,
             'portrait_id' => $portrait_id,
         ]);
+    }
+
+    /**
+     * Deletes an existing Answer model.
+     * If deletion is successful, the browser will be redirected to the 'query/view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+        $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
+        if ($this->findModel($id)->delete()) {
+            Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
+        }
+        $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
+        return $this->redirect($urlAnswer);   
     }
 
     /**
