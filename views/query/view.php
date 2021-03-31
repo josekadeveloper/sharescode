@@ -8,9 +8,6 @@ use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Query */
-
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Queries', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -57,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'date_created:dateTime',
             [
                 '__class' => ActionColumn::class, 
-                'template' => '{accessto} {update}',
+                'template' => '{accessto} {update} {delete}',
                 'buttons' => [
                     'accessto' => function ($url, $model, $key) {
                         return Html::a(
@@ -79,6 +76,25 @@ $this->params['breadcrumbs'][] = $this->title;
                                           'portrait_id' => $portrait_id
                                         ])) {
                             return Html::a('update', $urlAnswer, ['class' => 'btn btn-info']);
+                        } 
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        $urlAnswer = Url::toRoute(['answer/delete', 'id' => $key]);
+                        $portrait_id = Portrait::findOne(['us_id' => Yii::$app->user->id]);
+                        if ($portrait_id !== null){
+                            $portrait_id = $portrait_id['id'];
+                        }
+                        if (Answer::findOne([
+                                          'id' => $key,
+                                          'portrait_id' => $portrait_id
+                                        ])) {
+                            return Html::a('delete', $urlAnswer, [
+                                        'class' => 'btn btn-danger',
+                                        'data' => [
+                                            'confirm' => 'Are you sure you want to delete this answers?',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
                         } 
                     },
                 ],
