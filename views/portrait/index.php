@@ -1,11 +1,9 @@
 
 <?php
 
+use app\models\Portrait;
 use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\PortraitSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Mi perfil';
 $this->params['breadcrumbs'][] = $this->title;

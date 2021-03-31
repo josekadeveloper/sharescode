@@ -1,33 +1,34 @@
 <?php
 
+use app\models\Portrait;
 use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
-
-/* @var $this yii\web\View */
-/* @var $model app\models\Portrait */
 
 $this->title = $model->name_portrait;
 $this->params['breadcrumbs'][] = ['label' => 'Portraits', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-$d = date('Y-m-d H:m:s');
-$date = Yii::$app->formatter->asDate($d); 
+if (Yii::$app->user->id !== null) {
+    $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+} else {
+    $user_portrait = null;
+}
 ?>
 <div class="portrait-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+<?php if ($model->id == $user_portrait): ?>
     <p>
         <?= Html::a('Update portrait', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete portrait', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Are you sure you want to delete your Portrait?',
                 'method' => 'post',
             ],
         ]) ?>
     </p>
-
+<?php endif ?>
     <p>
         <?= $img = $model->devolverImg($model) ?>            
     </p>
@@ -41,9 +42,5 @@ $date = Yii::$app->formatter->asDate($d);
                 'repository:url',
                 'prestige_port',
                 'sex',
-                [
-                    'label' => 'User',
-                    'value' => $nickname,
-                ],
         ],
     ]); ?>

@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Portrait;
 use app\models\Users;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -24,6 +25,17 @@ class PortraitController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index', 'create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
         ];
@@ -76,15 +88,20 @@ class PortraitController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $nickname = Users::find()->where(['id' => $model->us_id])->one()->nickname;
+        $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($id == $user_portrait) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Portrait has been successfully modified.');
+                return $this->redirect(['portrait/index']); 
+            }
+    
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        Yii::$app->session->setFlash('error', 'You can only update your own portrait.');
+        return $this->redirect(['view', 'id' => $model->id]); 
     }
 
     /**
@@ -96,11 +113,9 @@ class PortraitController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $nickname = Users::find()->where(['id' => $model->us_id])->one()->nickname;
 
         return $this->render('view', [
             'model' => $model,
-            'nickname' => $nickname,
         ]);
     }
 
@@ -113,10 +128,15 @@ class PortraitController extends Controller
      */
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete()) {
-            Yii::$app->session->setFlash('success', 'El perfil se ha borrado correctamente.');
+        $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+        if ($id == $user_portrait) {
+            if ($this->findModel($id)->delete()) {
+                Yii::$app->session->setFlash('success', 'Portrait has been successfully deleted.');
+            }
+            return $this->redirect(['portrait/index']); 
         }
-        return $this->redirect(['portrait/index']); 
+        Yii::$app->session->setFlash('error', 'You can only delete your own portrait.');
+        return $this->redirect(['view', 'id' => $id]); 
     }
 
     /**
