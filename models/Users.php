@@ -100,7 +100,9 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
             return false;
         }
 
-        if ($this->getPortrait()->exists()) {
+        if ($this->getPortrait()->exists() || $this->getQueries()->exists() 
+                || $this->getAnswers()->exists() || $this->getReminders()->exists()) {
+            Yii::$app->session->setFlash('error', 'User is associated with some queries, answers, portrait or reminders.');
             return false;
         }
 
