@@ -16,7 +16,7 @@ $sex = ['Men' => 'Men',
 
     <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'date_register')->hiddenInput(['value' => date('Y-m-d H:m:s')])->label(false) ?>
+    <?= $form->field($model, 'date_register')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
