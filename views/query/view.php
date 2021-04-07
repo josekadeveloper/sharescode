@@ -35,7 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'date_created:date',
             [
                 'attribute' => 'portrait_id',
-                'value' => $name_portrait,
+                'value' => Html::a(
+                                'Access to user portrait', 
+                                ['portrait/view', 'id' => $model->id], 
+                                ['class' => 'btn btn-success']
+                            ),
+                'format' => 'html',
             ],
         ],
     ]) ?>
@@ -63,6 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'portrait/view',
                                 'id' => $model->portrait_id,
                             ],
+                            ['class' => 'btn btn-success']
                         );
                     },
                     'update' => function ($url, $model, $key) {

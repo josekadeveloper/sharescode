@@ -102,6 +102,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
 
         if ($this->getPortrait()->exists()) {
             Yii::$app->session->setFlash('error', 'User is associated with some portrait.');
+
             return false;
         }
 

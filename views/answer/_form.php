@@ -14,7 +14,7 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'date_created')->hiddenInput(['value' => date('Y-m-d H:m:s')])->label(false) ?>
+    <?= $form->field($model, 'date_created')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
 
     <?= $form->field($model, 'query_id')->hiddenInput(['value' => $id])->label(false) ?>
 
