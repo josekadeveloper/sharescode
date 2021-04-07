@@ -101,6 +101,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         }
 
         if ($this->getPortrait()->exists()) {
+            Yii::$app->session->setFlash('error', 'User is associated with some portrait.');
             return false;
         }
 
@@ -141,16 +142,6 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[Answers]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAnswers()
-    {
-        return $this->hasMany(Answer::class, ['us_id' => 'id']);
-    }
-
-    /**
      * Gets query for [[Portraits]].
      *
      * @return \yii\db\ActiveQuery
@@ -159,25 +150,5 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return $this->hasOne(Portrait::class, ['us_id' => 'id'])
                     ->inverseOf('users');
-    }
-
-    /**
-     * Gets query for [[Queries]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getQueries()
-    {
-        return $this->hasMany(Query::class, ['us_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Reminders]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReminders()
-    {
-        return $this->hasMany(Reminder::class, ['us_id' => 'id']);
     }
 }
