@@ -9,7 +9,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Portraits', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 if (Yii::$app->user->id !== null) {
-    $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+    if (Portrait::find()->where(['us_id' => Yii::$app->user->id])->one() !== null) {
+        $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+    } else {
+        $user_portrait = null;
+    }
 } else {
     $user_portrait = null;
 }

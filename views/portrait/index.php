@@ -5,7 +5,7 @@ use app\models\Portrait;
 use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
 
-$this->title = 'Mi perfil';
+$this->title = 'My Portrait';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
     <p>

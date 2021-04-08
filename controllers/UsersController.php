@@ -32,12 +32,12 @@ class UsersController extends Controller
                 'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'delete'],
+                        'actions' => ['index', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            $nickname = Yii::$app->user->identity->nickname;
-                            return $nickname === 'admin';
+                            $rol = Yii::$app->user->identity->is_admin;
+                            return $rol === true;
                         },
                     ],
                 ],

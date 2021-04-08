@@ -2,9 +2,6 @@
 
 use yii\bootstrap4\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Portrait */
-
 $this->title = 'Update Portrait: ' . $model->name_portrait;
 $this->params['breadcrumbs'][] = ['label' => 'Portraits', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Mi perfil', 'url' => ['view', 'id' => $model->id]];
