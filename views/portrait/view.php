@@ -5,7 +5,6 @@ use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
 
 $this->title = $model->name_portrait;
-$this->params['breadcrumbs'][] = ['label' => 'Portraits', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 if (Yii::$app->user->id !== null) {
