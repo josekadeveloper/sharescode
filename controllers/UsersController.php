@@ -29,15 +29,14 @@ class UsersController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'delete'],
+                'only' => ['index', 'create', 'update', 'delete'],
                 'rules' => [
                     [
                         'actions' => ['index', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            $rol = Yii::$app->user->identity->is_admin;
-                            return $rol === true;
+                            return Yii::$app->user->identity->is_admin;
                         },
                     ],
                 ],
