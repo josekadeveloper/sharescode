@@ -43,7 +43,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home', 'url' => ['/query/index']],
             Yii::$app->user->isGuest ? ['label' => 'Register', 'url' => ['/users/register']] : (''),
-            !Yii::$app->user->isGuest ? (Yii::$app->user->identity->nickname === 'admin' ? ['label' => 'Users', 'url' => ['/users/index']] : ('')) : (''),
+            !Yii::$app->user->isGuest ? (Yii::$app->user->identity->is_admin === true ? ['label' => 'Users', 'url' => ['/users/index']] : ('')) : (''),
             Yii::$app->user->isGuest ? ( '' ) : (['label' => 'My Portrait', 'url' => ['/portrait/index']]),
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],

@@ -9,7 +9,9 @@ use yii\bootstrap4\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'nickname')->textInput(['maxlength' => true]) ?>
+
         <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true])->label('Password') ?>
+        
         <?= $form->field($model, 'password')->passwordInput(['maxlength' => true])->label('Password Repeat')  ?>
 
         <div class="form-group">
