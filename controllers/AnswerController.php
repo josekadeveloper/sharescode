@@ -106,7 +106,7 @@ class AnswerController extends Controller
         ]);
     }
 
-        /**
+    /**
      * Updates an existing Answer model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -128,8 +128,11 @@ class AnswerController extends Controller
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
         if ($this->findOwnAnswer($id, $portrait_id)) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Yii::debug('3');
+                Yii::$app->session->setFlash('success', 'Answer has been modified successfully.');
                 return $this->redirect($urlAnswer);
             }
+            Yii::debug($model);
     
             return $this->render('update', [
                 'model' => $model,
@@ -137,6 +140,7 @@ class AnswerController extends Controller
                 'portrait_id' => $portrait_id,
             ]);
         }
+        Yii::debug('4');
         Yii::$app->session->setFlash('error', 'You can only update your own answer.');
         return $this->redirect($urlAnswer); 
     }

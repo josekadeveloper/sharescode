@@ -1,13 +1,11 @@
 <?php
 
 use yii\bootstrap4\Html;
+use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Answer */
-
-$this->title = 'Update Answer: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Answers', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$urlQuery = Url::toRoute(['query/view', 'id' => $model->query_id]);
+$this->title = 'Update Answer: ';
+$this->params['breadcrumbs'][] = ['label' => 'Query', 'url' => $urlQuery];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="answer-update">
