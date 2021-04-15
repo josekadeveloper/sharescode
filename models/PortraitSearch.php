@@ -17,8 +17,7 @@ class PortraitSearch extends Portrait
     public function rules()
     {
         return [
-            [['id', 'us_id'], 'integer'],
-            [['name_portrait', 'last_name', 'date_register', 'email', 'repository', 'prestige_port', 'sex'], 'safe'],
+            [['nickname', 'date_register', 'email', 'repository', 'prestige_port', 'sex'], 'safe'],
         ];
     }
 
@@ -58,13 +57,10 @@ class PortraitSearch extends Portrait
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'date_register' => $this->date_register,
-            'us_id' => $this->us_id,
         ]);
 
-        $query->andFilterWhere(['ilike', 'name_portrait', $this->name_portrait])
-            ->andFilterWhere(['ilike', 'last_name', $this->last_name])
+        $query->andFilterWhere(['ilike', 'nickname', $this->nickname])
             ->andFilterWhere(['ilike', 'email', $this->email])
             ->andFilterWhere(['ilike', 'repository', $this->repository])
             ->andFilterWhere(['ilike', 'prestige_port', $this->prestige_port])

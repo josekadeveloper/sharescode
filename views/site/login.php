@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?= $form->field($model, 'password')->passwordInput() ?>
         
-        <?= Html::a('Register', Url::to(['users/register'])) ?>
+        <?= Html::a('Register', Url::to(['/portrait/register'])) ?>
 
         <div class="form-group">
             <div class="offset-sm-2">

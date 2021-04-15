@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'nickname',
             'is_admin:boolean',
+            'is_deleted:boolean',
         ],
     ]) ?>
 

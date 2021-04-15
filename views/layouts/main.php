@@ -9,6 +9,7 @@ use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 use yii\bootstrap4\Breadcrumbs;
 use app\assets\AppAsset;
+use app\models\Portrait;
 
 AppAsset::register($this);
 ?>
@@ -42,9 +43,10 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Home', 'url' => ['/query/index']],
-            Yii::$app->user->isGuest ? ['label' => 'Register', 'url' => ['/users/register']] : (''),
+            Yii::$app->user->isGuest ? ['label' => 'Register', 'url' => ['/portrait/register']] : (''),
             !Yii::$app->user->isGuest ? (Yii::$app->user->identity->is_admin === true ? ['label' => 'Users', 'url' => ['/users/index']] : ('')) : (''),
-            Yii::$app->user->isGuest ? ( '' ) : (['label' => 'My Portrait', 'url' => ['/portrait/index']]),
+            Yii::$app->user->isGuest ? ( '' ) : (['label' => 'My Portrait', 
+                                                  'url' => ['/portrait/view', 'id' => Portrait::findOne(['us_id' => Yii::$app->user->identity->id])['id']]]),
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (

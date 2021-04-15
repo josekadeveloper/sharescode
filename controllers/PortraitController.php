@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Portrait;
+use app\models\PortraitSearch;
 use app\models\Users;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -46,36 +47,59 @@ class PortraitController extends Controller
      */
     public function actionIndex()
     { 
-        $usu_id = Yii::$app->user->identity->id;
-        $model = Portrait::find()->where(['us_id' => $usu_id])->one();
-        $nickname = Users::find()->where(['id' => $usu_id])->one()->nickname;
+        $searchModel = new PortraitSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if ($model === null) {
-            return $this->redirect(['create']);
-        } else {
-            return $this->render('index', [
-                'model' => $model,
-                'nickname' => $nickname,
-            ]);
-        }
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
      * Create a new Portrait model.
-     * If creation is successful, the browser will be redirected to the 'index' page.
+     * If creation is successful, the browser will be redirected to the 'portrait' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Portrait();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        $count = 0;
+        if ($count <= 1) {
+            $id = $this->createUser();
+            $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'User has been successfully created.');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+            return $this->render('register', [
+                'model' => $model,
+                'id' => $id,
+            ]); 
         }
+        $count++;
+    }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+    /**
+     * Register a Portrait.
+     * If registration is successful, the browser will be redirected to the 'portrait' page.
+     * @return mixed
+     */
+    public function actionRegister()
+    {
+        $count = 0;
+        if ($count <= 1) {
+            $id = $this->createUser();
+            $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'User has been successfully created.');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+            return $this->render('register', [
+                'model' => $model,
+                'id' => $id,
+            ]); 
+        }
+        $count++;      
     }
 
     /**
@@ -88,6 +112,8 @@ class PortraitController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = Portrait::SCENARIO_UPDATE;
+        $model->password = '';
         $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
 
         if ($id == $user_portrait) {
@@ -153,5 +179,25 @@ class PortraitController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Register a User.
+     * If registration is successful, the browser will be return user id.
+     * @return int
+     */
+    private function createUser() {
+        $id = Users::find()->max('id');
+        $id++;
+        if ((Portrait::find()->max('us_id') + 1) === $id)  {
+            $model_user = new Users(['id' => $id, 'is_deleted' => false]);
+            $model_user->save();
+            return $id;
+        } else {
+            $id--;
+            $model_user = Users::findOne(['id' => $id]);
+            $model_user->delete();
+            return $id; 
+        }  
     }
 }

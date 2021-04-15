@@ -79,31 +79,13 @@ class UsersController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Users(['scenario' => Users::SCENARIO_CREATE]);
+        $model = new Users();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Register a Users.
-     * If registration is successful, the browser will be redirected to the 'portrait' page.
-     * @return mixed
-     */
-    public function actionRegister()
-    {
-        $model = new Users(['scenario' => Users::SCENARIO_REGISTER]);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['site/login']);
-        }
-
-        return $this->render('register', [
             'model' => $model,
         ]);
     }
@@ -118,8 +100,6 @@ class UsersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->scenario = Users::SCENARIO_UPDATE;
-        $model->password = '';
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

@@ -18,8 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'nickname',
-            'is_admin:boolean',
+            'is_deleted:boolean',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

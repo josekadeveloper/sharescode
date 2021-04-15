@@ -18,8 +18,7 @@ class UsersSearch extends Users
     {
         return [
             [['id'], 'integer'],
-            [['nickname', 'password'], 'safe'],
-            [['is_admin'], 'boolean'],
+            [['is_deleted'], 'boolean'],
         ];
     }
 
@@ -60,11 +59,8 @@ class UsersSearch extends Users
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'is_admin' => $this->is_admin,
+            'is_deleted' => $this->is_deleted,
         ]);
-
-        $query->andFilterWhere(['ilike', 'nickname', $this->nickname])
-            ->andFilterWhere(['ilike', 'password', $this->password]);
 
         return $dataProvider;
     }

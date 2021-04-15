@@ -4,7 +4,7 @@ use app\models\Portrait;
 use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
 
-$this->title = $model->name_portrait;
+$this->title = $model->nickname;
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 if (Yii::$app->user->id !== null) {
@@ -38,8 +38,7 @@ if (Yii::$app->user->id !== null) {
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-                'name_portrait',
-                'last_name',
+                'nickname',
                 'date_register:date',
                 'email:email',
                 'repository:url',

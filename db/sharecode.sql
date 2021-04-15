@@ -6,10 +6,8 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users
 (
-    id       bigserial     PRIMARY KEY
-  , nickname varchar(255)  NOT NULL UNIQUE
-  , password varchar(255)  NOT NULL
-  , is_admin boolean       NOT NULL DEFAULT false
+    id         bigserial     PRIMARY KEY
+  , is_deleted boolean       NOT NULL DEFAULT false
 );
 
 DROP TABLE IF EXISTS portrait CASCADE;
@@ -17,8 +15,9 @@ DROP TABLE IF EXISTS portrait CASCADE;
 CREATE TABLE portrait
 (
     id             bigserial     PRIMARY KEY
-  , name_portrait  varchar(255)  NOT NULL UNIQUE
-  , last_name      varchar(255)  NOT NULL
+  , is_admin       boolean       NOT NULL DEFAULT false
+  , nickname       varchar(255)  NOT NULL UNIQUE
+  , password       varchar(255)  NOT NULL
   , date_register  timestamp     NOT NULL
   , email          varchar(255)  NOT NULL UNIQUE
   , repository     varchar(255)  NOT NULL UNIQUE
@@ -72,8 +71,11 @@ CREATE TABLE reminder
 
 --- Fixtures ---
 
-INSERT INTO users (nickname, password, is_admin)
-VALUES ('admin', crypt('admin', gen_salt('bf', 10)), true);
+INSERT INTO users (is_deleted)
+VALUES (false);
+
+INSERT INTO portrait (is_admin, nickname, password, date_register, email, repository, prestige_port, sex, us_id)
+VALUES (true, 'admin', crypt('admin', gen_salt('bf', 10)), '2021-04-12 19:10:00', 'jose@gmail.com', 'https://github.com/joseckk', 'Initiate', 'Men', 1);
 
 INSERT INTO prestige (type_prestige, score, portrait_id)
 VALUES ('Initiate', 0, null),
