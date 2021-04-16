@@ -66,12 +66,12 @@ class PortraitController extends Controller
         $count = 0;
         if ($count <= 1) {
             $id = $this->createUser();
-            $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
+            $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Yii::$app->session->setFlash('success', 'User has been successfully created.');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-            return $this->render('register', [
+            return $this->render('create', [
                 'model' => $model,
                 'id' => $id,
             ]); 
@@ -116,7 +116,7 @@ class PortraitController extends Controller
         $model->password = '';
         $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
 
-        if ($id == $user_portrait) {
+        if ($id == $user_portrait || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Yii::$app->session->setFlash('success', 'Portrait has been successfully modified.');
                 return $this->redirect(['portrait/index']); 
@@ -138,10 +138,26 @@ class PortraitController extends Controller
      */
     public function actionView($id)
     {
+        $model_portrait = $this->findModel($id);
+        $model_user = Users::findOne(['id' => $model_portrait->us_id]);
+        if ($model_user->is_deleted === true) {
+            Yii::$app->session->setFlash('error', 'User has been deleted.');
+            return $this->redirect(['/query/index']); 
+        }
+        if (Yii::$app->user->id !== null) {
+            if (Portrait::find()->where(['us_id' => Yii::$app->user->id])->one() !== null) {
+                $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+            } else {
+                $user_portrait = null;
+            }
+        } else {
+            $user_portrait = null;
+        }
         $model = $this->findModel($id);
 
         return $this->render('view', [
             'model' => $model,
+            'user_portrait' => $user_portrait,
         ]);
     }
 
@@ -154,12 +170,12 @@ class PortraitController extends Controller
      */
     public function actionDelete($id)
     {
-        $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
-        if ($id == $user_portrait) {
-            if ($this->findModel($id)->delete()) {
-                Yii::$app->session->setFlash('success', 'Portrait has been successfully deleted.');
-            }
-            return $this->redirect(['portrait/index']); 
+        $portrait_id = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+        if ($id == $portrait_id || Yii::$app->user->identity->is_admin === true) {
+            $model_user = Users::findOne(['id' => $portrait_id]);
+            $model_user->is_deleted = true;
+            Yii::$app->session->setFlash('success', 'User has been successfully deleted.');
+            return $this->redirect(['/query/index']);
         }
         Yii::$app->session->setFlash('error', 'You can only delete your own portrait.');
         return $this->redirect(['view', 'id' => $id]); 

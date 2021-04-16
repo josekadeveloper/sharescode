@@ -12,7 +12,7 @@ $sex = ['Men' => 'Men',
     <?php $form = ActiveForm::begin(); ?>
 
         <?php if (Yii::$app->user->identity->is_admin === true): ?>
-            <?= $form->field($model1, 'is_admin')->checkbox() ?>
+            <?= $form->field($model, 'is_admin')->checkbox() ?>
         <?php endif ?>
 
         <?= $form->field($model, 'nickname')->textInput(['maxlength' => true]) ?>

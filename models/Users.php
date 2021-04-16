@@ -49,20 +49,6 @@ class Users extends \yii\db\ActiveRecord
         ];
     }
 
-    public function beforeDelete()
-    {
-        if (!parent::beforeDelete()) {
-            return false;
-        }
-
-        if ($this->getPortrait()->exists()) {
-            Yii::$app->session->setFlash('error', 'User is associated with some portrait.');
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * Gets query for [[Portraits]].
      *
