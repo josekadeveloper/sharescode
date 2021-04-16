@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Portrait;
 use Yii;
 use app\models\Users;
 use app\models\UsersSearch;
@@ -79,15 +80,7 @@ class UsersController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Users();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->redirect(['/portrait/create']);
     }
 
     /**
@@ -119,7 +112,8 @@ class UsersController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model_user = $this->findModel($id);
+        $model_user->is_deleted = true;
         Yii::$app->session->setFlash('success', 'User has been successfully deleted.');
         return $this->redirect(['index']);
     }

@@ -9,6 +9,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Portrait;
+use app\models\Users;
 
 class SiteController extends Controller
 {
@@ -76,8 +78,16 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post())) {
+            $portrait_id = Portrait::findOne(['nickname' => $model->username])['us_id'];
+            $model_user = Users::findOne(['id' => $portrait_id]);
+            if ($model_user->is_deleted === true) {
+                Yii::$app->session->setFlash('error', 'User has been deleted.');
+                return $this->redirect(['/query/index']); 
+            } else {
+                $model->login();
+                return $this->goBack();
+            }
         }
 
         $model->password = '';
