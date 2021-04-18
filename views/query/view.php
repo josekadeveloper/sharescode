@@ -11,6 +11,7 @@ use yii\widgets\DetailView;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+Yii::debug($owner_id);
 ?>
 <div class="query-view">
 
@@ -79,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         if (Answer::findOne([
                                           'id' => $key,
                                           'portrait_id' => $portrait_id
-                                        ])) {
+                                        ]) || Yii::$app->user->identity->is_admin === true) {
                             return Html::a('update', $urlAnswer, ['class' => 'btn btn-info']);
                         } 
                     },
@@ -92,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         if (Answer::findOne([
                                           'id' => $key,
                                           'portrait_id' => $portrait_id
-                                        ])) {
+                                        ]) || Yii::$app->user->identity->is_admin === true) {
                             return Html::a('delete', $urlAnswer, [
                                         'class' => 'btn btn-danger',
                                         'data' => [

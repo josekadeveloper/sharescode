@@ -77,11 +77,8 @@ class QueryController extends Controller
     public function actionView($id)
     {
         if ($this->findPortrait(Yii::$app->user->id)) {
-            if (Yii::$app->user->identity->is_admin === true) {
-                $owner_id = 'admin';
-            }
             $portrait_id = $this->findPortrait(Yii::$app->user->id)->id;
-            if ($this->findOwnQuery($id, $portrait_id)) {
+            if ($this->findOwnQuery($id, $portrait_id) || Yii::$app->user->identity->is_admin === true) {
                 $owner_id = $portrait_id;
             } else {
                 $owner_id = null;
@@ -89,7 +86,7 @@ class QueryController extends Controller
         } else {
             $owner_id = null;
         }
-
+        Yii::debug($owner_id);
         $query = Answer::find()->where(['query_id' => $id]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
