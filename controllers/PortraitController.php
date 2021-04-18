@@ -145,6 +145,9 @@ class PortraitController extends Controller
             return $this->redirect(['/query/index']); 
         }
         if (Yii::$app->user->id !== null) {
+            if (Yii::$app->user->identity->is_admin === true) {
+                $user_portrait = 'admin';
+            }
             if (Portrait::find()->where(['us_id' => Yii::$app->user->id])->one() !== null) {
                 $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
             } else {

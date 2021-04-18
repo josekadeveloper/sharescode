@@ -7,6 +7,7 @@ use Yii;
 use app\models\Portrait;
 use app\models\Query;
 use app\models\QuerySearch;
+use app\models\Users;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -76,6 +77,9 @@ class QueryController extends Controller
     public function actionView($id)
     {
         if ($this->findPortrait(Yii::$app->user->id)) {
+            if (Yii::$app->user->identity->is_admin === true) {
+                $owner_id = 'admin';
+            }
             $portrait_id = $this->findPortrait(Yii::$app->user->id)->id;
             if ($this->findOwnQuery($id, $portrait_id)) {
                 $owner_id = $portrait_id;
@@ -93,9 +97,9 @@ class QueryController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'owner_id' => $owner_id,
-            'name_portrait' => Portrait::find()
+            'nickname' => Portrait::find()
                                 ->where(['id' => $this->findModel($id)->portrait_id])
-                                ->one()['name_portrait'],
+                                ->one()['nickname'],
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -174,7 +178,7 @@ class QueryController extends Controller
             $portrait_id = null;
         }
 
-        if ($this->findOwnQuery($id, $portrait_id)) {
+        if ($this->findOwnQuery($id, $portrait_id) || Yii::$app->user->identity->is_admin === true) {
             if ($this->findModel($id)->delete()) {
                 Yii::$app->session->setFlash('success', 'Query has been successfully deleted.');
             } else {

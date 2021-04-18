@@ -2,9 +2,6 @@
 
 use yii\bootstrap4\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Answer */
-
 $this->title = 'Create Answer';
 $this->params['breadcrumbs'][] = ['label' => 'Answers', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -15,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'id' => $id,
+        'query_id' => $query_id,
         'portrait_id' => $portrait_id,
     ]) ?>
 

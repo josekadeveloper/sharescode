@@ -2,6 +2,7 @@
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
+
 ?>
 
 <div class="query-form">

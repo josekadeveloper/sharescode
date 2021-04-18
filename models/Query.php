@@ -65,8 +65,10 @@ class Query extends \yii\db\ActiveRecord
             return false;
         }
 
-        if ($this->getAnswers()->exists()) {
-            return false;
+        if (!Yii::$app->user->identity->is_admin === true) {
+            if ($this->getAnswers()->exists()) {
+                return false;
+            }
         }
 
         return true;
