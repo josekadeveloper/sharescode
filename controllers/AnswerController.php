@@ -98,10 +98,10 @@ class AnswerController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
+        $query_id = $id;
         return $this->render('create', [
             'model' => $model,
-            'id' => $id,
+            'query_id' => $query_id,
             'portrait_id' => $portrait_id,
         ]);
     }
@@ -128,7 +128,6 @@ class AnswerController extends Controller
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
         if ($this->findOwnAnswer($id, $portrait_id)) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Yii::debug('3');
                 Yii::$app->session->setFlash('success', 'Answer has been modified successfully.');
                 return $this->redirect($urlAnswer);
             }
@@ -136,11 +135,10 @@ class AnswerController extends Controller
     
             return $this->render('update', [
                 'model' => $model,
-                'id' => $id,
+                'query_id' => $query_id,
                 'portrait_id' => $portrait_id,
             ]);
         }
-        Yii::debug('4');
         Yii::$app->session->setFlash('error', 'You can only update your own answer.');
         return $this->redirect($urlAnswer); 
     }

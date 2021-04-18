@@ -2,9 +2,6 @@
 
 use yii\bootstrap4\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Query */
-
 $this->title = 'Create Query';
 $this->params['breadcrumbs'][] = ['label' => 'Queries', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

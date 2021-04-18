@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'portrait_id',
                 'value' => Html::a(
                                 'Access to user portrait', 
-                                ['portrait/view', 'id' => $model->id], 
+                                ['portrait/view', 'id' => $model->portrait_id], 
                                 ['class' => 'btn btn-success']
                             ),
                 'format' => 'html',

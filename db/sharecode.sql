@@ -18,7 +18,7 @@ CREATE TABLE portrait
   , is_admin       boolean       NOT NULL DEFAULT false
   , nickname       varchar(255)  NOT NULL UNIQUE
   , password       varchar(255)  NOT NULL
-  , date_register  timestamp     NOT NULL
+  , date_register  timestamp     NOT NULL DEFAULT current_timestamp
   , email          varchar(255)  NOT NULL UNIQUE
   , repository     varchar(255)  NOT NULL UNIQUE
   , prestige_port  varchar(255)  NOT NULL DEFAULT 'Initiate'
@@ -44,9 +44,9 @@ CREATE TABLE query
     id              bigserial    PRIMARY KEY
   , title           varchar(255) NOT NULL
   , explanation     text         NOT NULL
-  , date_created    timestamp    NOT NULL
+  , date_created    timestamp    NOT NULL DEFAULT current_timestamp
   , is_closed       boolean
-  , portrait_id     bigint       REFERENCES portrait (id)   
+  , portrait_id     bigint       REFERENCES portrait (id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS answer CASCADE;
@@ -55,9 +55,9 @@ CREATE TABLE answer
 (
     id              bigserial    PRIMARY KEY
   , content         varchar(255) NOT NULL
-  , date_created    timestamp    NOT NULL
-  , query_id        bigint       NOT NULL REFERENCES query (id)
-  , portrait_id     bigint       REFERENCES portrait (id)
+  , date_created    timestamp    NOT NULL DEFAULT current_timestamp
+  , query_id        bigint       NOT NULL REFERENCES query (id) ON DELETE CASCADE
+  , portrait_id     bigint       REFERENCES portrait (id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS reminder CASCADE;

@@ -79,15 +79,18 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post())) {
+            if (Portrait::findOne(['nickname' => $model->username]) === null) {
+                Yii::$app->session->setFlash('error', 'data entered is incorrect.');
+                return $this->redirect(['/site/login']); 
+            }
             $portrait_id = Portrait::findOne(['nickname' => $model->username])['us_id'];
             $model_user = Users::findOne(['id' => $portrait_id]);
             if ($model_user->is_deleted === true) {
                 Yii::$app->session->setFlash('error', 'User has been deleted.');
-                return $this->redirect(['/query/index']); 
-            } else {
-                $model->login();
-                return $this->goBack();
+                return $this->redirect(['/site/login']); 
             }
+            $model->login();
+            return $this->goBack();
         }
 
         $model->password = '';
