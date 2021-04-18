@@ -162,7 +162,7 @@ class AnswerController extends Controller
 
         $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
-        if ($this->findOwnAnswer($id, $portrait_id)) {
+        if ($this->findOwnAnswer($id, $portrait_id) || Yii::$app->user->identity->is_admin === true) {
             if ($this->findModel($id)->delete()) {
                 Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
             }
