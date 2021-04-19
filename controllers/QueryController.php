@@ -77,16 +77,15 @@ class QueryController extends Controller
     public function actionView($id)
     {
         if ($this->findPortrait(Yii::$app->user->id)) {
-            $portrait_id = $this->findPortrait(Yii::$app->user->id)->id;
-            if ($this->findOwnQuery($id, $portrait_id) || Yii::$app->user->identity->is_admin === true) {
-                $owner_id = $portrait_id;
+            $user_id = $this->findPortrait(Yii::$app->user->id)->id;
+            if ($this->findOwnQuery($id, $user_id) || Yii::$app->user->identity->is_admin === true) {
+                $owner_id = $user_id;
             } else {
                 $owner_id = null;
             }
         } else {
             $owner_id = null;
         }
-        Yii::debug($owner_id);
         $query = Answer::find()->where(['query_id' => $id]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -95,8 +94,9 @@ class QueryController extends Controller
             'model' => $this->findModel($id),
             'owner_id' => $owner_id,
             'nickname' => Portrait::find()
-                                ->where(['id' => $this->findModel($id)->portrait_id])
+                                ->where(['id' => $user_id])
                                 ->one()['nickname'],
+            'user_id' => $user_id,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -108,21 +108,15 @@ class QueryController extends Controller
     public function actionCreate()
     {
         $model = new Query();
-        $portrait = $this->findPortrait(Yii::$app->user->id);
+        $users_id = Yii::$app->user->id;
 
-        if ($portrait !== null) {
-            $portrait_id = $portrait->id;
-        } else {
-            $portrait_id = null;
-        }
-  
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
-            'portrait_id' => $portrait_id,
+            'users_id' => $users_id,
         ]);
     }
 
@@ -136,22 +130,16 @@ class QueryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $portrait = $this->findPortrait(Yii::$app->user->id);
+        $users_id = Yii::$app->user->id;
 
-        if ($portrait !== null) {
-            $portrait_id = $portrait->id;
-        } else {
-            $portrait_id = null;
-        }
-
-        if ($this->findOwnQuery($id, $portrait_id)) {
+        if ($this->findOwnQuery($id, $users_id)) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
     
             return $this->render('update', [
                 'model' => $model,
-                'portrait_id' => $portrait_id,
+                'users_id' => $users_id,
             ]);
         }
         Yii::$app->session->setFlash('error', 'You can only update your own query.');
@@ -167,15 +155,9 @@ class QueryController extends Controller
      */
     public function actionDelete($id)
     {
-        $portrait = $this->findPortrait(Yii::$app->user->id);
+        $users_id = Yii::$app->user->id;
 
-        if ($portrait !== null) {
-            $portrait_id = $portrait->id;
-        } else {
-            $portrait_id = null;
-        }
-
-        if ($this->findOwnQuery($id, $portrait_id) || Yii::$app->user->identity->is_admin === true) {
+        if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
             if ($this->findModel($id)->delete()) {
                 Yii::$app->session->setFlash('success', 'Query has been successfully deleted.');
             } else {
@@ -212,7 +194,7 @@ class QueryController extends Controller
     protected function findPortrait($id)
     {
         if (($model = Portrait::find()
-                        ->where(['us_id' => $id])
+                        ->where(['id' => $id])
                         ->one()) !== null
             ) {
             return $model;
@@ -221,17 +203,17 @@ class QueryController extends Controller
     }
 
     /**
-     * Finds the Query model based on its primary key value and portrait_id.
+     * Finds the Query model based on its primary key value and user_id.
      * If the model is not found, a null.
-     * @param integer $id && $portrait_id
+     * @param integer $id && $user_id
      * @return mixed Query || null
      */
-    protected function findOwnQuery($id, $portrait_id)
+    protected function findOwnQuery($id, $users_id)
     {
         if (($model = Query::find()
                         ->where([
                             'id' => $id,
-                            'portrait_id' => $portrait_id,
+                            'users_id' => $users_id,
                       ])->one()) !== null
             ){
             return $model;

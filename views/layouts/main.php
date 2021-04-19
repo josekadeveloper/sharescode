@@ -46,7 +46,7 @@ AppAsset::register($this);
             Yii::$app->user->isGuest ? ['label' => 'Register', 'url' => ['/portrait/register']] : (''),
             !Yii::$app->user->isGuest ? (Yii::$app->user->identity->is_admin === true ? ['label' => 'Users', 'url' => ['/users/index']] : ('')) : (''),
             Yii::$app->user->isGuest ? ( '' ) : (['label' => 'My Portrait', 
-                                                  'url' => ['/portrait/view', 'id' => Portrait::findOne(['us_id' => Yii::$app->user->identity->id])['id']]]),
+                                                  'url' => ['/portrait/view', 'id' => Portrait::findOne(['id' => Yii::$app->user->identity->id])['id']]]),
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (

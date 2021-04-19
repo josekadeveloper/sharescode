@@ -11,7 +11,6 @@ use yii\widgets\DetailView;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-Yii::debug($owner_id);
 ?>
 <div class="query-view">
 
@@ -34,10 +33,10 @@ Yii::debug($owner_id);
             'title',
             'date_created:date',
             [
-                'attribute' => 'portrait_id',
+                'attribute' => 'Portrait',
                 'value' => Html::a(
                                 'Access to user portrait', 
-                                ['portrait/view', 'id' => $model->portrait_id], 
+                                ['portrait/view', 'id' => $user_id], 
                                 ['class' => 'btn btn-success']
                             ),
                 'format' => 'html',
@@ -66,33 +65,27 @@ Yii::debug($owner_id);
                             "Access to user portrait",
                             [
                                 'portrait/view',
-                                'id' => $model->portrait_id,
+                                'id' => $model->users_id,
                             ],
                             ['class' => 'btn btn-success']
                         );
                     },
                     'update' => function ($url, $model, $key) {
                         $urlAnswer = Url::toRoute(['answer/update', 'id' => $key]);
-                        $portrait_id = Portrait::findOne(['us_id' => Yii::$app->user->id]);
-                        if ($portrait_id !== null){
-                            $portrait_id = $portrait_id['id'];
-                        }
+                        $users_id = Yii::$app->user->id;
                         if (Answer::findOne([
                                           'id' => $key,
-                                          'portrait_id' => $portrait_id
+                                          'users_id' => $users_id
                                         ]) || Yii::$app->user->identity->is_admin === true) {
                             return Html::a('update', $urlAnswer, ['class' => 'btn btn-info']);
                         } 
                     },
                     'delete' => function ($url, $model, $key) {
                         $urlAnswer = Url::toRoute(['answer/delete', 'id' => $key]);
-                        $portrait_id = Portrait::findOne(['us_id' => Yii::$app->user->id]);
-                        if ($portrait_id !== null){
-                            $portrait_id = $portrait_id['id'];
-                        }
+                        $users_id = Yii::$app->user->id;
                         if (Answer::findOne([
                                           'id' => $key,
-                                          'portrait_id' => $portrait_id
+                                          'users_id' => $users_id
                                         ]) || Yii::$app->user->identity->is_admin === true) {
                             return Html::a('delete', $urlAnswer, [
                                         'class' => 'btn btn-danger',

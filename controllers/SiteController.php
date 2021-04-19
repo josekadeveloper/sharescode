@@ -84,7 +84,7 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('error', 'data entered is incorrect.');
                 return $this->redirect(['/site/login']); 
             }
-            $portrait_id = Portrait::findOne(['nickname' => $model->username])['us_id'];
+            $portrait_id = Portrait::findOne(['nickname' => $model->username])['id'];
             $model_user = Users::findOne(['id' => $portrait_id]);
             if ($model_user->is_deleted === true) {
                 Yii::$app->session->setFlash('error', 'User has been deleted.');

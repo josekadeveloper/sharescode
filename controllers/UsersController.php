@@ -115,6 +115,7 @@ class UsersController extends Controller
         $model_user = $this->findModel($id);
         $model_user->is_deleted = true;
         $model_user->save();
+        Portrait::findOne(['id' => $id])->delete();
         Yii::$app->session->setFlash('success', 'User has been successfully deleted.');
         return $this->redirect(['index']);
     }

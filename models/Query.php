@@ -12,10 +12,9 @@ use Yii;
  * @property string $explanation
  * @property string $date_created
  * @property bool|null $is_closed
- * @property int|null $portrait_id
+ * @property int|null $users_id
  *
  * @property Answer[] $answers
- * @property Portrait $portrait
  */
 class Query extends \yii\db\ActiveRecord
 {
@@ -37,10 +36,10 @@ class Query extends \yii\db\ActiveRecord
             [['explanation'], 'string'],
             [['date_created'], 'safe'],
             [['is_closed'], 'boolean'],
-            [['portrait_id'], 'default', 'value' => null],
-            [['portrait_id'], 'integer'],
+            [['users_id'], 'default', 'value' => null],
+            [['users_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
-            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::class, 'targetAttribute' => ['portrait_id' => 'id']],
+            [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::class, 'targetAttribute' => ['users_id' => 'id']],
         ];
     }
 
@@ -55,7 +54,7 @@ class Query extends \yii\db\ActiveRecord
             'explanation' => 'Explanation',
             'date_created' => 'Date Created',
             'is_closed' => 'Is Closed',
-            'portrait_id' => 'Portrait',
+            'users_id' => 'User',
         ];
     }
 
@@ -85,13 +84,13 @@ class Query extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Portrait]].
+     * Gets query for [[Users]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPortrait()
+    public function getUser()
     {
-        return $this->hasOne(Portrait::class, ['id' => 'portrait_id'])->inverseOf('queries');
+        return $this->hasOne(Users::class, ['id' => 'users_id'])->inverseOf('queries');
     }
 
     public function getLastAnswer()

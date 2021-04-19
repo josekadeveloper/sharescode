@@ -17,7 +17,7 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'is_closed')->checkbox()->label(false) ?>
 
-    <?= $form->field($model, 'portrait_id')->hiddenInput(['value' => $portrait_id])->label(false)  ?>
+    <?= $form->field($model, 'users_id')->hiddenInput(['value' => $users_id])->label(false)  ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

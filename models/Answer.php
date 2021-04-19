@@ -11,9 +11,9 @@ use Yii;
  * @property string $content
  * @property string $date_created
  * @property int $query_id
- * @property int|null $portrait_id
+ * @property int|null $users_id
  *
- * @property Portrait $portrait
+ * @property Users $users
  * @property Query $query
  */
 class Answer extends \yii\db\ActiveRecord
@@ -34,10 +34,10 @@ class Answer extends \yii\db\ActiveRecord
         return [
             [['content', 'date_created', 'query_id'], 'required'],
             [['date_created'], 'safe'],
-            [['query_id', 'portrait_id'], 'default', 'value' => null],
-            [['query_id', 'portrait_id'], 'integer'],
+            [['query_id', 'users_id'], 'default', 'value' => null],
+            [['query_id', 'users_id'], 'integer'],
             [['content'], 'string', 'max' => 255],
-            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::class, 'targetAttribute' => ['portrait_id' => 'id']],
+            [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['users_id' => 'id']],
             [['query_id'], 'exist', 'skipOnError' => true, 'targetClass' => Query::class, 'targetAttribute' => ['query_id' => 'id']],
         ];
     }
@@ -52,7 +52,7 @@ class Answer extends \yii\db\ActiveRecord
             'content' => 'Content',
             'date_created' => 'Date Created',
             'query_id' => 'Query ID',
-            'portrait_id' => 'Portrait ID',
+            'users_id' => 'User ID',
         ];
     }
 
@@ -61,9 +61,9 @@ class Answer extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPortrait()
+    public function getUser()
     {
-        return $this->hasOne(Portrait::class, ['id' => 'portrait_id'])->inverseOf('answers');
+        return $this->hasOne(Users::class, ['id' => 'users_id'])->inverseOf('answers');
     }
 
     /**
