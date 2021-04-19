@@ -241,21 +241,9 @@ class PortraitController extends Controller
 
     /**
      * Register a User.
-     * If registration is successful, the browser will be return user id.
-     * @return int
      */
     private function createUser() {
-        $id = Users::find()->max('id');
-        $id++;
-        if ((Portrait::find()->max('id') + 1) === $id)  {
-            $model_user = new Users(['id' => $id, 'is_deleted' => false]);
-            $model_user->save();
-            return $id;
-        } else {
-            $id--;
-            $model_user = Users::findOne(['id' => $id]);
-            $model_user->delete();
-            return $id; 
-        }
+        $model = new Users();
+        $model->save();
     }
 }
