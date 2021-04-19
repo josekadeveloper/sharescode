@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\NotRegistered;
 use Yii;
 use app\models\Portrait;
 use app\models\PortraitSearch;
@@ -10,6 +11,8 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * PortraitController implements the CRUD actions for Portrait model.
@@ -86,20 +89,54 @@ class PortraitController extends Controller
      */
     public function actionRegister()
     {
-        $count = 0;
-        if ($count <= 1) {
-            $id = $this->createUser();
-            $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'User has been successfully created.');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-            return $this->render('register', [
-                'model' => $model,
-                'id' => $id,
-            ]); 
+        $id = $this->createUser();
+        $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $notRegistered = new NotRegistered([
+                'id' => $model->id,
+                'token' => Yii::$app->security->generateRandomString(),
+            ]);
+            $notRegistered->save();
+            $body = 'To activate user click here: '
+                . Html::a (
+                    'Activate user',
+                    Url::to([
+                        'portrait/activate',
+                        'id' => $model->id,
+                        'token' => $notRegistered->token
+                    ], true)
+                );
+            Yii::$app->mailer->compose()
+                ->setTo($model->email)
+                ->setFrom(Yii::$app->params['smtpUsername'])
+                ->setSubject('Activate user')
+                ->setHtmlBody($body)
+                ->send();
+            Yii::$app->session->setFlash(
+                'success',
+                'You must activate the user to validate the account'
+            );
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-        $count++;      
+        return $this->render('register', [
+            'model' => $model,
+            'id' => $id,
+        ]);     
+    }
+
+    public function actionActivate($id, $token)
+    {
+        $user = $this->findModel($id);
+        if ($user->notRegistered === null) {
+            return $this->goHome();
+        }
+        if ($user->notRegistered->token === $token) {
+            $user->notRegistered->delete();
+            Yii::$app->session->setFlash('success', 'User successfully activated.');
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+        Yii::$app->session->setFlash('error', "$token");
+        return $this->goHome();
     }
 
     /**
@@ -217,6 +254,6 @@ class PortraitController extends Controller
             $model_user = Users::findOne(['id' => $id]);
             $model_user->delete();
             return $id; 
-        }  
+        }
     }
 }
