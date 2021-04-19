@@ -79,7 +79,8 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post())) {
-            if (Portrait::findOne(['nickname' => $model->username]) === null) {
+            $model_user = Portrait::findOne(['nickname' => $model->username]);
+            if ($model_user === null || !$model_user->validatePassword($model->password)) {
                 Yii::$app->session->setFlash('error', 'data entered is incorrect.');
                 return $this->redirect(['/site/login']); 
             }

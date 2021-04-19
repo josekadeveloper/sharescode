@@ -169,6 +169,17 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
         return $img;
     }
 
+    public function validateActivation()
+    {
+        return $this->notRegistered === null;
+    }
+
+    public function getNotRegistered()
+    {
+        return $this->hasOne(NotRegistered::class, ['id' => 'id'])
+            ->inverseOf('portrait');
+    }
+
     /**
      * Gets query for [[Us]].
      *
