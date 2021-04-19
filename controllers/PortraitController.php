@@ -89,7 +89,6 @@ class PortraitController extends Controller
      */
     public function actionRegister()
     {
-        $this->createUser();
         $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $notRegistered = new NotRegistered([
@@ -116,6 +115,7 @@ class PortraitController extends Controller
                 'success',
                 'You must activate the user to validate the account'
             );
+            $this->createUser();
             return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('register', [
