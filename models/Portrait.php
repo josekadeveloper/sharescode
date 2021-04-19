@@ -18,11 +18,8 @@ use yii\web\IdentityInterface;
  * @property string $repository
  * @property string $prestige_port
  * @property string $sex
- * @property int $us_id
  *
  * @property Users $us
- * @property Prestige[] $prestiges
- * @property Query[] $queries
  */
 class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -46,16 +43,13 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['is_admin'], 'boolean'],
-            [['nickname', 'password', 'date_register', 'email', 'repository', 'sex', 'us_id'], 'required'],
+            [['nickname', 'password', 'date_register', 'email', 'repository', 'sex'], 'required'],
             [['date_register'], 'safe'],
-            [['us_id'], 'default', 'value' => null],
-            [['us_id'], 'integer'],
             [['nickname', 'password', 'email', 'repository', 'prestige_port'], 'string', 'max' => 255],
             [['sex'], 'string'],
             [['email'], 'unique'],
             [['nickname'], 'unique'],
             [['repository'], 'unique'],
-            [['us_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['us_id' => 'id']],
             [['password', 'password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_REGISTER]],
             [['password'], 'compare', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE, self::SCENARIO_REGISTER]],
             [['password_repeat'], 'safe', 'on' => [self::SCENARIO_UPDATE, self::SCENARIO_REGISTER]],
@@ -82,7 +76,6 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
             'repository' => 'Repository',
             'prestige_port' => 'Prestige Port',
             'sex' => 'Sex',
-            'us_id' => 'User',
         ];
     }
 
@@ -109,21 +102,7 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
         }
         return true;
     }
-
-    public function beforeDelete()
-    {
-        if (!parent::beforeDelete()) {
-            return false;
-        }
-
-        if ($this->getQueries()->exists() || $this->getAnswers()->exists()) {
-            Yii::$app->session->setFlash('error', 'User is associated with some queries or answers.');
-            return false;
-        }
-
-        return true;
-    }
-
+    
     public static function findIdentity($id)
     {
         return static::findOne($id);
@@ -188,35 +167,5 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
     public function getUs()
     {
         return $this->hasOne(Users::class, ['id' => 'us_id'])->inverseOf('portraits');
-    }
-
-    /**
-     * Gets query for [[Prestiges]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPrestiges()
-    {
-        return $this->hasMany(Prestige::class, ['portrait_id' => 'id'])->inverseOf('portrait');
-    }
-
-    /**
-     * Gets query for [[Queries]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getQueries()
-    {
-        return $this->hasMany(Query::class, ['portrait_id' => 'id'])->inverseOf('portrait');
-    }
-
-    /**
-     * Gets query for [[Answers]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAnswers()
-    {
-        return $this->hasMany(Answer::class, ['portrait_id' => 'id'])->inverseOf('portrait');
     }
 }

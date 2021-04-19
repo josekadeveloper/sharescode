@@ -87,13 +87,7 @@ class AnswerController extends Controller
     public function actionCreate($id)
     {
         $model = new Answer();
-        $portrait = $this->findPortrait(Yii::$app->user->id);
-
-        if ($portrait !== null) {
-            $portrait_id = $portrait->id;
-        } else {
-            $portrait_id = null;
-        }
+        $users_id = Yii::$app->user->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -102,7 +96,7 @@ class AnswerController extends Controller
         return $this->render('create', [
             'model' => $model,
             'query_id' => $query_id,
-            'portrait_id' => $portrait_id,
+            'users_id' => $users_id,
         ]);
     }
 
@@ -116,17 +110,11 @@ class AnswerController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $portrait = $this->findPortrait(Yii::$app->user->id);
-
-        if ($portrait !== null) {
-            $portrait_id = $portrait->id;
-        } else {
-            $portrait_id = null;
-        }
+        $users_id = Yii::$app->user->id;
 
         $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
-        if ($this->findOwnAnswer($id, $portrait_id)) {
+        if ($this->findOwnAnswer($id, $users_id)) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Yii::$app->session->setFlash('success', 'Answer has been modified successfully.');
                 return $this->redirect($urlAnswer);
@@ -136,7 +124,7 @@ class AnswerController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'query_id' => $query_id,
-                'portrait_id' => $portrait_id,
+                'users_id' => $users_id,
             ]);
         }
         Yii::$app->session->setFlash('error', 'You can only update your own answer.');
@@ -152,17 +140,10 @@ class AnswerController extends Controller
      */
     public function actionDelete($id)
     {
-        $portrait = $this->findPortrait(Yii::$app->user->id);
-
-        if ($portrait !== null) {
-            $portrait_id = $portrait->id;
-        } else {
-            $portrait_id = null;
-        }
-
+        $users_id = Yii::$app->user->id;
         $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
-        if ($this->findOwnAnswer($id, $portrait_id) || Yii::$app->user->identity->is_admin === true) {
+        if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
             if ($this->findModel($id)->delete()) {
                 Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
             }
@@ -198,7 +179,7 @@ class AnswerController extends Controller
     protected function findPortrait($id)
     {
         if (($model = Portrait::find()
-                        ->where(['us_id' => $id])
+                        ->where(['id' => $id])
                         ->one()) !== null
             ) {
             return $model;
@@ -207,17 +188,17 @@ class AnswerController extends Controller
     }
 
     /**
-     * Finds the Answer model based on its primary key value and portrait_id.
+     * Finds the Answer model based on its primary key value and users_id.
      * If the model is not found, a null.
-     * @param integer $id && $portrait_id
+     * @param integer $id && $users_id
      * @return mixed Answer || null
      */
-    protected function findOwnAnswer($id, $portrait_id)
+    protected function findOwnAnswer($id, $users_id)
     {
         if (($model = Answer::find()
                         ->where([
                             'id' => $id,
-                            'portrait_id' => $portrait_id,
+                            'users_id' => $users_id,
                       ])->one()) !== null
             ){
             return $model;

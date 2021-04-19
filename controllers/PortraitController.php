@@ -89,7 +89,7 @@ class PortraitController extends Controller
      */
     public function actionRegister()
     {
-        $id = $this->createUser();
+        $this->createUser();
         $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $notRegistered = new NotRegistered([
@@ -120,7 +120,6 @@ class PortraitController extends Controller
         }
         return $this->render('register', [
             'model' => $model,
-            'id' => $id,
         ]);     
     }
 
@@ -151,7 +150,7 @@ class PortraitController extends Controller
         $model = $this->findModel($id);
         $model->scenario = Portrait::SCENARIO_UPDATE;
         $model->password = '';
-        $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+        $user_portrait = Portrait::find()->where(['id' => $id])->one()['id'];
 
         if ($id == $user_portrait || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -161,6 +160,7 @@ class PortraitController extends Controller
     
             return $this->render('update', [
                 'model' => $model,
+                'id' => $id,
             ]);
         }
         Yii::$app->session->setFlash('error', 'You can only update your own portrait.');
@@ -175,8 +175,7 @@ class PortraitController extends Controller
      */
     public function actionView($id)
     {
-        $model_portrait = $this->findModel($id);
-        $model_user = Users::findOne(['id' => $model_portrait->us_id]);
+        $model_user = Users::findOne(['id' => $id]);
         if ($model_user->is_deleted === true) {
             Yii::$app->session->setFlash('error', 'User has been deleted.');
             return $this->redirect(['/query/index']); 
@@ -185,8 +184,8 @@ class PortraitController extends Controller
             if (Yii::$app->user->identity->is_admin === true) {
                 $user_portrait = 'admin';
             }
-            if (Portrait::find()->where(['us_id' => Yii::$app->user->id])->one() !== null) {
-                $user_portrait = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+            if (Portrait::find()->where(['id' => Yii::$app->user->id])->one() !== null) {
+                $user_portrait = Portrait::find()->where(['id' => Yii::$app->user->id])->one()['id'];
             } else {
                 $user_portrait = null;
             }
@@ -210,10 +209,13 @@ class PortraitController extends Controller
      */
     public function actionDelete($id)
     {
-        $portrait_id = Portrait::find()->where(['us_id' => Yii::$app->user->id])->one()['id'];
+        $portrait_id = Portrait::find()->where(['id' => $id])->one()['id'];
         if ($id == $portrait_id || Yii::$app->user->identity->is_admin === true) {
             $model_user = Users::findOne(['id' => $portrait_id]);
             $model_user->is_deleted = true;
+            $model_user->save();
+            $model_portrait = $this->findModel($id);
+            $model_portrait->delete();
             Yii::$app->session->setFlash('success', 'User has been successfully deleted.');
             return $this->redirect(['/query/index']);
         }
@@ -245,7 +247,7 @@ class PortraitController extends Controller
     private function createUser() {
         $id = Users::find()->max('id');
         $id++;
-        if ((Portrait::find()->max('us_id') + 1) === $id)  {
+        if ((Portrait::find()->max('id') + 1) === $id)  {
             $model_user = new Users(['id' => $id, 'is_deleted' => false]);
             $model_user->save();
             return $id;

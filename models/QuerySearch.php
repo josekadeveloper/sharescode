@@ -17,7 +17,7 @@ class QuerySearch extends Query
     public function rules()
     {
         return [
-            [['id', 'portrait_id'], 'integer'],
+            [['id', 'users_id'], 'integer'],
             [['title', 'explanation', 'date_created'], 'safe'],
             [['is_closed'], 'boolean'],
         ];
@@ -62,7 +62,7 @@ class QuerySearch extends Query
             'id' => $this->id,
             'date_created' => $this->date_created,
             'is_closed' => $this->is_closed,
-            'portrait_id' => $this->portrait_id,
+            'users_id' => $this->users_id,
         ]);
 
         $query->andFilterWhere(['ilike', 'title', $this->title])

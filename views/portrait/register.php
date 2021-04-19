@@ -11,7 +11,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_register', [
         'model' => $model,
-        'id' => $id,
     ]) ?>
 
 </div>

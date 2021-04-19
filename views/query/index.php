@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-<?php if (Portrait::findOne(['us_id' => Yii::$app->user->id])): ?>
+<?php if (Portrait::findOne(['id' => Yii::$app->user->id])): ?>
     <p>
         <?= Html::a('Create Query', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'create' => function ($url, $model, $key) {
                         $urlAnswer = Url::toRoute(['answer/create', 'id' => $key]);
-                        if (Portrait::findOne(['us_id' => Yii::$app->user->id])) {
+                        if (Portrait::findOne(['id' => Yii::$app->user->id])) {
                             return Html::a('answer', $urlAnswer, ['class' => 'btn btn-success', 'id' => 'answer']);
                         } 
                     },

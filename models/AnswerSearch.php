@@ -17,7 +17,7 @@ class AnswerSearch extends Answer
     public function rules()
     {
         return [
-            [['id', 'query_id', 'us_id'], 'integer'],
+            [['id', 'query_id', 'users_id'], 'integer'],
             [['content', 'date_created'], 'safe'],
         ];
     }
@@ -61,7 +61,7 @@ class AnswerSearch extends Answer
             'id' => $this->id,
             'date_created' => $this->date_created,
             'query_id' => $this->query_id,
-            'us_id' => $this->us_id,
+            'users_id' => $this->users_id,
         ]);
 
         $query->andFilterWhere(['ilike', 'content', $this->content]);

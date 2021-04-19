@@ -49,14 +49,48 @@ class Users extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Portraits]].
+    public function beforeDelete()
+    {
+        if (!parent::beforeDelete()) {
+            return false;
+        }
+
+        if ($this->getQueries()->exists() || $this->getAnswers()->exists()) {
+            Yii::$app->session->setFlash('error', 'User is associated with some queries or answers.');
+            return false;
+        }
+
+        return true;
+    }
+
+
+        /**
+     * Gets query for [[Prestiges]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPortrait()
+    public function getPrestiges()
     {
-        return $this->hasOne(Portrait::class, ['us_id' => 'id'])
-                    ->inverseOf('users');
+        return $this->hasMany(Prestige::class, ['users_id' => 'id'])->inverseOf('users');
+    }
+
+    /**
+     * Gets query for [[Queries]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getQueries()
+    {
+        return $this->hasMany(Query::class, ['users_id' => 'id'])->inverseOf('users');
+    }
+
+    /**
+     * Gets query for [[Answers]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAnswers()
+    {
+        return $this->hasMany(Answer::class, ['users_id' => 'id'])->inverseOf('users');
     }
 }
