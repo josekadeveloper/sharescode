@@ -9,9 +9,9 @@ use Yii;
  *
  * @property int $id
  * @property string $dispatch
- * @property int $us_id
+ * @property int|null $users_id
  *
- * @property Users $us
+ * @property Users $users
  */
 class Reminder extends \yii\db\ActiveRecord
 {
@@ -29,11 +29,11 @@ class Reminder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dispatch', 'us_id'], 'required'],
-            [['us_id'], 'default', 'value' => null],
-            [['us_id'], 'integer'],
+            [['dispatch'], 'required'],
+            [['users_id'], 'default', 'value' => null],
+            [['users_id'], 'integer'],
             [['dispatch'], 'string', 'max' => 255],
-            [['us_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['us_id' => 'id']],
+            [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['users_id' => 'id']],
         ];
     }
 
@@ -45,17 +45,17 @@ class Reminder extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'dispatch' => 'Dispatch',
-            'us_id' => 'Us ID',
+            'users_id' => 'Users ID',
         ];
     }
 
     /**
-     * Gets query for [[Us]].
+     * Gets query for [[Users]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUs()
+    public function getUsers()
     {
-        return $this->hasOne(Users::className(), ['id' => 'us_id'])->inverseOf('reminders');
+        return $this->hasOne(Users::class, ['id' => 'users_id'])->inverseOf('reminders');
     }
 }

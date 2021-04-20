@@ -77,9 +77,9 @@ class QueryController extends Controller
     public function actionView($id)
     {
         if ($this->findPortrait(Yii::$app->user->id)) {
-            $user_id = $this->findPortrait(Yii::$app->user->id)->id;
-            if ($this->findOwnQuery($id, $user_id) || Yii::$app->user->identity->is_admin === true) {
-                $owner_id = $user_id;
+            $users_id = $this->findPortrait(Yii::$app->user->id)->id;
+            if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
+                $owner_id = $users_id;
             } else {
                 $owner_id = null;
             }
@@ -93,10 +93,6 @@ class QueryController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'owner_id' => $owner_id,
-            'nickname' => Portrait::find()
-                                ->where(['id' => $user_id])
-                                ->one()['nickname'],
-            'user_id' => $user_id,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -203,9 +199,9 @@ class QueryController extends Controller
     }
 
     /**
-     * Finds the Query model based on its primary key value and user_id.
+     * Finds the Query model based on its primary key value and users_id.
      * If the model is not found, a null.
-     * @param integer $id && $user_id
+     * @param integer $id && $users_id
      * @return mixed Query || null
      */
     protected function findOwnQuery($id, $users_id)

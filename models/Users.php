@@ -93,4 +93,14 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Answer::class, ['users_id' => 'id'])->inverseOf('users');
     }
+
+    /**
+     * Gets query for [[Reminders]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReminders()
+    {
+        return $this->hasMany(Reminder::class, ['users_id' => 'id'])->inverseOf('users');
+    }
 }

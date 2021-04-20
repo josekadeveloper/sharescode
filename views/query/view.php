@@ -1,7 +1,6 @@
 <?php
 
 use app\models\Answer;
-use app\models\Portrait;
 use yii\bootstrap4\Html;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
@@ -36,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'Portrait',
                 'value' => Html::a(
                                 'Access to user portrait', 
-                                ['portrait/view', 'id' => $user_id], 
+                                ['portrait/view', 'id' => $model->users_id], 
                                 ['class' => 'btn btn-success']
                             ),
                 'format' => 'html',
@@ -73,28 +72,32 @@ $this->params['breadcrumbs'][] = $this->title;
                     'update' => function ($url, $model, $key) {
                         $urlAnswer = Url::toRoute(['answer/update', 'id' => $key]);
                         $users_id = Yii::$app->user->id;
-                        if (Answer::findOne([
-                                          'id' => $key,
-                                          'users_id' => $users_id
-                                        ]) || Yii::$app->user->identity->is_admin === true) {
-                            return Html::a('update', $urlAnswer, ['class' => 'btn btn-info']);
-                        } 
+                        if ($users_id !== null) {
+                            if (Answer::findOne([
+                                'id' => $key,
+                                'users_id' => $users_id
+                            ]) || Yii::$app->user->identity->is_admin === true) {
+                                return Html::a('update', $urlAnswer, ['class' => 'btn btn-info']);
+                            } 
+                        }
                     },
                     'delete' => function ($url, $model, $key) {
                         $urlAnswer = Url::toRoute(['answer/delete', 'id' => $key]);
                         $users_id = Yii::$app->user->id;
-                        if (Answer::findOne([
+                        if ($users_id !== null) {
+                            if (Answer::findOne([
                                           'id' => $key,
-                                          'users_id' => $users_id
+                                          'users_id' => $users_id,
                                         ]) || Yii::$app->user->identity->is_admin === true) {
-                            return Html::a('delete', $urlAnswer, [
+                                return Html::a('delete', $urlAnswer, [
                                         'class' => 'btn btn-danger',
                                         'data' => [
                                             'confirm' => 'Are you sure you want to delete this answers?',
                                             'method' => 'post',
                                         ],
                                     ]);
-                        } 
+                            }
+                        }
                     },
                 ],
             ],

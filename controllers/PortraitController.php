@@ -89,7 +89,6 @@ class PortraitController extends Controller
      */
     public function actionRegister()
     {
-
         $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
         if ($model->load(Yii::$app->request->post())) {
             $this->createUser();
