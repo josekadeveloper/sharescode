@@ -6,6 +6,8 @@ use Yii;
 use app\models\Answer;
 use app\models\AnswerSearch;
 use app\models\Portrait;
+use app\models\Query;
+use app\models\Reminder;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -90,6 +92,7 @@ class AnswerController extends Controller
         $users_id = Yii::$app->user->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $this->createReminder($id, $users_id);
             return $this->redirect(['view', 'id' => $model->id]);
         }
         $query_id = $id;
@@ -116,6 +119,7 @@ class AnswerController extends Controller
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
         if ($this->findOwnAnswer($id, $users_id)) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                $this->createReminder($query_id, $users_id);
                 Yii::$app->session->setFlash('success', 'Answer has been modified successfully.');
                 return $this->redirect($urlAnswer);
             }
@@ -204,5 +208,20 @@ class AnswerController extends Controller
             return $model;
         }
         return null;
+    }
+
+    /**
+     *  A reminder will be created when creating, 
+     * modifying or deleting an answer referring to a query
+     * @param integer $query_id && $users_id
+     * @return
+     */
+    protected function createReminder($query_id, $users_id)
+    {
+        $name_query = Query::findOne(['id' => $query_id])['title'];
+        $reminder = new Reminder(['title' => 'Se ha respondido a una de tus consultas', 
+                                  'dispatch' => "Se ha respondido a la consulta $name_query",
+                                  'users_id' => $users_id]);
+        $reminder->save();
     }
 }
