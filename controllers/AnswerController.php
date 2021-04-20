@@ -8,11 +8,13 @@ use app\models\AnswerSearch;
 use app\models\Portrait;
 use app\models\Query;
 use app\models\Reminder;
+use app\models\Users;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 
 /**
  * AnswerController implements the CRUD actions for Answer model.
@@ -90,9 +92,11 @@ class AnswerController extends Controller
     {
         $model = new Answer();
         $users_id = Yii::$app->user->id;
-
+        $sending_user_id = Query::findOne(['id' => $id])['users_id'];
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->createReminder($id, $users_id);
+            $this->sendReminder($id, $sending_user_id);
             return $this->redirect(['view', 'id' => $model->id]);
         }
         $query_id = $id;
@@ -211,8 +215,8 @@ class AnswerController extends Controller
     }
 
     /**
-     *  A reminder will be created when creating, 
-     * modifying or deleting an answer referring to a query
+     *  A reminder will be created when creating or 
+     * modifying an answer referring to a query
      * @param integer $query_id && $users_id
      * @return
      */
@@ -223,5 +227,30 @@ class AnswerController extends Controller
                                   'dispatch' => "Se ha respondido a la consulta $name_query",
                                   'users_id' => $users_id]);
         $reminder->save();
+    }
+
+    /**
+     *  The user will be notified by email that they 
+     * have received a reminder
+     * @param integer $query_id && $users_id
+     * @return
+     */
+    protected function sendReminder($query_id, $users_id)
+    {
+        $model = Portrait::findOne(['id' => $users_id]);
+        $body = 'To see your notifications click here: '
+            . Html::a (
+                'View notifications',
+                Url::to([
+                    'query/view',
+                    'id' => $query_id,
+                ], true)
+            );
+        Yii::$app->mailer->compose()
+            ->setTo($model->email)
+            ->setFrom(Yii::$app->params['smtpUsername'])
+            ->setSubject('View reminder')
+            ->setHtmlBody($body)
+            ->send();
     }
 }
