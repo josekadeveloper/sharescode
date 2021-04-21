@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Reminder;
 use app\models\ReminderSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,6 +27,20 @@ class ReminderController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index', 'update'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return !Yii::$app->user->isGuest ||Yii::$app->user->identity->is_admin;
+                        },
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -45,6 +60,26 @@ class ReminderController extends Controller
     }
 
     /**
+     * Creates a new Reminder model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Reminder();
+        $users_id = Yii::$app->user->id;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'users_id' => $users_id,
+        ]);
+    }
+
+    /**
      * Displays a single Reminder model.
      * @param integer $id
      * @return mixed
@@ -54,24 +89,6 @@ class ReminderController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Reminder model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Reminder();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
         ]);
     }
 

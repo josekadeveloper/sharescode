@@ -2,12 +2,8 @@
 
 use yii\bootstrap4\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Reminder */
-
-$this->title = 'Update Reminder: ' . $model->id;
+$this->title = 'Update Reminder: ';
 $this->params['breadcrumbs'][] = ['label' => 'Reminders', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="reminder-update">

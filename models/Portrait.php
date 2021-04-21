@@ -166,6 +166,6 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getUs()
     {
-        return $this->hasOne(Users::class, ['id' => 'us_id'])->inverseOf('portraits');
+        return $this->hasOne(Users::class, ['id' => 'id'])->inverseOf('portraits');
     }
 }

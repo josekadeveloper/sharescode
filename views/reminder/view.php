@@ -3,10 +3,7 @@
 use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Reminder */
-
-$this->title = $model->id;
+$this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Reminders', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -29,9 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            'title',
             'dispatch',
-            'users_id',
+            'date_created:dateTime',
+            'is_read:boolean',
+            [
+                'label' => 'Transmitter User',
+                'value' => $model->nickname,
+            ],
         ],
     ]) ?>
 

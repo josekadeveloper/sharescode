@@ -6,6 +6,7 @@ use yii\widgets\DetailView;
 $this->params['breadcrumbs'][] = ['label' => 'Answers', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
 ?>
 <div class="answer-view">
 
