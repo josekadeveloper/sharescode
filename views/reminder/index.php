@@ -21,12 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_read:boolean',
             [
                 'class' => ActionColumn::class,
-                'template' => '{view}',
-                'buttons' => [
-                    'view' => function ($url, $model, $key) {
-                        return Html::a('view', $url, ['class' => 'btn btn-info', 'id' => 'view']);
-                    },
-                ],
+                'template' => '{view} {delete}',
             ],
         ],
     ]); ?>
