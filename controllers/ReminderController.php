@@ -29,10 +29,10 @@ class ReminderController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index'],
+                'only' => ['index', 'delete'],
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
@@ -81,8 +81,12 @@ class ReminderController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $reminder = Reminder::find(['id' => $id, 'users_id' => Yii::$app->user->id]);
+        if ($reminder !== null) {
+            $this->findModel($id)->delete();
+            return $this->redirect(['index']);
+        }
+        Yii::$app->session->setFlash('error', 'You can only delete your owns notifications.');
         return $this->redirect(['index']);
     }
 
