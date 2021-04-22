@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Reminder;
+use Yii;
 
 /**
  * ReminderSearch represents the model behind the search form of `\app\models\Reminder`.
@@ -18,7 +19,8 @@ class ReminderSearch extends Reminder
     {
         return [
             [['id', 'users_id'], 'integer'],
-            [['dispatch'], 'safe'],
+            [['title', 'dispatch'], 'safe'],
+            [['is_read'], 'boolean'],
         ];
     }
 
@@ -59,10 +61,12 @@ class ReminderSearch extends Reminder
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'users_id' => $this->users_id,
+            'is_read' => $this->is_read,
         ]);
 
-        $query->andFilterWhere(['ilike', 'dispatch', $this->dispatch]);
+        $query->andFilterWhere(['ilike', 'title', $this->title])
+              ->andFilterWhere(['ilike', 'dispatch', $this->dispatch])
+              ->andFilterWhere(['users_id' => Yii::$app->user->id]);
 
         return $dataProvider;
     }

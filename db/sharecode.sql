@@ -68,7 +68,7 @@ CREATE TABLE reminder
   , dispatch        varchar(255) NOT NULL
   , date_created    timestamp    NOT NULL DEFAULT current_timestamp
   , is_read         boolean      NOT NULL DEFAULT false
-  , users_id        bigint       REFERENCES users (id)
+  , users_id        bigint       NOT NULL REFERENCES users (id)
 );
 
 --- Fixtures ---

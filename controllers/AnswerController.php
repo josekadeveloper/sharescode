@@ -8,7 +8,6 @@ use app\models\AnswerSearch;
 use app\models\Portrait;
 use app\models\Query;
 use app\models\Reminder;
-use app\models\Users;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -95,7 +94,7 @@ class AnswerController extends Controller
         $sending_user_id = Query::findOne(['id' => $id])['users_id'];
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->createReminder($id, $users_id);
+            $this->createReminder($id, $sending_user_id);
             $this->sendReminder($id, $sending_user_id);
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -118,16 +117,17 @@ class AnswerController extends Controller
     {
         $model = $this->findModel($id);
         $users_id = Yii::$app->user->id;
-
         $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
+        $sending_user_id = Query::findOne(['id' => $query_id])['users_id'];
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
+
         if ($this->findOwnAnswer($id, $users_id)) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                $this->createReminder($query_id, $users_id);
+                $this->createReminder($query_id, $sending_user_id);
+                $this->sendReminder($id, $sending_user_id);
                 Yii::$app->session->setFlash('success', 'Answer has been modified successfully.');
                 return $this->redirect($urlAnswer);
             }
-            Yii::debug($model);
     
             return $this->render('update', [
                 'model' => $model,
@@ -218,7 +218,6 @@ class AnswerController extends Controller
      *  A reminder will be created when creating or 
      * modifying an answer referring to a query
      * @param integer $query_id && $users_id
-     * @return
      */
     protected function createReminder($query_id, $users_id)
     {
@@ -233,7 +232,6 @@ class AnswerController extends Controller
      *  The user will be notified by email that they 
      * have received a reminder
      * @param integer $query_id && $users_id
-     * @return
      */
     protected function sendReminder($query_id, $users_id)
     {

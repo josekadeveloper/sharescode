@@ -8,7 +8,10 @@ use Yii;
  * This is the model class for table "reminder".
  *
  * @property int $id
+ * @property string $title
  * @property string $dispatch
+ * @property string $date_created
+ * @property boolean $is_read
  * @property int|null $users_id
  *
  * @property Users $users
@@ -29,10 +32,12 @@ class Reminder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dispatch'], 'required'],
-            [['users_id'], 'default', 'value' => null],
+            [['title', 'dispatch', 'users_id'], 'required'],
+            [['date_created'], 'safe'],
             [['users_id'], 'integer'],
-            [['dispatch'], 'string', 'max' => 255],
+            [['title', 'dispatch'], 'string', 'max' => 255],
+            [['is_read'], 'boolean'],
+            [['is_read'], 'default', 'value' => false],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['users_id' => 'id']],
         ];
     }
@@ -44,8 +49,11 @@ class Reminder extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'title' => 'Title',
             'dispatch' => 'Dispatch',
-            'users_id' => 'Users ID',
+            'date_created' => 'Date Created',
+            'is_read' => 'Is Read',
+            'users_id' => 'Transmitter User',
         ];
     }
 
@@ -54,8 +62,18 @@ class Reminder extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
+    public function getUser()
     {
         return $this->hasOne(Users::class, ['id' => 'users_id'])->inverseOf('reminders');
+    }
+
+    /**
+     * Gets query for [[Portrait]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNickname()
+    {
+        return Portrait::findOne(['id' => $this->users_id])['nickname'];
     }
 }
