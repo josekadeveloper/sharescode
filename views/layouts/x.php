@@ -1,0 +1,92 @@
+<?php
+
+use app\widgets\Alert;
+use yii\helpers\Html;
+use yii\bootstrap4\Nav;
+use yii\bootstrap4\NavBar;
+use yii\bootstrap4\Breadcrumbs;
+use app\assets\AppAsset;
+use app\models\Portrait;
+
+AppAsset::register($this);
+?>
+<?php $this->beginPage() ?>
+<!DOCTYPE html>
+<html lang="<?= Yii::$app->language ?>">
+<head>
+    <meta charset="<?= Yii::$app->charset ?>">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php $this->registerCsrfMetaTags() ?>
+    <title><?= Html::encode($this->title) ?></title>
+    <?php $this->head() ?>
+</head>
+<body>
+<?php $this->beginBody() ?>
+
+<div class="wrap">
+    <?php
+    NavBar::begin([
+        'brandLabel' => Html::img('@web/img/sharecode.svg', ['style'=>['height'=>'40px']]) . Yii::$app->name,
+        'brandUrl' => Yii::$app->homeUrl,
+        'options' => [
+            'class' => 'navbar-dark bg-dark navbar-expand-md fixed-top',
+        ],
+        'collapseOptions' => [
+            'class' => 'justify-content-end',
+        ],
+    ]);
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav'],
+        'items' => [
+            ['label' => 'Home', 'url' => ['/query/index']],
+            Yii::$app->user->isGuest ? ['label' => 'Register', 'url' => ['/portrait/register']] : (''),
+            !Yii::$app->user->isGuest ? 
+            (['label' => 'Users', 'url' => ['/users/index'], 'visible' => Yii::$app->user->identity->is_admin === true]) : (''),
+            !Yii::$app->user->isGuest ? 
+            (['label' => 'Portrait List', 'url' => ['/portrait/index'], 'visible' => Yii::$app->user->identity->is_admin === true]) : (''),
+            !Yii::$app->user->isGuest ? 
+            (['label' => 'Notifications', 'url' => ['/reminder/index'], 'visible' => !Yii::$app->user->isGuest 
+            || Yii::$app->user->identity->is_admin === true]) : (''),
+            Yii::$app->user->isGuest ? ( '' ) : (['label' => 'My Portrait', 
+                                                  'url' => ['/portrait/view', 'id' => Portrait::findOne(['id' => Yii::$app->user->identity->id])['id']]]),
+            ['label' => 'About', 'url' => ['/site/about']],
+            ['label' => 'Contact', 'url' => ['/site/contact']],
+            Yii::$app->user->isGuest ? (
+                ['label' => 'Login', 'url' => ['/site/login']]
+            ) : (
+                '<li class="nav-item">'
+                . Html::beginForm(['/site/logout'], 'post')
+                . Html::submitButton(
+                    'Logout (' . Yii::$app->user->identity->nickname . ')',
+                    ['class' => 'btn btn-dark nav-link logout']
+                )
+                . Html::endForm()
+                . '</li>'
+            )
+        ],
+    ]);
+    NavBar::end();
+    ?>
+
+    <div class="container">
+        <?= Breadcrumbs::widget([
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
+        <?= Alert::widget() ?>
+        <?= $content ?>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p class="float-left">&copy; My Company <?= date('Y') ?></p>
+
+        <p class="float-right"><?= Yii::powered() ?></p>
+    </div>
+</footer>
+
+<?php $this->endBody() ?>
+</body>
+</html>
+<?php $this->endPage() ?>
