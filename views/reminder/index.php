@@ -1,6 +1,7 @@
 <?php
 
 use yii\bootstrap4\Html;
+use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 $this->title = 'Reminders';
@@ -19,10 +20,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'date_created:dateTime',
             'is_read:boolean',
             [
-                'label' => 'Transmitter User',
-                'value' => 'nickname'
+                'class' => ActionColumn::class,
+                'template' => '{view}',
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        return Html::a('view', $url, ['class' => 'btn btn-info', 'id' => 'view']);
+                    },
+                ],
             ],
-            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

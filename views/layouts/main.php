@@ -46,7 +46,7 @@ AppAsset::register($this);
             !Yii::$app->user->isGuest ? 
             (['label' => 'Portrait List', 'url' => ['/portrait/index'], 'visible' => Yii::$app->user->identity->is_admin === true]) : (''),
             !Yii::$app->user->isGuest ? 
-            (['label' => 'All Reminders', 'url' => ['/reminder/index'], 'visible' => !Yii::$app->user->isGuest 
+            (['label' => 'Notifications', 'url' => ['/reminder/index'], 'visible' => !Yii::$app->user->isGuest 
             || Yii::$app->user->identity->is_admin === true]) : (''),
             Yii::$app->user->isGuest ? ( '' ) : (['label' => 'My Portrait', 
                                                   'url' => ['/portrait/view', 'id' => Portrait::findOne(['id' => Yii::$app->user->identity->id])['id']]]),

@@ -30,10 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'dispatch',
             'date_created:dateTime',
             'is_read:boolean',
-            [
-                'label' => 'Transmitter User',
-                'value' => $model->nickname,
-            ],
         ],
     ]) ?>
 

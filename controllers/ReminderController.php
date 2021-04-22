@@ -29,14 +29,14 @@ class ReminderController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'update'],
+                'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update'],
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return !Yii::$app->user->isGuest ||Yii::$app->user->identity->is_admin;
+                            return !Yii::$app->user->isGuest;
                         },
                     ],
                 ],
@@ -60,26 +60,6 @@ class ReminderController extends Controller
     }
 
     /**
-     * Creates a new Reminder model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Reminder();
-        $users_id = Yii::$app->user->id;
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-            'users_id' => $users_id,
-        ]);
-    }
-
-    /**
      * Displays a single Reminder model.
      * @param integer $id
      * @return mixed
@@ -89,26 +69,6 @@ class ReminderController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Updates an existing Reminder model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
         ]);
     }
 

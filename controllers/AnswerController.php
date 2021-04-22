@@ -117,8 +117,8 @@ class AnswerController extends Controller
     {
         $model = $this->findModel($id);
         $users_id = Yii::$app->user->id;
-        $sending_user_id = Query::findOne(['id' => $id])['users_id'];
         $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
+        $sending_user_id = Query::findOne(['id' => $query_id])['users_id'];
         $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
 
         if ($this->findOwnAnswer($id, $users_id)) {
