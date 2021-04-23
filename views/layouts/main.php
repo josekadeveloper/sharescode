@@ -1,12 +1,17 @@
 <?php
 
+use app\models\Users;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 \hail812\adminlte3\assets\FontAwesomeAsset::register($this);
 \hail812\adminlte3\assets\AdminLteAsset::register($this);
 $this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+$urlReminder = Url::to(['reminder/index']);
+$notifications_no_read = Users::countReminders();
+$notifications_time = Users::timeReminders();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -24,7 +29,12 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
 
 <div class="wrapper">
     <!-- Navbar -->
-    <?= $this->render('navbar', ['assetDir' => $assetDir]) ?>
+    <?= $this->render('navbar', [
+        'assetDir' => $assetDir,
+        'urlReminder' => $urlReminder,
+        'notifications_no_read' => $notifications_no_read,
+        'notifications_time' => $notifications_time,
+        ]) ?>
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
