@@ -1,6 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
+
+$urlPortrait = Url::to(['/portrait/view', 'id' => Yii::$app->user->id]);
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -14,10 +17,10 @@ use yii\helpers\Html;
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <?= $img ?>
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href=<?= $urlPortrait ?> class="d-block"><?= $nickname ?></a>
             </div>
         </div>
 

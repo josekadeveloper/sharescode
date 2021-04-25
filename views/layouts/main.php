@@ -12,6 +12,8 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
 $urlReminder = Url::to(['reminder/index']);
 $notifications_no_read = Users::countReminders();
 $notifications_time = Users::timeReminders();
+$img = Users::getImg();
+$nickname = Users::getNickname();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -38,7 +40,11 @@ $notifications_time = Users::timeReminders();
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <?= $this->render('sidebar', ['assetDir' => $assetDir]) ?>
+    <?= $this->render('sidebar', [
+        'assetDir' => $assetDir,
+        'nickname' => $nickname,
+        'img' => $img,
+        ]) ?>
 
     <!-- Content Wrapper. Contains page content -->
     <?= $this->render('content', ['content' => $content, 'assetDir' => $assetDir]) ?>

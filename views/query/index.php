@@ -11,8 +11,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="query-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
 <?php if (Portrait::findOne(['id' => Yii::$app->user->id])): ?>
     <p>
         <?= Html::a('Create Query', ['create'], ['class' => 'btn btn-success']) ?>

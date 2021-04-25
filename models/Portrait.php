@@ -136,7 +136,7 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
             ->validatePassword($password, $this->password);
     }
 
-    public function devolverImg($model) {
+    public static function devolverImg($model) {
         $sexo = $model->sex;
         if ($sexo !== null) {
             if ($sexo === 'Men') {

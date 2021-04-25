@@ -3,7 +3,6 @@
 namespace app\models;
 
 use DateTime;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Yii;
 
 /**
@@ -107,7 +106,7 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Count notifications not read by user.
+     * Count notifications not read by user
      *
      * @return int
      */
@@ -150,6 +149,35 @@ class Users extends \yii\db\ActiveRecord
             }
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Returns the user profile image 
+     *
+     * @return img || null
+     */
+    public static function getImg()
+    {
+        if (!Yii::$app->user->isGuest) {
+            $model = Portrait::findOne(['id' => Yii::$app->user->id]);
+            return Portrait::devolverImg($model);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the nickname
+     *
+     * @return string
+     */
+    public static function getNickname()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return Portrait::findOne(['id' => Yii::$app->user->id])->nickname;
+        } else {
+            return '';
         }
     }
 }

@@ -10,8 +10,6 @@ $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="answer-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
         'query_id' => $query_id,

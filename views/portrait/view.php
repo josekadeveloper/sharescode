@@ -9,7 +9,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="portrait-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 <?php if ($model->id == $user_portrait || $user_portrait === 'admin'): ?>
     <p>
         <?= Html::a('Update portrait', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

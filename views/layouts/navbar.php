@@ -13,11 +13,16 @@ use yii\helpers\Html;
         <li class="nav-item d-none d-sm-inline-block">
             <a href="<?=\yii\helpers\Url::home()?>" class="nav-link">Home</a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <?php if (Yii::$app->user->isGuest): ?>
-                <?= Html::a('Register', ['portrait/register'], ['class' => 'nav-link']) ?>
-            <?php endif ?>
-        </li>
+        <?php if (Yii::$app->user->isGuest): ?>
+            <li class="nav-item d-none d-sm-inline-block">
+                    <?= Html::a('Register', ['portrait/register'], ['class' => 'nav-link']) ?>
+            </li>
+        <?php endif ?>
+        <?php if (!Yii::$app->user->isGuest): ?>
+            <li class="nav-item d-none d-sm-inline-block">
+                    <?= Html::a('My Portrait', ['/portrait/view', 'id' => Yii::$app->user->id], ['class' => 'nav-link']) ?>
+            </li>
+        <?php endif ?>
         <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin === true): ?>
             <li class="nav-item d-none d-sm-inline-block">
                     <?= Html::a('Users', ['users/index'], ['class' => 'nav-link']) ?>
@@ -64,9 +69,15 @@ use yii\helpers\Html;
                 </a>
             </div>
         </li>
-        <li class="nav-item">
-            <?= Html::a('<i class="fas fa-sign-out-alt"></i>', ['/site/logout'], ['data-method' => 'post', 'class' => 'nav-link']) ?>
-        </li>
+        <?php if (!Yii::$app->user->isGuest): ?>
+            <li class="nav-item">
+                <?= Html::a('<i class="fas fa-sign-out-alt"></i>', ['/site/logout'], ['data-method' => 'post', 'class' => 'nav-link']) ?>
+            </li>
+        <?php else: ?>
+            <li class="nav-item">
+                <?= Html::a('<i class="fas fa-sign-in-alt"></i>', ['/site/login'], ['data-method' => 'post', 'class' => 'nav-link']) ?>
+            </li>
+        <?php endif ?>
         <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>

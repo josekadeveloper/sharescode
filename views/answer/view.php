@@ -10,8 +10,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="answer-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('Update Answer', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete Answer', ['delete', 'id' => $model->id], [

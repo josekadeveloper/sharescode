@@ -12,8 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="query-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 <?php if ($owner_id !== null): ?>
     <p>
         <?= Html::a('Update query', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
