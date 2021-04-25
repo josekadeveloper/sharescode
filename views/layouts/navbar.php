@@ -1,6 +1,5 @@
 <?php
 
-use app\models\Reminder;
 use yii\helpers\Html;
 
 ?>
@@ -51,7 +50,9 @@ use yii\helpers\Html;
         <?php if (!Yii::$app->user->isGuest): ?>
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-bell"></i>
-                <span class="badge badge-warning navbar-badge"><?= $notifications_no_read ?></span>
+                <?php if ($notifications_no_read !== 0): ?>
+                    <span class="badge badge-warning navbar-badge"><?= $notifications_no_read ?></span>
+                <?php endif ?>
             </a>
         <?php endif ?>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">

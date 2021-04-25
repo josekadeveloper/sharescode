@@ -90,7 +90,7 @@ if (YII_ENV_DEV) {
             'crud' => [ // generator name
                 'class' => 'yii\gii\generators\crud\Generator', // generator class
                 'templates' => [ // setting for out templates
-                    'default' => '@app/templates/crud/default', // template name => path to template
+                    'yii2-adminlte3' => '@vendor/hail812/yii2-adminlte3/src/gii/generators/crud/default', // template name => path to template
                 ],
             ],
         ],

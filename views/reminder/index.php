@@ -1,30 +1,50 @@
 <?php
 
-use yii\bootstrap4\Html;
-use yii\grid\ActionColumn;
+use hail812\adminlte3\yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\helpers\Html;
 
 $this->title = 'Reminders';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="reminder-index">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+                    <?= GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        'filterModel' => $searchModel,
+                        'columns' => [
+                            'title',
+                            'dispatch',
+                            'date_created:dateTime',
+                            [
+                                'class' => ActionColumn::class,
+                                'template' => '{view} {read} {delete}',
+                                'buttons' => [
+                                    'view' => function ($url, $model, $key) {
+                                        return Html::a('', $url, ['class' => 'fas fa-eye btn-sm btn-success', 'id' => 'view']);
+                                    },
+                                    'read' => function ($url, $model, $key) {
+                                        return !$model->is_read ? Html::a('<i class="fas fa-envelope btn-sm btn-primary"></i>') :  Html::a('<i class="fas fa-envelope-open-text btn-sm btn-primary"></i>') ;
+                                    },
+                                    'delete' => function ($url, $model, $key) {
+                                        return Html::a('', $url, ['class' => 'fas fa-trash-alt btn-sm btn-danger', 'id' => 'delete']); 
+                                    },
+                                ],
+                            ],
+                        ],
+                        'summaryOptions' => ['class' => 'summary mb-2'],
+                        'pager' => [
+                            'class' => 'yii\bootstrap4\LinkPager',
+                        ]
+                    ]); ?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            'title:text',
-            'dispatch:text',
-            'date_created:dateTime',
-            'is_read:boolean',
-            [
-                'class' => ActionColumn::class,
-                'template' => '{view} {delete}',
-            ],
-        ],
-    ]); ?>
 
-
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

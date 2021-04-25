@@ -42,7 +42,7 @@ class ReminderSearch extends Reminder
      */
     public function search($params)
     {
-        $query = Reminder::find();
+        $query = Reminder::find()->orderBy('date_created DESC');
 
         // add conditions that should always apply here
 
