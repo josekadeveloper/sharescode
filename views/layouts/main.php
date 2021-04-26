@@ -12,8 +12,10 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
 $urlReminder = Url::to(['reminder/index']);
 $notifications_no_read = Users::countReminders();
 $notifications_time = Users::timeReminders();
+$urlPortrait = Url::to(['/portrait/view', 'id' => Yii::$app->user->id]);
 $img = Users::getImg();
 $nickname = Users::getNickname();
+$prestigie = Users::getPrestige();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -42,8 +44,10 @@ $nickname = Users::getNickname();
     <!-- Main Sidebar Container -->
     <?= $this->render('sidebar', [
         'assetDir' => $assetDir,
+        'urlPortrait' => $urlPortrait,
         'nickname' => $nickname,
         'img' => $img,
+        'prestigie' => $prestigie,
         ]) ?>
 
     <!-- Content Wrapper. Contains page content -->

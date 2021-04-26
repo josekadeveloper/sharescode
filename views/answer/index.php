@@ -8,10 +8,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="answer-index">
 
-    <p>
-        <?= Html::a('Create Answer', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

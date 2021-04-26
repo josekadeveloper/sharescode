@@ -1,9 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 
-$urlPortrait = Url::to(['/portrait/view', 'id' => Yii::$app->user->id]);
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -14,76 +12,86 @@ $urlPortrait = Url::to(['/portrait/view', 'id' => Yii::$app->user->id]);
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <?= $img ?>
-            </div>
-            <div class="info">
-                <a href=<?= $urlPortrait ?> class="d-block"><?= $nickname ?></a>
-            </div>
-        </div>
-
-        <!-- SidebarSearch Form -->
-        <!-- href be escaped -->
-        <!-- <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
+        <!-- Sidebar Menu Users -->
+        <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin === false):?>
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <?= $img ?>
+                    </div>
+                    <div class="info">
+                        <a href=<?= $urlPortrait ?> class="d-block"><?= $nickname ?></a>
+                    </div>
                 </div>
-            </div>
-        </div> -->
+            <nav class="mt-2">
+                <?php
+                echo \hail812\adminlte3\widgets\Menu::widget([
+                    'items' => [
+                        [
+                            'label' => 'Prestigie',
+                            'icon' => 'fas fa-medal',
+                            'badge' => '<span class="right badge badge-info">' . $prestigie .  '</span>',
+                        ],
+                        ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'], 
+                                                    'badge' => '<span class="right badge badge-success">New</span>'],
+                        ['label' => 'Answers List', 'icon' => 'fad fa-reply-all', 'url' => ['answer/index']],
+                    ],
+                ]);
+                ?>
+            </nav>
+        <?php endif ?>
+        <!-- /.sidebar-menu-users -->
 
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
-            <?php
-            echo \hail812\adminlte3\widgets\Menu::widget([
-                'items' => [
-                    [
-                        'label' => 'Starter Pages',
-                        'icon' => 'tachometer-alt',
-                        'badge' => '<span class="right badge badge-info">2</span>',
-                        'items' => [
-                            ['label' => 'Active Page', 'url' => ['site/index'], 'iconStyle' => 'far'],
-                            ['label' => 'Inactive Page', 'iconStyle' => 'far'],
-                        ]
+        <!-- Sidebar Menu Guest -->
+        <?php if (Yii::$app->user->isGuest):?>
+            <nav class="mt-2">
+                <?php
+                echo \hail812\adminlte3\widgets\Menu::widget([
+                    'items' => [
+                        [
+                            'label' => 'DEAR GUEST',
+                            'icon' => 'fas fa-smile-beam',
+                            'badge' => '<span class="left badge badge-primary">Welcome to ShareCode</span>',
+                        ],
+                        ['label' => 'LOGIN', 'header' => true],
+                        ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt'],
                     ],
-                    ['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
-                    ['label' => 'Yii2 PROVIDED', 'header' => true],
-                    ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
-                    ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
-                    ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
-                    ['label' => 'MULTI LEVEL EXAMPLE', 'header' => true],
-                    ['label' => 'Level1'],
-                    [
-                        'label' => 'Level1',
-                        'items' => [
-                            ['label' => 'Level2', 'iconStyle' => 'far'],
-                            [
-                                'label' => 'Level2',
-                                'iconStyle' => 'far',
-                                'items' => [
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle'],
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle'],
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle']
-                                ]
-                            ],
-                            ['label' => 'Level2', 'iconStyle' => 'far']
-                        ]
+                ]);
+                ?>
+            </nav>
+        <?php endif ?>
+        <!-- /.sidebar-menu-guest -->
+
+                <!-- Sidebar Menu Admin -->
+                <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin === true):?>
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <?= $img ?>
+                    </div>
+                    <div class="info">
+                        <a href=<?= $urlPortrait ?> class="d-block"><?= $nickname ?></a>
+                    </div>
+                </div>
+            <nav class="mt-2">
+                <?php
+                echo \hail812\adminlte3\widgets\Menu::widget([
+                    'items' => [
+                        ['label' => 'USER OPTIONS', 'header' => true],
+                        ['label' => 'Users Lists', 'icon' => 'fas fa-users', 'url' => ['users/index']],
+                        ['label' => 'Create Users', 'icon' => 'fas fa-user-plus', 'url' => ['users/create'], 
+                                                    'badge' => '<span class="right badge badge-success">New</span>'],
+                        ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'], 
+                                                    'badge' => '<span class="right badge badge-success">New</span>'],
+                        ['label' => 'Answers List', 'icon' => 'fad fa-reply-all', 'url' => ['answer/index']],
+                        ['label' => 'APP DEBUGER', 'header' => true],
+                        ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
                     ],
-                    ['label' => 'Level1'],
-                    ['label' => 'LABELS', 'header' => true],
-                    ['label' => 'Important', 'iconStyle' => 'far', 'iconClassAdded' => 'text-danger'],
-                    ['label' => 'Warning', 'iconClass' => 'nav-icon far fa-circle text-warning'],
-                    ['label' => 'Informational', 'iconStyle' => 'far', 'iconClassAdded' => 'text-info'],
-                ],
-            ]);
-            ?>
-        </nav>
-        <!-- /.sidebar-menu -->
+                ]);
+                ?>
+            </nav>
+        <?php endif ?>
+        <!-- /.sidebar-menu-admin -->
     </div>
     <!-- /.sidebar -->
 </aside>

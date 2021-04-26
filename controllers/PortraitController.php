@@ -66,20 +66,16 @@ class PortraitController extends Controller
      */
     public function actionCreate()
     {
-        $count = 0;
-        if ($count <= 1) {
-            $id = $this->createUser();
-            $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'User has been successfully created.');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-            return $this->render('create', [
-                'model' => $model,
-                'id' => $id,
-            ]); 
+        $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
+        if ($model->load(Yii::$app->request->post())) {
+            $this->createUser();
+            $model->save();
+            Yii::$app->session->setFlash('success', 'User has been successfully created.');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-        $count++;
+        return $this->render('create', [
+            'model' => $model,
+        ]); 
     }
 
     /**

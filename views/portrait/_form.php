@@ -31,8 +31,6 @@ $sex = ['Men' => 'Men',
 
         <?= $form->field($model, 'sex')->textInput(['maxlength' => true])->dropDownList($sex)  ?>
 
-        <?= $form->field($model, 'us_id')->hiddenInput(['value' => $id])->label(false) ?>
-
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

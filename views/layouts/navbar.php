@@ -22,13 +22,8 @@ use yii\helpers\Html;
             <li class="nav-item d-none d-sm-inline-block">
                     <?= Html::a('My Portrait', ['/portrait/view', 'id' => Yii::$app->user->id], ['class' => 'nav-link']) ?>
             </li>
-        <?php endif ?>
-        <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin === true): ?>
             <li class="nav-item d-none d-sm-inline-block">
-                    <?= Html::a('Users', ['users/index'], ['class' => 'nav-link']) ?>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                    <?= Html::a('Potrait List', ['portrait/index'], ['class' => 'nav-link']) ?>
+                    <?= Html::a('Users Profiles', ['portrait/index'], ['class' => 'nav-link']) ?>
             </li>
         <?php endif ?>
         <li class="nav-item d-none d-sm-inline-block">
@@ -38,7 +33,7 @@ use yii\helpers\Html;
 
     <!-- SEARCH FORM -->
     <form class="form-inline ml-5">
-        <div class="input-group input-group-sm">
+        <div class="input-group input-group-sm" data-widget="sidebar-search">
             <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
             <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">

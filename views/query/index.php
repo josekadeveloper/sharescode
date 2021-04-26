@@ -11,11 +11,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="query-index">
 
-<?php if (Portrait::findOne(['id' => Yii::$app->user->id])): ?>
-    <p>
-        <?= Html::a('Create Query', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-<?php endif ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

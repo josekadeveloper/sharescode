@@ -180,4 +180,18 @@ class Users extends \yii\db\ActiveRecord
             return '';
         }
     }
+
+    /**
+     * Returns the prestige of the user
+     *
+     * @return string
+     */
+    public static function getPrestige()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return Portrait::findOne(['id' => Yii::$app->user->id])->prestige_port;
+        } else {
+            return '';
+        }
+    }
 }
