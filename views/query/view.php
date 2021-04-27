@@ -1,8 +1,8 @@
 <?php
 
 use app\models\Answer;
+use hail812\adminlte3\yii\grid\ActionColumn;
 use yii\bootstrap4\Html;
-use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
@@ -14,9 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="query-view">
 <?php if ($owner_id !== null): ?>
     <p>
-        <?= Html::a('Update query', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete query', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
+        <?= Html::a(' Update query', ['update', 'id' => $model->id], ['class' => 'fas fa-user-edit btn-sm btn-primary']) ?>
+        <?= Html::a(' Delete query', ['delete', 'id' => $model->id], [
+            'class' => 'fas fa-trash-alt btn-sm btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this query?',
                 'method' => 'post',
@@ -32,9 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'Portrait',
                 'value' => Html::a(
-                                'Access to user portrait', 
+                                '', 
                                 ['portrait/view', 'id' => $model->users_id], 
-                                ['class' => 'btn btn-success']
+                                ['class' => 'fas fa-eye btn-sm btn-success']
                             ),
                 'format' => 'html',
             ],
@@ -59,12 +59,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'accessto' => function ($url, $model, $key) {
                         return Html::a(
-                            "Access to user portrait",
+                            '',
                             [
                                 'portrait/view',
                                 'id' => $model->users_id,
                             ],
-                            ['class' => 'btn btn-success']
+                            ['class' => 'fas fa-eye btn-sm btn-success']
                         );
                     },
                     'update' => function ($url, $model, $key) {
@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'id' => $key,
                                 'users_id' => $users_id
                             ]) || Yii::$app->user->identity->is_admin === true) {
-                                return Html::a('update', $urlAnswer, ['class' => 'btn btn-info']);
+                                return Html::a('', $urlAnswer, ['class' => 'fas fa-user-edit btn-sm btn-primary']);
                             } 
                         }
                     },
@@ -87,8 +87,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                           'id' => $key,
                                           'users_id' => $users_id,
                                         ]) || Yii::$app->user->identity->is_admin === true) {
-                                return Html::a('delete', $urlAnswer, [
-                                        'class' => 'btn btn-danger',
+                                return Html::a('', $urlAnswer, [
+                                        'class' => 'fas fa-trash-alt btn-sm btn-danger',
                                         'data' => [
                                             'confirm' => 'Are you sure you want to delete this answers?',
                                             'method' => 'post',

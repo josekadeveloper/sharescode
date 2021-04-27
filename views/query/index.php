@@ -5,11 +5,16 @@ use yii\bootstrap4\Html;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Url;
+use yii\widgets\ListView;
 
-$this->title = 'Queries';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="query-index">
+
+    <?= ListView::widget([
+        'dataProvider' => $dataProvider,
+        'itemView' => '_post',
+    ]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -25,12 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view} {create}',
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
-                        return Html::a('view', $url, ['class' => 'btn btn-info', 'id' => 'view']);
+                        return Html::a('', $url, ['class' => 'fas fa-eye btn-sm btn-success', 'id' => 'view']);
                     },
                     'create' => function ($url, $model, $key) {
                         $urlAnswer = Url::toRoute(['answer/create', 'id' => $key]);
                         if (Portrait::findOne(['id' => Yii::$app->user->id])) {
-                            return Html::a('answer', $urlAnswer, ['class' => 'btn btn-success', 'id' => 'answer']);
+                            return Html::a('', $urlAnswer, ['class' => 'fas fa-reply btn-sm btn-primary', 'id' => 'answer']);
                         } 
                     },
                 ],

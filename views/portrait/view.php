@@ -11,9 +11,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php if ($model->id == $user_portrait || $user_portrait === 'admin'): ?>
     <p>
-        <?= Html::a('Update portrait', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete portrait', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
+        <?= Html::a('', ['update', 'id' => $model->id], ['class' => 'fas fa-user-edit btn-sm btn-primary']) ?>
+        <?= Html::a('', ['delete', 'id' => $model->id], [
+            'class' => 'fas fa-trash-alt btn-sm btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete your Portrait?',
                 'method' => 'post',
