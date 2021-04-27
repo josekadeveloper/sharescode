@@ -10,7 +10,7 @@ $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
 $answers_list = $model->answers;
 ?>
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5">
     <div class="col-md-9 card card-widget">
         <div class="card-header">
             <div class="user-block">
@@ -53,12 +53,12 @@ $answers_list = $model->answers;
                 <div class="card-comment">
                     <!-- User image -->
                     <div class="img-circle" alt="User Image">
-                        <?= Answer::findUserImage($answer->id) ?>
+                        <?= Answer::findUserImage($answer->users_id) ?>
                     </div>
 
                     <div class="comment-text">
                         <span class="username">
-                            <?= Answer::findUserName($answer->id) ?>
+                            <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
                         <span class="text-muted float-right"><?= $answer->date_created ?></span>
                         </span><!-- /.username -->
                         <?= $answer->content ?>

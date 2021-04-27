@@ -5,7 +5,7 @@ use yii\bootstrap4\ActiveForm;
 $sex = ['Men' => 'Men',
         'Woman' => 'Woman'];
 ?>
-<div class="users-form">
+<div class="users-form todo-padding">
 
     <?php $form = ActiveForm::begin(); ?>
 

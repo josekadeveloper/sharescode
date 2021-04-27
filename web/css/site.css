@@ -118,3 +118,11 @@ a.desc:after {
     content: "\f2ed";
     color: var(--danger);
 }
+
+.todo-padding {
+    padding: 6vw;
+}
+
+.margen-abajo {
+    margin-bottom: 16vw;
+}

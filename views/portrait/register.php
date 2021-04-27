@@ -1,11 +1,4 @@
-<?php
-
-use yii\bootstrap4\Html;
-
-$this->title = 'Register';
-$this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="portrait-register">
+<div class="portrait-register margen-abajo">
 
     <?= $this->render('_register', [
         'model' => $model,
