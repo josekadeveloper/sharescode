@@ -1,4 +1,4 @@
-<div class="portrait-register margen-abajo">
+<div class="portrait-register">
 
     <?= $this->render('_register', [
         'model' => $model,

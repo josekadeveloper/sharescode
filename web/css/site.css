@@ -119,10 +119,8 @@ a.desc:after {
     color: var(--danger);
 }
 
-.todo-padding {
+.formulario {
     padding: 6vw;
-}
-
-.margen-abajo {
-    margin-bottom: 16vw;
+    margin-bottom: 7vw;
+    text-align: center;
 }

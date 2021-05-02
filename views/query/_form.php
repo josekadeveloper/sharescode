@@ -4,25 +4,26 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 
 ?>
+<div class="row justify-content-center">
+    <div class="query-form formulario col-md-4" style="margin-bottom: 17.1vw;">
 
-<div class="query-form">
+        <?php $form = ActiveForm::begin(); ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+        <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'explanation')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'explanation')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'date_created')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
 
-    <?= $form->field($model, 'date_created')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
+        <?= $form->field($model, 'is_closed')->checkbox()->label(false) ?>
 
-    <?= $form->field($model, 'is_closed')->checkbox()->label(false) ?>
+        <?= $form->field($model, 'users_id')->hiddenInput(['value' => $users_id])->label(false)  ?>
 
-    <?= $form->field($model, 'users_id')->hiddenInput(['value' => $users_id])->label(false)  ?>
+        <div class="form-group">
+            <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        </div>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?php ActiveForm::end(); ?>
+
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

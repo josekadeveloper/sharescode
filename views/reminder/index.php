@@ -8,8 +8,8 @@ $this->title = 'Reminders';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row justify-content-center">
+        <div class="formulario col-md-9" style="margin-bottom: 20.3vw;">
             <div class="card">
                 <div class="card-body">
 
