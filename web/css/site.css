@@ -118,3 +118,9 @@ a.desc:after {
     content: "\f2ed";
     color: var(--danger);
 }
+
+.formulario {
+    padding: 6vw;
+    margin-bottom: 7vw;
+    text-align: center;
+}

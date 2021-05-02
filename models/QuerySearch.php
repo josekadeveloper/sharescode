@@ -41,7 +41,7 @@ class QuerySearch extends Query
      */
     public function search($params)
     {
-        $query = Query::find();
+        $query = Query::find()->orderBy('date_created DESC');
 
         // add conditions that should always apply here
 

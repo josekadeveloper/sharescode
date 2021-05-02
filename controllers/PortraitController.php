@@ -66,20 +66,16 @@ class PortraitController extends Controller
      */
     public function actionCreate()
     {
-        $count = 0;
-        if ($count <= 1) {
-            $id = $this->createUser();
-            $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'User has been successfully created.');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-            return $this->render('create', [
-                'model' => $model,
-                'id' => $id,
-            ]); 
+        $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
+        if ($model->load(Yii::$app->request->post())) {
+            $this->createUser();
+            $model->save();
+            Yii::$app->session->setFlash('success', 'User has been successfully created.');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-        $count++;
+        return $this->render('create', [
+            'model' => $model,
+        ]); 
     }
 
     /**
@@ -182,22 +178,21 @@ class PortraitController extends Controller
             return $this->redirect(['/query/index']); 
         }
         if (Yii::$app->user->id !== null) {
-            if (Yii::$app->user->identity->is_admin === true) {
-                $user_portrait = 'admin';
-            }
             if (Portrait::find()->where(['id' => Yii::$app->user->id])->one() !== null) {
-                $user_portrait = Portrait::find()->where(['id' => Yii::$app->user->id])->one()['id'];
+                $user_id = Portrait::find()->where(['id' => Yii::$app->user->id])->one()['id'];
             } else {
-                $user_portrait = null;
+                $user_id = null;
             }
         } else {
-            $user_portrait = null;
+            $user_id = null;
         }
         $model = $this->findModel($id);
+        $model_portrait = Portrait::findOne(['id' => Yii::$app->user->id]);
 
         return $this->render('view', [
             'model' => $model,
-            'user_portrait' => $user_portrait,
+            'model_portrait' => $model_portrait,
+            'user_id' => $user_id,
         ]);
     }
 

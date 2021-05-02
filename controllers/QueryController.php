@@ -68,35 +68,6 @@ class QueryController extends Controller
     }
 
     /**
-     * Displays a single Query model.
-     * If the user is logged, he has created a profile and is 
-     * the creator of the query, he can modify or delete it
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        if ($this->findPortrait(Yii::$app->user->id)) {
-            $users_id = $this->findPortrait(Yii::$app->user->id)->id;
-            if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
-                $owner_id = $users_id;
-            } else {
-                $owner_id = null;
-            }
-        } else {
-            $owner_id = null;
-        }
-        $query = Answer::find()->where(['query_id' => $id]);
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'owner_id' => $owner_id,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-    /**
      * Creates a new Query model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed

@@ -67,6 +67,7 @@ class ReminderController extends Controller
      */
     public function actionView($id)
     {
+        $this->actionRead($id);
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -114,11 +115,9 @@ class ReminderController extends Controller
     public function actionRead($id)
     {
         $reminder = $this->findModel($id);
-        $reminder->is_read === false ? $reminder->is_read = true : $reminder->is_read = false;
-        if ($reminder->save()) {
-            return $this->redirect(['view', 'id' => $id]);
-        } else {
-            Yii::$app->session->setFlash('error', 'Wrong reminder.');
+        if ($reminder->is_read === false) {
+            $reminder->is_read = true;
+            $reminder->save();
         }
     }
 }

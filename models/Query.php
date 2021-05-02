@@ -98,5 +98,43 @@ class Query extends \yii\db\ActiveRecord
         $last_date = $this->getAnswers()->max('date_created');
         return Answer::findOne(['date_created' => $last_date])['content'] === null ? '' 
                 : Answer::findOne(['date_created' => $last_date])['content'];
-    }    
+    }
+    
+    /**
+     * Find the name of the user from the id of the query.
+     * @param integer $id
+     * @return mixed String || null
+     */
+    public static function findUserName($id)
+    {
+        if (($model = Query::find()
+                    ->where(['id' => $id])
+                    ->one()) !== null
+            ){
+            $user_id = $model->users_id;
+            $model_user = Portrait::findOne(['id' => $user_id]);
+            $username = $model_user->nickname;
+            return $username;
+        }
+        return null;
+    }
+
+    /**
+     * Find the image of the user from the id of the query.
+     * @param integer $id
+     * @return mixed Image || null
+     */
+    public static function findUserImage($id)
+    {
+        if (($model = Query::find()
+                    ->where(['id' => $id])
+                    ->one()) !== null
+            ){
+            $user_id = $model->users_id;
+            $model_user = Portrait::findOne(['id' => $user_id]);
+            $img = $model_user->devolverImg($model_user);
+            return $img;
+        }
+        return null;
+    }
 }

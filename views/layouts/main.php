@@ -1,14 +1,22 @@
 <?php
 
-use app\widgets\Alert;
+use app\models\Users;
 use yii\helpers\Html;
-use yii\bootstrap4\Nav;
-use yii\bootstrap4\NavBar;
-use yii\bootstrap4\Breadcrumbs;
-use app\assets\AppAsset;
-use app\models\Portrait;
+use yii\helpers\Url;
 
-AppAsset::register($this);
+\hail812\adminlte3\assets\FontAwesomeAsset::register($this);
+\hail812\adminlte3\assets\AdminLteAsset::register($this);
+$this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
+$this->registerCssFile('@web/css/site.css');
+
+$assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+$urlReminder = Url::to(['reminder/index']);
+$notifications_no_read = Users::countReminders();
+$notifications_time = Users::timeReminders();
+$urlPortrait = Url::to(['/portrait/view', 'id' => Yii::$app->user->id]);
+$img = Users::getImg();
+$nickname = Users::getNickname();
+$prestigie = Users::getPrestige();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -21,70 +29,39 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body class="hold-transition sidebar-mini">
 <?php $this->beginBody() ?>
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Html::img('@web/img/sharecode.svg', ['style'=>['height'=>'40px']]) . Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-dark bg-dark navbar-expand-md fixed-top',
-        ],
-        'collapseOptions' => [
-            'class' => 'justify-content-end',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/query/index']],
-            Yii::$app->user->isGuest ? ['label' => 'Register', 'url' => ['/portrait/register']] : (''),
-            !Yii::$app->user->isGuest ? 
-            (['label' => 'Users', 'url' => ['/users/index'], 'visible' => Yii::$app->user->identity->is_admin === true]) : (''),
-            !Yii::$app->user->isGuest ? 
-            (['label' => 'Portrait List', 'url' => ['/portrait/index'], 'visible' => Yii::$app->user->identity->is_admin === true]) : (''),
-            !Yii::$app->user->isGuest ? 
-            (['label' => 'Notifications', 'url' => ['/reminder/index'], 'visible' => !Yii::$app->user->isGuest 
-            || Yii::$app->user->identity->is_admin === true]) : (''),
-            Yii::$app->user->isGuest ? ( '' ) : (['label' => 'My Portrait', 
-                                                  'url' => ['/portrait/view', 'id' => Portrait::findOne(['id' => Yii::$app->user->identity->id])['id']]]),
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li class="nav-item">'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->nickname . ')',
-                    ['class' => 'btn btn-dark nav-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
-    NavBar::end();
-    ?>
-
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+<div class="wrapper">
+    <!-- Navbar -->
+    <?= $this->render('navbar', [
+        'assetDir' => $assetDir,
+        'urlReminder' => $urlReminder,
+        'notifications_no_read' => $notifications_no_read,
+        'notifications_time' => $notifications_time,
         ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <?= $this->render('sidebar', [
+        'assetDir' => $assetDir,
+        'urlPortrait' => $urlPortrait,
+        'nickname' => $nickname,
+        'img' => $img,
+        'prestigie' => $prestigie,
+        ]) ?>
+
+    <!-- Content Wrapper. Contains page content -->
+    <?= $this->render('content', ['content' => $content, 'assetDir' => $assetDir]) ?>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <?= $this->render('control-sidebar') ?>
+    <!-- /.control-sidebar -->
+
+    <!-- Main Footer -->
+    <?= $this->render('footer') ?>
 </div>
-
-<footer class="footer">
-    <div class="container">
-        <p class="float-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="float-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
 
 <?php $this->endBody() ?>
 </body>

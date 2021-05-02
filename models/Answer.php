@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "answer".
@@ -74,5 +75,49 @@ class Answer extends \yii\db\ActiveRecord
     public function getQuery()
     {
         return $this->hasOne(Query::class, ['id' => 'query_id'])->inverseOf('answers');
+    }
+
+    /**
+     * Find the name of the user from the users_id of the answer.
+     * @param integer $users_id
+     * @return mixed String || null
+     */
+    public static function findUserName($users_id)
+    {
+        if ((Portrait::findOne(['id' => $users_id])) !== null){
+            $model_user = Portrait::findOne(['id' => $users_id]);
+            $username = $model_user->nickname;
+            return $username;
+        }
+        return null;
+    }
+
+    /**
+     * Find the image of the user from the id of the answer.
+     * @param integer $id
+     * @return mixed Image || null
+     */
+    public static function findUserImage($users_id)
+    {
+        if ((Portrait::findOne(['id' => $users_id])) !== null){
+            $model_user = Portrait::findOne(['id' => $users_id]);
+            $img = $model_user->devolverImg($model_user);
+            return $img;
+        }
+        return null;
+    }
+
+    /**
+     * Find the name of the user from the id of the answer.
+     * @param integer $id
+     * @return mixed URL || null
+     */
+    public static function findUserPortrait($users_id)
+    {
+        if ((Portrait::findOne(['id' => $users_id])) !== null){
+            $urlPortrait = Url::to(['portrait/view', 'id' => $users_id]);
+            return $urlPortrait;
+        }
+        return null;
     }
 }

@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Answer;
+use Yii;
 
 /**
  * AnswerSearch represents the model behind the search form of `\app\models\Answer`.
@@ -40,7 +41,7 @@ class AnswerSearch extends Answer
      */
     public function search($params)
     {
-        $query = Answer::find();
+        $query = Answer::find()->orderBy('date_created DESC');
 
         // add conditions that should always apply here
 
@@ -64,7 +65,8 @@ class AnswerSearch extends Answer
             'users_id' => $this->users_id,
         ]);
 
-        $query->andFilterWhere(['ilike', 'content', $this->content]);
+        $query->andFilterWhere(['ilike', 'content', $this->content])
+              ->andFilterWhere(['users_id' => Yii::$app->user->id]);
 
         return $dataProvider;
     }
