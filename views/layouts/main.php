@@ -3,8 +3,8 @@
 use app\models\Users;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use hail812\adminlte3\assets\AdminLteAsset;
 use hail812\adminlte3\assets\FontAwesomeAsset;
+use hail812\adminlte3\assets\AdminLteAsset;
 
 FontAwesomeAsset::register($this);
 AdminLteAsset::register($this);
