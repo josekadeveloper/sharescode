@@ -54,9 +54,6 @@
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
-        },
-        "github-oauth": {
-            "github.com": "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"
         }
     },
     "scripts": {
