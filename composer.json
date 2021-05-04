@@ -34,7 +34,7 @@
         "yiisoft/yii2-shell": "~2.0.2",
         "yiisoft/yii2-apidoc": "dev-project",
         "codeception/codeception": "^4.0",
-        "codeception/verify": "dev-patch-1",
+        "codeception/verify": "dev-master",
         "codeception/specify": "~0.4.6",
         "symfony/browser-kit": ">=2.7 <=4.2.4",
         "codeception/module-filesystem": "^1.0.0",

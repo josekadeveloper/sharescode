@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6af6c007efb475e401b9043ccd66b4a7",
+    "content-hash": "c7004fb017ae3ea992f277b1b92a0816",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -2169,16 +2169,16 @@
         },
         {
             "name": "codeception/verify",
-            "version": "dev-patch-1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ricpelo/Verify.git",
-                "reference": "faeb839a3dcd176258d49aec000b1061d61e6d6e"
+                "reference": "532e526b8b1ac2343bf799e6b36e3446896ff52a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ricpelo/Verify/zipball/faeb839a3dcd176258d49aec000b1061d61e6d6e",
-                "reference": "faeb839a3dcd176258d49aec000b1061d61e6d6e",
+                "url": "https://api.github.com/repos/ricpelo/Verify/zipball/532e526b8b1ac2343bf799e6b36e3446896ff52a",
+                "reference": "532e526b8b1ac2343bf799e6b36e3446896ff52a",
                 "shasum": ""
             },
             "require": {
@@ -2206,9 +2206,9 @@
             ],
             "description": "BDD assertion library for PHPUnit",
             "support": {
-                "source": "https://github.com/ricpelo/Verify/tree/patch-1"
+                "source": "https://github.com/ricpelo/Verify/tree/1.2.0"
             },
-            "time": "2020-01-11T09:38:41+00:00"
+            "time": "2019-08-24T13:58:30+00:00"
         },
         {
             "name": "composer/semver",
