@@ -4,8 +4,11 @@ use app\models\Users;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+<<<<<<< HEAD
 /** \hail812\adminlte3\assets\FontAwesomeAsset::register($this); \hail812\adminlte3\assets\AdminLteAsset::register($this); */
 
+=======
+>>>>>>> 74268c394ae819573c70a3b2863198e4c3428549
 $this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
 $this->registerCssFile('@web/css/site.css');
 
