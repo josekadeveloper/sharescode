@@ -124,3 +124,8 @@ a.desc:after {
     margin-bottom: 7vw;
     text-align: center;
 }
+
+.img-answer {
+    height: 40px;
+    margin-top: -10px;
+}

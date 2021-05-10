@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Answer;
+use app\models\Portrait;
 use app\models\Query;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -9,6 +10,17 @@ $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
 $answers_list = $model->answers;
+
+if (Yii::$app->user->id !== null) {
+    $user_actually_id = Yii::$app->user->id;
+    $model_portrait = Portrait::findOne(['id' => $user_actually_id]);
+    $model_portrait->sex === 'Men'
+    ? $url = '@web/img/men.svg'
+    : $url = '@web/img/woman.svg';
+    $img_response = Html::img($url, ['class'=> 'img-answer']);
+} else {
+    $user_actually_id = null;
+}
 ?>
 <div class="row justify-content-center mt-5">
     <div class="col-md-9 card card-widget">
@@ -68,11 +80,14 @@ $answers_list = $model->answers;
                 <!-- /.card-comment -->
             </div>
         <?php endforeach ?>
-        <?php if (Yii::$app->user->id !== null):?>
+        <?php if ($user_actually_id): ?>
             <!-- /.card-footer -->
-            <div class="card-footer">
+            <div class="card-footer mb-3">
                 <form action="#" method="post">
-                    <img class="img-fluid img-circle img-sm" src="../dist/img/user4-128x128.jpg" alt="">
+                    <!-- User image -->
+                    <div class="img-fluid img-circle img-sm">
+                        <?= $img_response ?>
+                    </div>
                     <!-- .img-push is used to add margin to elements next to floating images -->
                     <div class="img-push">
                         <input type="text" class="form-control form-control-sm" placeholder="Press enter to post comment">
