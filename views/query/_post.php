@@ -22,15 +22,10 @@ $answers_list = $model->answers;
             </div>
         <!-- /.user-block -->
         <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Mark as read">
-                <i class="far fa-circle"></i>
-            </button>
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
             </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                <i class="fas fa-times"></i>
-            </button>
+            <span class="text-primary"><?= $model->title ?> </span>
         </div>
         <!-- /.card-tools -->
         </div>
@@ -73,6 +68,7 @@ $answers_list = $model->answers;
                 <!-- /.card-comment -->
             </div>
         <?php endforeach ?>
+        <?php if (Yii::$app->user->id !== null):?>
             <!-- /.card-footer -->
             <div class="card-footer">
                 <form action="#" method="post">
@@ -84,5 +80,6 @@ $answers_list = $model->answers;
                 </form>
             </div>
             <!-- /.card-footer -->
+        <?php endif ?>
     </div>
 </div>
