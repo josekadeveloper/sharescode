@@ -10,8 +10,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row justify-content-center">
     <div class="portrait-view formulario col-md-6" style="margin-bottom: 2.7vw;">
 
-    <?php if ($model->id == $user_id): ?>
-        <?php if ($model_portrait->is_admin === true) : ?>
+    <?php if (Yii::$app->user->id): ?>
+        <?php if ($model->id == $user_id || $model_portrait->is_admin === true): ?>
             <p>
                 <?= Html::a('', ['update', 'id' => $model->id], ['class' => 'fas fa-user-edit btn-sm btn-primary']) ?>
                 <?= Html::a('', ['delete', 'id' => $model->id], [
