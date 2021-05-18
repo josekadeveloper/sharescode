@@ -154,7 +154,6 @@ class AnswerController extends Controller
 
     /**
      * Deletes an existing Answer model and Reminder model.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -168,7 +167,6 @@ class AnswerController extends Controller
 
             if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
                 if ($this->findModel($id)->delete()) {
-                    Yii::debug($model_reminder);
                     $model_reminder->delete();
                     Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
                 }

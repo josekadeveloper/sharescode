@@ -143,7 +143,7 @@ if (!Yii::$app->user->isGuest) {
         <?php if ($user_actually_id): ?>
             <!-- /.card-footer -->
             <div class="card-footer mb-3">
-                <form action=<?= $url_answer ?> method="post">
+                <form action=<?= $url_create ?> method="post">
                     <!-- User image -->
                     <div class="img-fluid img-circle img-sm">
                         <?= $img_response ?>
