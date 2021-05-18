@@ -22,15 +22,15 @@ if (Yii::$app->user->id !== null) {
     $user_actually_id = null;
 }
 
-$url_answer = Url::to(['answer/create', 'id' => $model->id]);
-$js = <<<EOT
+$url_create = Url::to(['answer/create', 'id' => $model->id]);
+$createAnswer = <<<EOT
     $('#content-$model->id').keydown(function (ev) {
         if (ev.keyCode == 13) { 
             ev.preventDefault();
             var content = ev.target.value;
             $.ajax({
                 type: 'POST',
-                url: '$url_answer',
+                url: '$url_create',
                 data: {
                     content: content,
                 }
@@ -43,8 +43,36 @@ $js = <<<EOT
         }
     });
 EOT;
+
+$url_delete = Url::to(['answer/delete']);
+$deleteAnswer = <<<EOT
+    var list = [];
+    $(".delete").each(function(index) {
+        list.push($(this).attr("id"));
+    });
+    
+    $.each(list, function (ind, elem) {
+        $('#'+elem).click(function (ev) {
+            ev.preventDefault();
+            var id = elem.substring(7);
+
+            $.ajax({
+                type: 'POST',
+                url: '$url_delete',
+                data: {
+                    id: id,
+                }
+            })
+            .done(function (data) {
+                $('#'+elem).parent().parent().remove();
+            });
+            return false;
+        });
+    });
+EOT;
 if (!Yii::$app->user->isGuest) {
-    $this->registerJs($js);
+    $this->registerJs($createAnswer);
+    $this->registerJs($deleteAnswer);
 }
 ?>
 <div class="row justify-content-center mt-5">
@@ -97,8 +125,13 @@ if (!Yii::$app->user->isGuest) {
                                 <?= $answer->content ?>
                             </div>
                             <hr>
+                            <?php if ($answer->users_id === Yii::$app->user->id): ?>
+                                <!-- Delete or update answer -->
+                                <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update"><i class="far fa-edit"></i> Update</button>
+                            <?php endif ?>
                             <!-- Social sharing buttons -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share</button>
+                            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-share"></i> Share</button>
                             <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like</button>
                             <span class="float-right text-muted">45 likes - 2 comments</span>
                             <!-- /.comment-text -->
