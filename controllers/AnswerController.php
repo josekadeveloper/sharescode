@@ -115,6 +115,7 @@ class AnswerController extends Controller
 
             return $this->asJson([
                 'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
+                'answer_id' => $answer_id,
             ]);
         }
     }

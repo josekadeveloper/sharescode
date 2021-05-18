@@ -38,6 +38,10 @@ $createAnswer = <<<EOT
             .done(function (data) {
                 $('#answers-$model->id').append(data.response);
                 $('#content-$model->id').val('');
+                $(".delete").each(function(index) {
+                    list.push($(this).attr("id"));
+                });
+                list.push($('#delete-' + data.answer_id));
             });
             return false;
         }
