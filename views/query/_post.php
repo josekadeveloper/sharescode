@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Answer;
+use app\models\Portrait;
 use app\models\Query;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -9,6 +10,74 @@ $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
 $answers_list = $model->answers;
+
+if (Yii::$app->user->id !== null) {
+    $user_actually_id = Yii::$app->user->id;
+    $model_portrait = Portrait::findOne(['id' => $user_actually_id]);
+    $model_portrait->sex === 'Men'
+    ? $url = '@web/img/men.svg'
+    : $url = '@web/img/woman.svg';
+    $img_response = Html::img($url, ['class'=> 'img-answer']);
+} else {
+    $user_actually_id = null;
+}
+
+$url_create = Url::to(['answer/create', 'id' => $model->id]);
+$createAnswer = <<<EOT
+    $('#content-$model->id').keydown(function (ev) {
+        if (ev.keyCode == 13) { 
+            ev.preventDefault();
+            var content = ev.target.value;
+            $.ajax({
+                type: 'POST',
+                url: '$url_create',
+                data: {
+                    content: content,
+                }
+            })
+            .done(function (data) {
+                $('#answers-$model->id').append(data.response);
+                $('#content-$model->id').val('');
+                $(".delete").each(function(index) {
+                    list.push($(this).attr("id"));
+                });
+                list.push($('#delete-' + data.answer_id));
+            });
+            return false;
+        }
+    });
+EOT;
+
+$url_delete = Url::to(['answer/delete']);
+$deleteAnswer = <<<EOT
+    var list = [];
+    $(".delete").each(function(index) {
+        list.push($(this).attr("id"));
+    });
+    
+    $.each(list, function (ind, elem) {
+        $('#'+elem).click(function (ev) {
+            ev.preventDefault();
+            var id = elem.substring(7);
+
+            $.ajax({
+                type: 'POST',
+                url: '$url_delete',
+                data: {
+                    id: id,
+                }
+            })
+            .done(function (data) {
+                $('#'+elem).parent().parent().remove();
+            });
+            return false;
+        });
+    });
+EOT;
+if (!Yii::$app->user->isGuest) {
+    $this->registerJs($createAnswer);
+    $this->registerJs($deleteAnswer);
+}
 ?>
 <div class="row justify-content-center mt-5">
     <div class="col-md-9 card card-widget">
@@ -25,7 +94,7 @@ $answers_list = $model->answers;
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
             </button>
-            <span class="text-primary"><?= $model->title ?> </span>
+            <span class="text-primary"><?= $model->title ?></span>
         </div>
         <!-- /.card-tools -->
         </div>
@@ -42,40 +111,50 @@ $answers_list = $model->answers;
             </div>
             <!-- /.attachment-block -->
         </div>
-        <?php foreach ($answers_list as $answer): ?>
-            <!-- /.card-body -->
-            <div class="card-footer card-comments">
-                <div class="card-comment">
-                    <!-- User image -->
-                    <div class="img-circle" alt="User Image">
-                        <?= Answer::findUserImage($answer->users_id) ?>
-                    </div>
+            <div id="answers-<?= $model->id ?>">
+                <?php foreach ($answers_list as $answer): ?>
+                    <!-- /.card-body -->
+                    <div class="card-footer card-comments">
+                        <div class="card-comment">
+                            <!-- User image -->
+                            <div class="img-circle" alt="User Image">
+                                <?= Answer::findUserImage($answer->users_id) ?>
+                            </div>
 
-                    <div class="comment-text">
-                        <span class="username">
-                            <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                        <span class="text-muted float-right"><?= $answer->date_created ?></span>
-                        </span><!-- /.username -->
-                        <?= $answer->content ?>
+                            <div class="comment-text">
+                                <span class="username">
+                                    <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
+                                <span class="text-muted float-right"><?= $answer->date_created ?></span>
+                                </span><!-- /.username -->
+                                <?= $answer->content ?>
+                            </div>
+                            <hr>
+                            <?php if ($answer->users_id === Yii::$app->user->id): ?>
+                                <!-- Delete or update answer -->
+                                <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update"><i class="far fa-edit"></i> Update</button>
+                            <?php endif ?>
+                            <!-- Social sharing buttons -->
+                            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-share"></i> Share</button>
+                            <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like</button>
+                            <span class="float-right text-muted">45 likes - 2 comments</span>
+                            <!-- /.comment-text -->
+                        </div>
+                        <!-- /.card-comment -->
                     </div>
-                    <hr>
-                    <!-- Social sharing buttons -->
-                    <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share</button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like</button>
-                    <span class="float-right text-muted">45 likes - 2 comments</span>
-                    <!-- /.comment-text -->
-                </div>
-                <!-- /.card-comment -->
+                <?php endforeach ?>
             </div>
-        <?php endforeach ?>
-        <?php if (Yii::$app->user->id !== null):?>
+        <?php if ($user_actually_id): ?>
             <!-- /.card-footer -->
-            <div class="card-footer">
-                <form action="#" method="post">
-                    <img class="img-fluid img-circle img-sm" src="../dist/img/user4-128x128.jpg" alt="">
+            <div class="card-footer mb-3">
+                <form action=<?= $url_create ?> method="post">
+                    <!-- User image -->
+                    <div class="img-fluid img-circle img-sm">
+                        <?= $img_response ?>
+                    </div>
                     <!-- .img-push is used to add margin to elements next to floating images -->
                     <div class="img-push">
-                        <input type="text" class="form-control form-control-sm" placeholder="Press enter to post comment">
+                        <input type="text" id="content-<?= $model->id ?>" class="form-control form-control-sm" placeholder="Press enter to post comment">
                     </div>
                 </form>
             </div>

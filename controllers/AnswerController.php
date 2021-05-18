@@ -89,21 +89,35 @@ class AnswerController extends Controller
      */
     public function actionCreate($id)
     {
-        $model = new Answer();
-        $users_id = Yii::$app->user->id;
-        $sending_user_id = Query::findOne(['id' => $id])['users_id'];
-        
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->createReminder($id, $sending_user_id);
-            $this->sendReminder($id, $sending_user_id);
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isAjax) {
+
+            $users_id = Yii::$app->user->id;
+            $model_portrait = $this->findPortrait($users_id);
+            $username = $model_portrait->nickname;
+            $img = Portrait::devolverImg($model_portrait);
+            $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
+            $date_created = date('Y-m-d H:i:s');
+            $content = Yii::$app->request->post('content');
+            $sending_user_id = Query::findOne(['id' => $id])['users_id'];
+
+            $model = new Answer([
+                'content' => $content,
+                'date_created' => $date_created,
+                'query_id' => $id,
+                'users_id' => $users_id,
+            ]);
+
+            if ($model->save()) {
+                $this->createReminder($id, $sending_user_id);
+                $this->sendReminder($id, $sending_user_id);
+            }
+            $answer_id = $model->id;
+
+            return $this->asJson([
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
+                'answer_id' => $answer_id,
+            ]);
         }
-        $query_id = $id;
-        return $this->render('create', [
-            'model' => $model,
-            'query_id' => $query_id,
-            'users_id' => $users_id,
-        ]);
     }
 
     /**
@@ -140,25 +154,26 @@ class AnswerController extends Controller
     }
 
     /**
-     * Deletes an existing Answer model.
-     * If deletion is successful, the browser will be redirected to the 'query/view' page.
-     * @param integer $id
+     * Deletes an existing Answer model and Reminder model.
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $users_id = Yii::$app->user->id;
-        $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
-        $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
-        if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
-            if ($this->findModel($id)->delete()) {
-                Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
+        if (Yii::$app->request->isAjax) {
+            $id = Yii::$app->request->post('id');
+            $users_id = Yii::$app->user->id;
+
+            $model_reminder = $this->findReminder($id);
+
+            if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
+                if ($this->findModel($id)->delete()) {
+                    $model_reminder->delete();
+                    Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
+                }
             }
-            return $this->redirect($urlAnswer);   
-        }
-        Yii::$app->session->setFlash('error', 'You can only delete your own answer.');
-        return $this->redirect($urlAnswer);  
+            Yii::$app->session->setFlash('error', 'You can only delete your own answer.');
+        } 
     }
 
     /**
@@ -250,5 +265,80 @@ class AnswerController extends Controller
             ->setSubject('View reminder')
             ->setHtmlBody($body)
             ->send();
+    }
+
+    /**
+     * Finds the Reminder model based on its primary key and users_id.
+     * If the model is not found, a null.
+     * @param integer $id && $users_id
+     * @return mixed Reminder || null
+     */
+    protected function findReminder($id)
+    {
+        if (($model = Reminder::find()
+                        ->where([
+                            'id' => $id,
+                      ])->one()) !== null
+            ){
+            return $model;
+        }
+        return null;
+    }
+
+
+    /**
+     *  Create the response as html container 
+     * to integrate it into the view
+     */
+    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id)
+    {
+        Yii::debug($answer_id);
+        if (Yii::$app->user->isGuest) {
+            return '';
+        } else {
+            return
+            '<div class="card-footer card-comments">' .
+                    '<div class="card-comment">'.
+                        '<div class="img-circle" alt="User Image">'.
+                            $img .
+                        '</div>'.
+                        '<div class="comment-text">'.
+                            '<span class="username">'.
+                                '<a href=' . $urlPortrait . '>' .
+                                    $username .
+                                '</a>' .
+                                '<span class="text-muted float-right">'.
+                                    $date_created .
+                                '</span>'.
+                            '</span>'.
+                            $content .
+                        '</div>'.
+                        '<hr>'.
+                        '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 
+                            '<i class="fas fa-minus-circle">' . 
+                            '</i>' . 
+                            ' Delete' . 
+                        '</button>' .
+                        '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update">' . 
+                            '<i class="far fa-edit">' . 
+                            '</i>' . 
+                            ' Update' . 
+                        '</button>' .
+                        '<button type="button" class="btn btn-success btn-sm">'.
+                            '<i class="fas fa-share">' .
+                            '</i>' .
+                            ' Share' .
+                        '</button>' .
+                        '<button type="button" class="btn btn-default btn-sm">'.
+                            '<i class="far fa-thumbs-up">' .
+                            '</i>' .
+                            ' Like' .
+                        '</button>' .
+                        '<span class="float-right text-muted">' .
+                            '45 likes - 2 comments' .
+                        '</span>' .
+                    '</div>' .
+            '</div>';
+        }
     }
 }

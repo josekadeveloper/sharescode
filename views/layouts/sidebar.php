@@ -1,12 +1,13 @@
 <?php
 
+use hail812\adminlte\widgets\Menu;
 use yii\helpers\Html;
 
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4 position-fixed">
     <!-- Brand Logo -->
     <a href=<?= Yii::$app->homeUrl ?> class="brand-link">
-        <?= Html::img('@web/img/sharecode.svg', ['class'=> 'brand-image img-circle mt-1'], ['style' => 'opacity: .8' ]) ?>
+        <?= Html::img('@web/img/sharecode.svg', ['class'=> 'brand-image img-circle mt-1'], ['style' => 'opacity: 0.8']) ?>
         <span class="brand-text font-weight-light"><?= Yii::$app->name ?></span>
     </a>
 
@@ -25,7 +26,7 @@ use yii\helpers\Html;
                 </div>
             <nav class="mt-2">
                 <?php
-                echo \hail812\adminlte3\widgets\Menu::widget([
+                echo Menu::widget([
                     'items' => [
                         [
                             'label' => 'Prestigie',
@@ -46,7 +47,7 @@ use yii\helpers\Html;
         <?php if (Yii::$app->user->isGuest):?>
             <nav class="mt-2">
                 <?php
-                echo \hail812\adminlte3\widgets\Menu::widget([
+                echo Menu::widget([
                     'items' => [
                         [
                             'label' => 'DEAR GUEST',
@@ -75,7 +76,7 @@ use yii\helpers\Html;
                 </div>
             <nav class="mt-2">
                 <?php
-                echo \hail812\adminlte3\widgets\Menu::widget([
+                echo Menu::widget([
                     'items' => [
                         ['label' => 'USER OPTIONS', 'header' => true],
                         ['label' => 'Users Lists', 'icon' => 'fas fa-users', 'url' => ['users/index']],
