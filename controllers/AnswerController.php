@@ -8,6 +8,7 @@ use app\models\AnswerSearch;
 use app\models\Portrait;
 use app\models\Query;
 use app\models\Reminder;
+use app\models\Users;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -116,6 +117,7 @@ class AnswerController extends Controller
             return $this->asJson([
                 'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
                 'answer_id' => $answer_id,
+                'reminders' => $this->builderReminders(),
             ]);
         }
     }
@@ -170,6 +172,9 @@ class AnswerController extends Controller
                 if ($this->findModel($id)->delete()) {
                     $model_reminder->delete();
                     Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
+                    return $this->asJson([
+                        'reminders' => $this->builderReminders(),
+                    ]);
                 }
             }
             Yii::$app->session->setFlash('error', 'You can only delete your own answer.');
@@ -339,6 +344,43 @@ class AnswerController extends Controller
                         '</span>' .
                     '</div>' .
             '</div>';
+        }
+    }
+
+    /**
+     *  Create the reminders as html container 
+     * to integrate it into the view
+     */
+    public function builderReminders()
+    {
+        if (Yii::$app->user->isGuest) {
+            return '';
+        } else {
+            $notifications_no_read = Users::countReminders();
+            $notifications_time = Users::timeReminders();
+            $urlReminder = Url::to(['reminder/index']);
+            return
+            '<li class="nav-item dropdown">' .
+                '<a class="nav-link" data-toggle="dropdown" href="#">'.
+                    '<i class="far fa-bell"></i>'.
+                    '<span class="badge badge-warning navbar-badge">'.
+                        $notifications_no_read .
+                    '</span>'.
+                '</a>'.
+                '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">' . 
+                    '<span class="dropdown-header">' .
+                        $notifications_no_read . ' Notifications' .
+                    '</span>' .  
+                    '<div class="dropdown-divider"></div>' .
+                    '<a href=' . $urlReminder . ' class="dropdown-item">' .
+                        '<i class="fas fa-envelope mr-2"></i>' .
+                            $notifications_no_read . ' new answers' .
+                        '<span class="float-right text-muted text-sm">' .
+                            $notifications_time .
+                        '</span>' .
+                    '</a>' . 
+                '</div>' .
+            '</li>';
         }
     }
 }
