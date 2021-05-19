@@ -324,16 +324,19 @@ class AnswerController extends Controller
                             '</i>' . 
                             ' Delete' . 
                         '</button>' .
+                        ' ' .
                         '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update">' . 
                             '<i class="far fa-edit">' . 
                             '</i>' . 
                             ' Update' . 
                         '</button>' .
+                        ' ' .
                         '<button type="button" class="btn btn-success btn-sm">'.
                             '<i class="fas fa-share">' .
                             '</i>' .
                             ' Share' .
                         '</button>' .
+                        ' ' .
                         '<button type="button" class="btn btn-default btn-sm">'.
                             '<i class="far fa-thumbs-up">' .
                             '</i>' .

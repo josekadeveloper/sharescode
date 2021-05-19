@@ -23,6 +23,7 @@ if (Yii::$app->user->id !== null) {
 }
 
 $url_create = Url::to(['answer/create', 'id' => $model->id]);
+$url_delete = Url::to(['answer/delete']);
 $createAnswer = <<<EOT
     $('#content-$model->id').keydown(function (ev) {
         if (ev.keyCode == 13) { 
@@ -36,22 +37,43 @@ $createAnswer = <<<EOT
                 }
             })
             .done(function (data) {
-                $('#answers-$model->id').append(data.response);
+                let newAnswer = $(data.response);
+                newAnswer.hide();
+                $('#answers-$model->id').append(newAnswer);
+                newAnswer.fadeIn('fast');
                 $('#content-$model->id').val('');
+                let deleteButton = $('#delete-' + data.answer_id);
+
+                deleteButton.click(function (ev) {
+                    ev.preventDefault();
+                    var id = data.answer_id;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '$url_delete',
+                        data: {
+                            id: id,
+                        }
+                    })
+                    .done(function (data) {
+                        let container = deleteButton.parent().parent();
+                        container.fadeOut('fast', function() {
+                            container.remove();
+                        });
+                        
+                        $('li.dropdown').remove();
+                        $('#notifications').append(data.reminders);
+                    });
+                    return false;
+                })
                 $('li.dropdown').remove();
                 $('#notifications').append(data.reminders);
-                $(".delete").each(function(index) {
-                    list.push($(this).attr("id"));
-                });
-                list.push($('#delete-' + data.answer_id));
-                console.log(list);
             });
             return false;
         }
     });
 EOT;
 
-$url_delete = Url::to(['answer/delete']);
 $deleteAnswer = <<<EOT
     var list = [];
     $(".delete").each(function(index) {
@@ -71,7 +93,11 @@ $deleteAnswer = <<<EOT
                 }
             })
             .done(function (data) {
-                $('#'+elem).parent().parent().remove();
+                let container = $('#'+elem).parent().parent();
+                container.fadeOut('fast', function() {
+                    container.remove();
+                });
+
                 $('li.dropdown').remove();
                 $('#notifications').append(data.reminders);
             });
