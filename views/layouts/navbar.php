@@ -46,24 +46,26 @@ use yii\helpers\Html;
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown">
-        <?php if (!Yii::$app->user->isGuest): ?>
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-bell"></i>
-                <?php if ($notifications_no_read !== 0): ?>
-                    <span class="badge badge-warning navbar-badge"><?= $notifications_no_read ?></span>
-                <?php endif ?>
-            </a>
-        <?php endif ?>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-header"><?= $notifications_no_read ?> Notifications</span>
-                <div class="dropdown-divider"></div>
-                <a href=<?= $urlReminder ?> class="dropdown-item">
-                    <i class="fas fa-envelope mr-2"></i><?= $notifications_no_read ?> new answers
-                    <span class="float-right text-muted text-sm"><?= $notifications_time ?></span>
+        <div id="notifications">
+            <li class="nav-item dropdown">
+            <?php if (!Yii::$app->user->isGuest): ?>
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                    <i class="far fa-bell"></i>
+                    <?php if ($notifications_no_read !== 0): ?>
+                        <span class="badge badge-warning navbar-badge"><?= $notifications_no_read ?></span>
+                    <?php endif ?>
                 </a>
-            </div>
-        </li>
+            <?php endif ?>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <span class="dropdown-header"><?= $notifications_no_read ?> Notifications</span>
+                    <div class="dropdown-divider"></div>
+                    <a href=<?= $urlReminder ?> class="dropdown-item">
+                        <i class="fas fa-envelope mr-2"></i><?= $notifications_no_read ?> new answers
+                        <span class="float-right text-muted text-sm"><?= $notifications_time ?></span>
+                    </a>
+                </div>
+            </li>
+        </div>
         <?php if (!Yii::$app->user->isGuest): ?>
             <li class="nav-item">
                 <?= Html::a('<i class="fas fa-sign-out-alt"></i>', ['/site/logout'], ['data-method' => 'post', 'class' => 'nav-link']) ?>

@@ -38,10 +38,13 @@ $createAnswer = <<<EOT
             .done(function (data) {
                 $('#answers-$model->id').append(data.response);
                 $('#content-$model->id').val('');
+                $('li.dropdown').remove();
+                $('#notifications').append(data.reminders);
                 $(".delete").each(function(index) {
                     list.push($(this).attr("id"));
                 });
                 list.push($('#delete-' + data.answer_id));
+                console.log(list);
             });
             return false;
         }
@@ -69,6 +72,8 @@ $deleteAnswer = <<<EOT
             })
             .done(function (data) {
                 $('#'+elem).parent().parent().remove();
+                $('li.dropdown').remove();
+                $('#notifications').append(data.reminders);
             });
             return false;
         });
