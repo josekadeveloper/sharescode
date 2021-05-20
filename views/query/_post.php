@@ -6,6 +6,10 @@ use app\models\Query;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js', ['position' => $this::POS_END]);
+$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js', ['position' => $this::POS_END]);
+$this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css', ['position' => $this::POS_HEAD]);
+
 $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
@@ -24,6 +28,7 @@ if (Yii::$app->user->id !== null) {
 
 $url_create = Url::to(['answer/create', 'id' => $model->id]);
 $url_delete = Url::to(['answer/delete']);
+$url_update = Url::to(['answer/update']);
 $createAnswer = <<<EOT
     $('#content-$model->id').keydown(function (ev) {
         if (ev.keyCode == 13) { 
@@ -79,7 +84,7 @@ $deleteAnswer = <<<EOT
     $(".delete").each(function(index) {
         list.push($(this).attr("id"));
     });
-    
+
     $.each(list, function (ind, elem) {
         $('#'+elem).click(function (ev) {
             ev.preventDefault();
@@ -105,9 +110,62 @@ $deleteAnswer = <<<EOT
         });
     });
 EOT;
+
+$updateAnswer = <<<EOT
+    var list = [];
+    $(".update").each(function(index) {
+        list.push($(this).attr("id"));
+    });
+
+    $.each(list, function (ind, elem) {
+        $('#'+elem).click(function (ev) {
+            ev.preventDefault();
+            let id = elem.substring(7);
+            
+            $('#con-'+id).keydown(function (ev) {
+                if (ev.keyCode == 13) {
+                    ev.preventDefault();
+                    var content = ev.target.value;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '$url_update',
+                        data: {
+                            id: id,
+                            content: content,
+                        }
+                    })
+                    .done(function (data) {
+                        let container = $('.current');
+                        container.fadeOut('fast', function() {
+                            container.remove();
+                        });
+
+                        let answer_id = data.answer_id;
+                        let oldAnswer = $('#update-'+answer_id).parent().parent();
+                        oldAnswer.fadeOut('fast', function() {
+                            oldAnswer.remove();
+                        });
+
+                        let newAnswer = $(data.response);
+                        
+                        let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
+                        $('#'+father_id).append(newAnswer);
+                        newAnswer.fadeIn('fast');
+
+                        $('li.dropdown').remove();
+                        $('#notifications').append(data.reminders);
+                    })
+                }
+            });
+        });
+    });
+    
+EOT;
 if (!Yii::$app->user->isGuest) {
     $this->registerJs($createAnswer);
     $this->registerJs($deleteAnswer);
+    $this->registerJs($updateAnswer);
 }
 ?>
 <div class="row justify-content-center mt-5">
@@ -163,7 +221,7 @@ if (!Yii::$app->user->isGuest) {
                             <?php if ($answer->users_id === Yii::$app->user->id): ?>
                                 <!-- Delete or update answer -->
                                 <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
-                                <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update"><i class="far fa-edit"></i> Update</button>
+                                <a href="#ex-<?= $answer->id ?>" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" rel="modal:open"><i class="far fa-edit"></i> Update</a>
                             <?php endif ?>
                             <!-- Social sharing buttons -->
                             <button type="button" class="btn btn-success btn-sm"><i class="fas fa-share"></i> Share</button>
@@ -173,6 +231,22 @@ if (!Yii::$app->user->isGuest) {
                         </div>
                         <!-- /.card-comment -->
                     </div>
+                    <?php if ($user_actually_id): ?>
+                        <div id="ex-<?= $answer->id ?>" class="modal">
+                            <!-- /.card-footer -->
+                            <div class="card-footer mb-3">
+                                    <!-- User image -->
+                                    <div class="img-fluid img-circle img-sm">
+                                        <?= $img_response ?>
+                                    </div>
+                                    <!-- .img-push is used to add margin to elements next to floating images -->
+                                    <div class="img-push">
+                                        <input type="text" id="con-<?= $answer->id ?>" class="form-control form-control-sm" placeholder="Press enter to post comment">
+                                    </div>
+                            </div>
+                            <!-- /.card-footer -->
+                        </div>
+                    <?php endif ?>
                 <?php endforeach ?>
             </div>
         <?php if ($user_actually_id): ?>

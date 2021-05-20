@@ -129,3 +129,15 @@ a.desc:after {
     height: 40px;
     margin-top: -10px;
 }
+
+.modal {
+    height: 10% !important;
+    width: 50% !important;
+    margin-left: 35%;
+    margin-top: 15%;
+}
+
+.modal a.close-modal {
+    top: -3px !important;
+    right: -3px !important;
+}
