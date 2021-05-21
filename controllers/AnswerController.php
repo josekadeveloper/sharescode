@@ -96,6 +96,10 @@ class AnswerController extends Controller
             $model_portrait = $this->findPortrait($users_id);
             $username = $model_portrait->nickname;
             $img = Portrait::devolverImg($model_portrait);
+            $model_portrait->sex === 'Men'
+            ? $url = '@web/img/men.svg'
+            : $url = '@web/img/woman.svg';
+            $img_response = Html::img($url, ['class'=> 'img-answer']);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
             $date_created = date('Y-m-d H:i:s');
             $content = Yii::$app->request->post('content');
@@ -118,6 +122,7 @@ class AnswerController extends Controller
                 'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
+                'modal' => $this->builderModal($answer_id, $img_response),
             ]);
         }
     }
@@ -159,6 +164,7 @@ class AnswerController extends Controller
                 'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
+                'modal' => $this->builderModal($answer_id, $img),
             ]);
         }
     }
@@ -305,7 +311,6 @@ class AnswerController extends Controller
      */
     public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id)
     {
-        Yii::debug($answer_id);
         if (Yii::$app->user->isGuest) {
             return '';
         } else {
@@ -392,6 +397,29 @@ class AnswerController extends Controller
                     '</a>' . 
                 '</div>' .
             '</li>';
+        }
+    }
+
+    /**
+     *  Create the modal window as html container 
+     * to integrate it into the view
+     */
+    public function builderModal($answer_id, $img_response)
+    {
+        if (Yii::$app->user->isGuest) {
+            return '';
+        } else {
+            return
+            '<div id="ex-' . $answer_id . '" class="modal">' .
+                '<div class="card-footer mb-3">'.
+                    '<div class="img-fluid img-circle img-sm">'.
+                        $img_response .
+                    '</div>' .
+                    '<div class="img-push">' .
+                        '<input type="text" id="con-' . $answer_id . '" class="form-control form-control-sm" placeholder="Press enter to post comment">'.
+                    '</div>' . 
+                '</div>' .
+            '</div>';
         }
     }
 }
