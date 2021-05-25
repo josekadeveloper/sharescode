@@ -48,7 +48,6 @@ $createAnswer = <<<EOT
                 newAnswer.fadeIn('fast');
                 $('#content-$model->id').val('');
                 $('#modals-$model->id').append(data.modal);
-                console.log($('#modals-$model->id'));
 
                 let deleteButton = $('#delete-' + data.answer_id);
                 let updateButton = $('#update-' + data.answer_id);
@@ -103,7 +102,7 @@ $createAnswer = <<<EOT
                                 let answer_id = data.answer_id;
                                 let oldAnswer = $('#update-'+answer_id).parent().parent();
                                 oldAnswer.fadeOut('fast', function() {
-                                    oldAnswer.hide();
+                                    oldAnswer.remove();
                                 });
         
                                 let newAnswer = $(data.response);
@@ -192,15 +191,16 @@ $updateAnswer = <<<EOT
                         let answer_id = data.answer_id;
                         let oldAnswer = $('#update-'+answer_id).parent().parent();
                         oldAnswer.fadeOut('fast', function() {
-                            oldAnswer.hide();
+                            oldAnswer.remove();
                         });
 
                         let newAnswer = $(data.response);
                         
                         let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
+                        console.log('#'+father_id);
                         $('#'+father_id).append(newAnswer);
                         newAnswer.fadeIn('fast');
-
+                        $('#con-'+id).val('');
                         $('#modals-'+answer_id).append(data.modal);
                         console.log($('#modals-'+answer_id));
 
@@ -208,7 +208,6 @@ $updateAnswer = <<<EOT
                         console.log(deleteButton);
                         
                         deleteButton.click(function (ev) {
-                            
                             var id = data.answer_id;
                             console.log(1);
                             $.ajax({
