@@ -7,8 +7,6 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js', ['position' => $this::POS_END]);
-$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js', ['position' => $this::POS_END]);
-$this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css', ['position' => $this::POS_HEAD]);
 
 $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
@@ -46,8 +44,8 @@ $createAnswer = <<<EOT
                 newAnswer.hide();
                 $('#answers-$model->id').append(newAnswer);
                 newAnswer.fadeIn('fast');
-                $('#content-$model->id').val('');
-                $('#modals-$model->id').append(data.modal);
+                $('#content-$model->id').val(''); 
+                $('#modals-$model->id').append(data.modal); 
 
                 let deleteButton = $('#delete-' + data.answer_id);
                 let updateButton = $('#update-' + data.answer_id);
@@ -74,48 +72,68 @@ $createAnswer = <<<EOT
                     });
                     return false;
                 })
-
-                updateButton.click(function (ev) {
+                
+                updateButton.click(function(ev) {
                     ev.preventDefault();
                     let id = data.answer_id;
-                    
-                    $('#con-'+id).keydown(function (ev) {
-                        console.log(2);
-                        if (ev.keyCode == 13) {
-                            ev.preventDefault();
-                            var content = ev.target.value;
+                
+                    $('#send-'+id).click(function (ev) {
+                        var content = $('#con-'+id).val();
+    
+                        $.ajax({
+                            type: 'POST',
+                            url: '$url_update',
+                            data: {
+                                id: id,
+                                content: content,
+                            }
+                        })
+                        .done(function (data) {
+                            let container = $('.fade');
+                            container.fadeOut('fast', function() {
+                                container.hide();
+                            });
         
+                            let answer_id = data.answer_id;
+                            let oldAnswer = $('#update-'+answer_id).parent().parent();
+                            oldAnswer.fadeOut('fast', function() {
+                                oldAnswer.remove();
+                            });
+        
+                            let newAnswer = $(data.response);
+                                
+                            let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
+                            $('#'+father_id).append(newAnswer);
+                            newAnswer.fadeIn('fast');
+                            $('#con-'+id).val('');
+
+
+                        $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
                             $.ajax({
                                 type: 'POST',
-                                url: '$url_update',
+                                url: '$url_delete',
                                 data: {
                                     id: id,
-                                    content: content,
                                 }
                             })
                             .done(function (data) {
-                                let container = $('.current');
+                                location.reload();
+                                let container = deleteButton.parent().parent();
+  
                                 container.fadeOut('fast', function() {
                                     container.remove();
                                 });
-        
-                                let answer_id = data.answer_id;
-                                let oldAnswer = $('#update-'+answer_id).parent().parent();
-                                oldAnswer.fadeOut('fast', function() {
-                                    oldAnswer.remove();
-                                });
-        
-                                let newAnswer = $(data.response);
-                                
-                                let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
-                                $('#'+father_id).append(newAnswer);
-                                newAnswer.fadeIn('fast');
-        
+                                    
                                 $('li.dropdown').remove();
                                 $('#notifications').append(data.reminders);
-                            })
+                            });
                             return false;
-                        }
+                        });
+        
+                            $('li.dropdown').remove();
+                            $('#notifications').append(data.reminders);
+                        })
+                        return false;
                     });
                 })
                 $('li.dropdown').remove();
@@ -168,73 +186,68 @@ $updateAnswer = <<<EOT
         $('#'+elem).click(function (ev) {
             ev.preventDefault();
             let id = elem.substring(7);
-            
-            $('#con-'+id).keydown(function (ev) {
-                if (ev.keyCode == 13) {
-                    ev.preventDefault();
-                    var content = ev.target.value;
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '$url_update',
-                        data: {
-                            id: id,
-                            content: content,
-                        }
-                    })
-                    .done(function (data) {
-                        let container = $('.current');
-                        container.fadeOut('fast', function() {
-                            container.remove();
-                        });
+            $('#send-'+id).click(function (ev) {
+                var content = $('#con-'+id).val();
 
-                        let answer_id = data.answer_id;
-                        let oldAnswer = $('#update-'+answer_id).parent().parent();
-                        oldAnswer.fadeOut('fast', function() {
-                            oldAnswer.remove();
-                        });
+                $.ajax({
+                    type: 'POST',
+                    url: '$url_update',
+                    data: {
+                        id: id,
+                        content: content,
+                    }
+                })
+                .done(function (data) {
+                    location.reload();
+                    let container = $('.fade');
+                    container.fadeOut('fast', function() {
+                        container.hide();
+                    });
 
-                        let newAnswer = $(data.response);
+                    let answer_id = data.answer_id;
+                    let oldAnswer = $('#update-'+answer_id).parent().parent();
+                    oldAnswer.fadeOut('fast', function() {
+                        oldAnswer.remove();
+                    });
+
+                    let newAnswer = $(data.response);
                         
-                        let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
-                        console.log('#'+father_id);
-                        $('#'+father_id).append(newAnswer);
-                        newAnswer.fadeIn('fast');
-                        $('#con-'+id).val('');
-                        $('#modals-'+answer_id).append(data.modal);
-                        console.log($('#modals-'+answer_id));
+                    let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
+                    $('#'+father_id).append(newAnswer);
+                    newAnswer.fadeIn('fast');
+                    $('#con-'+id).val('');
 
-                        let deleteButton = $('#delete-' + data.answer_id);
-                        console.log(deleteButton);
-                        
-                        deleteButton.click(function (ev) {
-                            var id = data.answer_id;
-                            console.log(1);
-                            $.ajax({
-                                type: 'POST',
-                                url: '$url_delete',
-                                data: {
-                                    id: id,
-                                }
-                            })
-                            .done(function (data) {
-                                console.log(2);
-                                let container = deleteButton.parent().parent();
-                                container.fadeOut('fast', function() {
-                                    container.remove();
-                                });
-                                
-                                $('li.dropdown').remove();
-                                $('#notifications').append(data.reminders);
-                            });
-                            return false;
+                    let deleteButton = $('#delete-' + data.answer_id);
+
+                    $('.card-comment').on('click', deleteButton, function(){
+                        var id = data.answer_id;
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '$url_delete',
+                            data: {
+                                id: id,
+                            }
                         })
+                        .done(function (data) {
+                            location.reload();
+                            let container = deleteButton.parent().parent();
 
-                        $('li.dropdown').remove();
-                        $('#notifications').append(data.reminders);
-                    })
-                    return false;
-                }
+                            container.fadeOut('fast', function() {
+                                container.remove();
+                            });
+                                
+                            $('li.dropdown').remove();
+                            $('#notifications').append(data.reminders);
+                        });
+                        return false;
+                    });
+
+                    $('li.dropdown').remove();
+                    $('#notifications').append(data.reminders);
+                })
+                return false;
             });
         });
     });
@@ -299,7 +312,9 @@ if (!Yii::$app->user->isGuest) {
                             <?php if ($answer->users_id === Yii::$app->user->id): ?>
                                 <!-- Delete or update answer -->
                                 <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
-                                <a href="#ex-<?= $answer->id ?>" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" rel="modal:open"><i class="far fa-edit"></i> Update</a>
+                                <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
+                                    <i class="far fa-edit"></i> Update
+                                </button>
                             <?php endif ?>
                             <!-- Social sharing buttons -->
                             <button type="button" class="btn btn-success btn-sm"><i class="fas fa-share"></i> Share</button>
@@ -309,21 +324,35 @@ if (!Yii::$app->user->isGuest) {
                         </div>
                         <!-- /.card-comment -->
                     </div>
-                    <div id="modals-<?= $answer->id ?>">
+                   <div id="modals-<?= $model->id ?>">
                         <?php if ($user_actually_id): ?>
-                            <div id="ex-<?= $answer->id ?>" class="modal">
-                                <!-- /.card-footer -->
-                                <div class="card-footer mb-3">
-                                        <!-- User image -->
-                                        <div class="img-fluid img-circle img-sm">
-                                            <?= $img_response ?>
+                            <div class="modal fade" id="ex-<?= $answer->id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
                                         </div>
-                                        <!-- .img-push is used to add margin to elements next to floating images -->
-                                        <div class="img-push">
-                                            <input type="text" id="con-<?= $answer->id ?>" class="form-control form-control-sm" placeholder="Press enter to post comment">
+                                        <div class="modal-body">
+                                            <!-- /.card-footer -->
+                                            <div class="card-footer mb-3">
+                                                <!-- User image -->
+                                                <div class="img-fluid img-circle img-sm">
+                                                    <?= $img_response ?>
+                                                </div>
+                                                <!-- .img-push is used to add margin to elements next to floating images -->
+                                                <div class="img-push">
+                                                    <input type="text" id="con-<?= $answer->id ?>" class="form-control form-control-sm" placeholder="Press enter to post comment">
+                                                </div>
+                                            </div>
+                                            <!-- /.card-footer -->
                                         </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="send-<?= $answer->id ?>" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!-- /.card-footer -->
                             </div>
                         <?php endif ?>
                     </div>

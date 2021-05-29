@@ -119,7 +119,7 @@ class AnswerController extends Controller
             $answer_id = $model->id;
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
                 'modal' => $this->builderModal($answer_id, $img_response),
@@ -161,10 +161,9 @@ class AnswerController extends Controller
             $answer_id = $model->id;
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
-                'modal' => $this->builderModal($answer_id, $img),
             ]);
         }
     }
@@ -309,7 +308,7 @@ class AnswerController extends Controller
      *  Create the response as html container 
      * to integrate it into the view
      */
-    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id)
+    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id)
     {
         if (Yii::$app->user->isGuest) {
             return '';
@@ -338,11 +337,11 @@ class AnswerController extends Controller
                             ' Delete' . 
                         '</button>' .
                         ' ' .
-                        '<a href="#ex-' . $answer_id . '" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" rel="modal:open">' . 
+                        '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-' . $answer_id . '">' .
                             '<i class="far fa-edit">' . 
                             '</i>' . 
-                            ' Update' . 
-                        '</a>' .
+                            ' Update' .
+                        '</button>' .
                         ' ' .
                         '<button type="button" class="btn btn-success btn-sm">'.
                             '<i class="fas fa-share">' .
@@ -359,6 +358,8 @@ class AnswerController extends Controller
                             '45 likes - 2 comments' .
                         '</span>' .
                     '</div>' .
+            '</div>' .
+            '<div id="modals-' . $id . '">' .
             '</div>';
         }
     }
@@ -410,14 +411,30 @@ class AnswerController extends Controller
             return '';
         } else {
             return
-            '<div id="ex-' . $answer_id . '" class="modal">' .
-                '<div class="card-footer mb-3">'.
-                    '<div class="img-fluid img-circle img-sm">'.
-                        $img_response .
+            '<div class="modal fade" id="ex-' . $answer_id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' .
+                '<div class="modal-dialog" role="document">' .
+                    '<div class="modal-content">' .
+                        '<div class="modal-header">' .
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' .
+                            '<span aria-hidden="true">&times;</span>' .
+                            '</button>' .
+                        '</div>' .
+                        '<div class="modal-body">' .
+                            '<div class="card-footer mb-3">' .
+                                '<div class="img-fluid img-circle img-sm">' .
+                                    $img_response .
+                                '</div>' .
+                                '<div class="img-push">' .
+                                    '<input type="text" id="con-' . $answer_id . '" class="form-control form-control-sm" placeholder="Press enter to post comment">' .
+                                '</div>' .
+                            '</div>' .
+                        '</div>' .
+                        '<div class="modal-footer">' .
+                            '<button type="button" id="send-' . $answer_id . '" class="btn btn-primary">' .
+                                'Save changes' .
+                            '</button>' .
+                        '</div>' .
                     '</div>' .
-                    '<div class="img-push">' .
-                        '<input type="text" id="con-' . $answer_id . '" class="form-control form-control-sm" placeholder="Press enter to post comment">'.
-                    '</div>' . 
                 '</div>' .
             '</div>';
         }

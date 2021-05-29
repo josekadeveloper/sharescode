@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    overflow: scroll;
 }
 
 .wrap {
@@ -131,13 +132,18 @@ a.desc:after {
 }
 
 .modal {
-    height: 10% !important;
+    height: 30% !important;
     width: 50% !important;
     margin-left: 35%;
     margin-top: 15%;
+    padding: 0px !important;
 }
 
-.modal a.close-modal {
-    top: -3px !important;
-    right: -3px !important;
+.send {
+    margin-top: 5px;
+}
+
+.empty {
+    text-align: center;
+    margin: 5%;
 }
