@@ -96,6 +96,10 @@ class AnswerController extends Controller
             $model_portrait = $this->findPortrait($users_id);
             $username = $model_portrait->nickname;
             $img = Portrait::devolverImg($model_portrait);
+            $model_portrait->sex === 'Men'
+            ? $url = '@web/img/men.svg'
+            : $url = '@web/img/woman.svg';
+            $img_response = Html::img($url, ['class'=> 'img-answer']);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
             $date_created = date('Y-m-d H:i:s');
             $content = Yii::$app->request->post('content');
@@ -115,9 +119,10 @@ class AnswerController extends Controller
             $answer_id = $model->id;
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
+                'modal' => $this->builderModal($answer_id, $img_response),
             ]);
         }
     }
@@ -129,30 +134,38 @@ class AnswerController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-        $model = $this->findModel($id);
-        $users_id = Yii::$app->user->id;
-        $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
-        $sending_user_id = Query::findOne(['id' => $query_id])['users_id'];
-        $urlAnswer = Url::toRoute(['query/view', 'id' => $query_id]);
+        if (Yii::$app->request->isAjax) {
 
-        if ($this->findOwnAnswer($id, $users_id)) {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $id = Yii::$app->request->post('id');
+            $model = $this->findModel($id);
+            $users_id = Yii::$app->user->id;
+            $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
+            $sending_user_id = Query::findOne(['id' => $query_id])['users_id'];
+            $model_portrait = $this->findPortrait($users_id);
+            $username = $model_portrait->nickname;
+            $img = Portrait::devolverImg($model_portrait);
+            $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
+            $date_created = date('Y-m-d H:i:s');
+            $content = Yii::$app->request->post('content');
+            
+            $model->content = $content;
+            $model->date_created = $date_created;
+
+            if ($model->save()) {
                 $this->createReminder($query_id, $sending_user_id);
                 $this->sendReminder($id, $sending_user_id);
-                Yii::$app->session->setFlash('success', 'Answer has been modified successfully.');
-                return $this->redirect($urlAnswer);
             }
-    
-            return $this->render('update', [
-                'model' => $model,
-                'query_id' => $query_id,
-                'users_id' => $users_id,
+
+            $answer_id = $model->id;
+
+            return $this->asJson([
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id),
+                'answer_id' => $answer_id,
+                'reminders' => $this->builderReminders(),
             ]);
         }
-        Yii::$app->session->setFlash('error', 'You can only update your own answer.');
-        return $this->redirect($urlAnswer); 
     }
 
     /**
@@ -295,9 +308,8 @@ class AnswerController extends Controller
      *  Create the response as html container 
      * to integrate it into the view
      */
-    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id)
+    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id)
     {
-        Yii::debug($answer_id);
         if (Yii::$app->user->isGuest) {
             return '';
         } else {
@@ -324,16 +336,19 @@ class AnswerController extends Controller
                             '</i>' . 
                             ' Delete' . 
                         '</button>' .
-                        '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update">' . 
+                        ' ' .
+                        '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-' . $answer_id . '">' .
                             '<i class="far fa-edit">' . 
                             '</i>' . 
-                            ' Update' . 
+                            ' Update' .
                         '</button>' .
+                        ' ' .
                         '<button type="button" class="btn btn-success btn-sm">'.
                             '<i class="fas fa-share">' .
                             '</i>' .
                             ' Share' .
                         '</button>' .
+                        ' ' .
                         '<button type="button" class="btn btn-default btn-sm">'.
                             '<i class="far fa-thumbs-up">' .
                             '</i>' .
@@ -343,6 +358,8 @@ class AnswerController extends Controller
                             '45 likes - 2 comments' .
                         '</span>' .
                     '</div>' .
+            '</div>' .
+            '<div id="modals-' . $id . '">' .
             '</div>';
         }
     }
@@ -381,6 +398,45 @@ class AnswerController extends Controller
                     '</a>' . 
                 '</div>' .
             '</li>';
+        }
+    }
+
+    /**
+     *  Create the modal window as html container 
+     * to integrate it into the view
+     */
+    public function builderModal($answer_id, $img_response)
+    {
+        if (Yii::$app->user->isGuest) {
+            return '';
+        } else {
+            return
+            '<div class="modal fade" id="ex-' . $answer_id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' .
+                '<div class="modal-dialog" role="document">' .
+                    '<div class="modal-content">' .
+                        '<div class="modal-header">' .
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' .
+                            '<span aria-hidden="true">&times;</span>' .
+                            '</button>' .
+                        '</div>' .
+                        '<div class="modal-body">' .
+                            '<div class="card-footer mb-3">' .
+                                '<div class="img-fluid img-circle img-sm">' .
+                                    $img_response .
+                                '</div>' .
+                                '<div class="img-push">' .
+                                    '<input type="text" id="con-' . $answer_id . '" class="form-control form-control-sm" placeholder="Press enter to post comment">' .
+                                '</div>' .
+                            '</div>' .
+                        '</div>' .
+                        '<div class="modal-footer">' .
+                            '<button type="button" id="send-' . $answer_id . '" class="btn btn-primary">' .
+                                'Save changes' .
+                            '</button>' .
+                        '</div>' .
+                    '</div>' .
+                '</div>' .
+            '</div>';
         }
     }
 }

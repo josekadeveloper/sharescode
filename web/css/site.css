@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    overflow: scroll;
 }
 
 .wrap {
@@ -128,4 +129,21 @@ a.desc:after {
 .img-answer {
     height: 40px;
     margin-top: -10px;
+}
+
+.modal {
+    height: 30% !important;
+    width: 50% !important;
+    margin-left: 35%;
+    margin-top: 15%;
+    padding: 0px !important;
+}
+
+.send {
+    margin-top: 5px;
+}
+
+.empty {
+    text-align: center;
+    margin: 5%;
 }
