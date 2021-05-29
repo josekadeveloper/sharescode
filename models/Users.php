@@ -64,17 +64,6 @@ class Users extends \yii\db\ActiveRecord
         return true;
     }
 
-
-    /**
-     * Gets query for [[Prestiges]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPrestiges()
-    {
-        return $this->hasMany(Prestige::class, ['users_id' => 'id'])->inverseOf('users');
-    }
-
     /**
      * Gets query for [[Queries]].
      *
@@ -190,6 +179,43 @@ class Users extends \yii\db\ActiveRecord
     {
         if (!Yii::$app->user->isGuest) {
             return Portrait::findOne(['id' => Yii::$app->user->id])->prestige_port;
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Returns the id of prestige of the user
+     *
+     * @return int
+     */
+    public static function getPrestigeId($prestige)
+    {
+        if (!Yii::$app->user->isGuest) {
+            return Prestige::findOne(['type_prestige' => $prestige])['id'];
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     *  Returns the antiquity of the user since he was registered 
+     * in the web application
+     *
+     * @return string
+     */
+    public static function getAntiquity()
+    {
+        $time_registration = Portrait::findOne([
+            'id' => Yii::$app->user->id,
+        ])['date_register'];
+        $today = new DateTime();
+        $time_registration = new DateTime($time_registration);
+        $time = $today->diff($time_registration);
+        $time = $time->format('%D days - %H hours - %I minutes - %S seconds');
+
+        if (!Yii::$app->user->isGuest) {
+            return $time;
         } else {
             return '';
         }

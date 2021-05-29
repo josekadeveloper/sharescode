@@ -31,9 +31,7 @@ CREATE TABLE prestige
 (
     id              bigserial    PRIMARY KEY
   , type_prestige   varchar(255) NOT NULL
-  , antiquity       timestamp
-  , score           smallint     NOT NULL DEFAULT 0
-  , users_id        bigint       REFERENCES users (id)  
+  , score           smallint     NOT NULL
 );
 
 DROP TABLE IF EXISTS query CASCADE;
@@ -79,9 +77,9 @@ VALUES (false);
 INSERT INTO portrait (is_admin, nickname, password, date_register, email, repository, prestige_port, sex)
 VALUES (true, 'admin', crypt('admin', gen_salt('bf', 10)), '2021-04-12 19:10:00', 'jose@gmail.com', 'https://github.com/joseckk', 'Initiate', 'Men');
 
-INSERT INTO prestige (type_prestige, score, users_id)
-VALUES ('Initiate', 0, null),
-       ('Regular', 32, null),
-       ('Junior', 89, null),
-       ('Senior', 150, null),
-       ('Programmer', 300, null);
+INSERT INTO prestige (type_prestige, score)
+VALUES ('Initiate', 0),
+       ('Regular', 32),
+       ('Junior', 89),
+       ('Senior', 150),
+       ('Programmer', 300);

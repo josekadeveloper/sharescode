@@ -9,9 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $type_prestige
- * @property string|null $antiquity
  * @property int $score
- * @property int|null $portrait_id
  *
  * @property Portrait $portrait
  */
@@ -32,11 +30,9 @@ class Prestige extends \yii\db\ActiveRecord
     {
         return [
             [['type_prestige'], 'required'],
-            [['antiquity'], 'safe'],
-            [['score', 'portrait_id'], 'default', 'value' => null],
-            [['score', 'portrait_id'], 'integer'],
+            [['score'], 'default', 'value' => null],
+            [['score'], 'integer'],
             [['type_prestige'], 'string', 'max' => 255],
-            [['portrait_id'], 'exist', 'skipOnError' => true, 'targetClass' => Portrait::className(), 'targetAttribute' => ['portrait_id' => 'id']],
         ];
     }
 
@@ -48,19 +44,7 @@ class Prestige extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'type_prestige' => 'Type Prestige',
-            'antiquity' => 'Antiquity',
             'score' => 'Score',
-            'portrait_id' => 'Portrait',
         ];
-    }
-
-    /**
-     * Gets query for [[Portrait]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPortrait()
-    {
-        return $this->hasOne(Portrait::class, ['id' => 'portrait_id'])->inverseOf('prestiges');
     }
 }
