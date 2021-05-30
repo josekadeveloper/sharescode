@@ -15,7 +15,10 @@ use yii\widgets\DetailView;
                                 'model' => $model,
                                 'attributes' => [
                                     'title',
-                                    'antiquity',
+                                    [
+                                        'label' => 'Antiquity',
+                                        'value' => $antiquity,
+                                    ],
                                     'puntuation',
                                 ],
                             ]) ?>

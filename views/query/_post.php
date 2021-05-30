@@ -3,6 +3,7 @@
 use app\models\Answer;
 use app\models\Portrait;
 use app\models\Query;
+use app\models\Users;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -27,6 +28,7 @@ if (Yii::$app->user->id !== null) {
 $url_create = Url::to(['answer/create', 'id' => $model->id]);
 $url_delete = Url::to(['answer/delete']);
 $url_update = Url::to(['answer/update']);
+$url_vote = Url::to(['answer/vote']);
 $createAnswer = <<<EOT
     $('#content-$model->id').keydown(function (ev) {
         if (ev.keyCode == 13) { 
@@ -253,10 +255,47 @@ $updateAnswer = <<<EOT
     });
     
 EOT;
+
+$voteAnswer = <<<EOT
+    var list = [];
+    $(".vote").each(function(index) {
+        list.push($(this).attr("id"));
+    });
+
+    $.each(list, function (ind, elem) {
+        $('#'+elem).click(function (ev) {
+            ev.preventDefault();
+            var id = elem.substring(5);
+
+            $.ajax({
+                type: 'POST',
+                url: '$url_vote',
+                data: {
+                    id: id,
+                }
+            })
+            .done(function (data) {
+                let answer_id = data.answer_id;
+                let oldAnswer = $('#vote-'+answer_id).parent().parent();
+                oldAnswer.fadeOut('fast', function() {
+                    oldAnswer.remove();
+                });
+
+                let newAnswer = $(data.response);
+  
+                let father_id = $('#vote-'+answer_id).parent().parent().parent().attr("id");
+                $('#'+father_id).append(newAnswer);
+                newAnswer.fadeIn('fast');
+            });
+            return false;
+        });
+    });
+EOT;
 if (!Yii::$app->user->isGuest) {
     $this->registerJs($createAnswer);
     $this->registerJs($deleteAnswer);
     $this->registerJs($updateAnswer);
+    $this->registerJs($voteAnswer);
 }
 ?>
 <div class="row justify-content-center mt-5">
@@ -293,37 +332,83 @@ if (!Yii::$app->user->isGuest) {
         </div>
             <div id="answers-<?= $model->id ?>">
                 <?php foreach ($answers_list as $answer): ?>
-                    <!-- /.card-body -->
-                    <div class="card-footer card-comments">
-                        <div class="card-comment">
-                            <!-- User image -->
-                            <div class="img-circle" alt="User Image">
-                                <?= Answer::findUserImage($answer->users_id) ?>
-                            </div>
+                    <?php if (Answer::bestAnswer($answer->id)): ?>
+                        <!-- /.card-body -->
+                        <div class="card-footer card-comments bestAnswer">
+                            <div class="card-comment">
+                                <!-- User image -->
+                                <div class="img-circle" alt="User Image">
+                                    <?= Answer::findUserImage($answer->users_id) ?>
+                                </div>
 
-                            <div class="comment-text">
-                                <span class="username">
-                                    <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                                <span class="text-muted float-right"><?= $answer->date_created ?></span>
-                                </span><!-- /.username -->
-                                <?= $answer->content ?>
+                                <div class="comment-text">
+                                    <span class="username">
+                                        <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
+                                    <span class="text-muted float-right"><?= $answer->date_created ?></span>
+                                    </span><!-- /.username -->
+                                    <?= $answer->content ?>
+                                </div>
+                                <hr>
+                                <?php if ($answer->users_id === Yii::$app->user->id): ?>
+                                    <!-- Delete or update answer -->
+                                    <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                    <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
+                                        <i class="far fa-edit"></i> Update
+                                    </button>
+                                <?php endif ?>
+                                <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
+                                    <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
+                                        <!-- Social sharing buttons -->
+                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
+                                    <?php else: ?>
+                                        <!-- Social sharing buttons -->
+                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                    <?php endif ?>
+                                <?php endif ?>
+                                <span class="float-right text-muted"><?= $answer->likes ?> likes</span>
+                                <!-- /.comment-text -->
                             </div>
-                            <hr>
-                            <?php if ($answer->users_id === Yii::$app->user->id): ?>
-                                <!-- Delete or update answer -->
-                                <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
-                                <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
-                                    <i class="far fa-edit"></i> Update
-                                </button>
-                            <?php endif ?>
-                            <!-- Social sharing buttons -->
-                            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-share"></i> Share</button>
-                            <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like</button>
-                            <span class="float-right text-muted">45 likes - 2 comments</span>
-                            <!-- /.comment-text -->
+                            <!-- /.card-comment -->
                         </div>
-                        <!-- /.card-comment -->
-                    </div>
+                    <?php else: ?>
+                        <!-- /.card-body -->
+                        <div class="card-footer card-comments">
+                            <div class="card-comment">
+                                <!-- User image -->
+                                <div class="img-circle" alt="User Image">
+                                    <?= Answer::findUserImage($answer->users_id) ?>
+                                </div>
+
+                                <div class="comment-text">
+                                    <span class="username">
+                                        <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
+                                    <span class="text-muted float-right"><?= $answer->date_created ?></span>
+                                    </span><!-- /.username -->
+                                    <?= $answer->content ?>
+                                </div>
+                                <hr>
+                                <?php if ($answer->users_id === Yii::$app->user->id): ?>
+                                    <!-- Delete or update answer -->
+                                    <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                    <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
+                                        <i class="far fa-edit"></i> Update
+                                    </button>
+                                <?php endif ?>
+                                <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
+                                    <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
+                                        <!-- Social sharing buttons -->
+                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
+                                    <?php else: ?>
+                                        <!-- Social sharing buttons -->
+                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                    <?php endif ?>
+                                <?php endif ?>
+                                <span class="float-right text-muted"><?= $answer->likes ?> likes</span>
+                                <!-- /.comment-text -->
+                            </div>
+                            <!-- /.card-comment -->
+                        </div>
+                    <?php endif ?>
                    <div id="modals-<?= $model->id ?>">
                         <?php if ($user_actually_id): ?>
                             <div class="modal fade" id="ex-<?= $answer->id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

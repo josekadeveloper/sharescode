@@ -35,8 +35,8 @@ class Answer extends \yii\db\ActiveRecord
         return [
             [['content', 'date_created', 'query_id'], 'required'],
             [['date_created'], 'safe'],
-            [['query_id', 'users_id'], 'default', 'value' => null],
-            [['query_id', 'users_id'], 'integer'],
+            [['likes', 'query_id', 'users_id'], 'default', 'value' => null],
+            [['likes', 'query_id', 'users_id'], 'integer'],
             [['content'], 'string', 'max' => 255],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['users_id' => 'id']],
             [['query_id'], 'exist', 'skipOnError' => true, 'targetClass' => Query::class, 'targetAttribute' => ['query_id' => 'id']],
@@ -52,6 +52,7 @@ class Answer extends \yii\db\ActiveRecord
             'id' => 'ID',
             'content' => 'Content',
             'date_created' => 'Date Created',
+            'likes' => 'Likes',
             'query_id' => 'Query ID',
             'users_id' => 'User ID',
         ];
@@ -119,5 +120,22 @@ class Answer extends \yii\db\ActiveRecord
             return $urlPortrait;
         }
         return null;
+    }
+
+    /**
+     *  Return the best-scored answer
+     * 
+     * @param integer $answer_id
+     * @return mixed string || null
+     */
+    public static function bestAnswer($answer_id)
+    {
+        if (!Yii::$app->user->isGuest) {
+            $otherAnswer = Answer::findOne(['id' => $answer_id])['likes'];
+            $theBest = Answer::find()->max('likes');
+            return $otherAnswer === $theBest;
+        } else {
+            return null;
+        }
     }
 }

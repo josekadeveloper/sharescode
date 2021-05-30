@@ -6,9 +6,12 @@ use Yii;
 use app\models\Answer;
 use app\models\AnswerSearch;
 use app\models\Portrait;
+use app\models\Prestige;
 use app\models\Query;
 use app\models\Reminder;
+use app\models\TypePrestige;
 use app\models\Users;
+use app\models\Votes;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -118,8 +121,28 @@ class AnswerController extends Controller
             }
             $answer_id = $model->id;
 
+            $likes = $model->likes . ' likes';
+
+            if ($model->likes === null) {
+                $likes = 0 . ' likes';
+            }
+
+            $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 
+                                '<i class="fas fa-minus-circle">' . 
+                                '</i>' . 
+                                ' Delete' . 
+                            '</button>';
+
+            $updateButton = '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" 
+                                data-toggle="modal" data-target="#ex-' . $answer_id . '">' .
+                                '<i class="far fa-edit">' . 
+                                '</i>' . 
+                                ' Update' .
+                            '</button>';
+
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, 
+                                                     $updateButton, '', $likes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
                 'modal' => $this->builderModal($answer_id, $img_response),
@@ -137,7 +160,6 @@ class AnswerController extends Controller
     public function actionUpdate()
     {
         if (Yii::$app->request->isAjax) {
-
             $id = Yii::$app->request->post('id');
             $model = $this->findModel($id);
             $users_id = Yii::$app->user->id;
@@ -160,8 +182,28 @@ class AnswerController extends Controller
 
             $answer_id = $model->id;
 
+            $likes = $model->likes . ' likes';
+
+            if ($model->likes === null) {
+                $likes = 0 . ' likes';
+            }
+
+            $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 
+                                '<i class="fas fa-minus-circle">' . 
+                                '</i>' . 
+                                ' Delete' . 
+                            '</button>';
+
+            $updateButton = '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" 
+                                data-toggle="modal" data-target="#ex-' . $answer_id . '">' .
+                                '<i class="far fa-edit">' . 
+                                '</i>' . 
+                                ' Update' .
+                            '</button>';
+
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, 
+                                                     $updateButton, '', $likes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
             ]);
@@ -191,6 +233,61 @@ class AnswerController extends Controller
                 }
             }
             Yii::$app->session->setFlash('error', 'You can only delete your own answer.');
+        } 
+    }
+
+    /**
+     * Vote an existing Answer model.
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionVote()
+    {
+        if (Yii::$app->request->isAjax) {
+            $answer_id = Yii::$app->request->post('id');
+            $users_id = Yii::$app->user->id;
+            $nickname = Portrait::findOne(['id' => $users_id])['nickname'];
+            $model_votes = new Votes([
+                'nickname' => $nickname,
+                'answer_id' => $answer_id,
+                'users_id' => $users_id,
+            ]);
+            $model_votes->save();
+    
+            $model_answer = $this->findModel($answer_id);
+            $model_answer->likes += 1;
+            $model_answer->save();
+
+            $model_prestige = Prestige::findOne(['users_id' => $model_answer->users_id]);
+            $model_prestige->puntuation += 1;
+            $prestige = TypePrestige::find()
+                                ->select('prestige')
+                                ->where(['<=', 'score', $model_prestige->puntuation])->one()['prestige'];
+            $model_prestige->title = $prestige;
+            $model_prestige->save();
+
+            $model_portrait = Portrait::findOne(['id' => $model_answer->users_id]);
+            $model_portrait->prestige_port = $prestige;
+            $model_portrait->save();
+
+            $img = Portrait::devolverImg($model_portrait);
+            $urlPortrait = Url::toRoute(['portrait/view', 'id' => $model_portrait->id]);
+            $username = $model_portrait->nickname;
+            $date_created = $model_answer->date_created;
+            $content = $model_answer->content;
+            $likes = $model_answer->likes . ' likes';
+
+            $voteButton = '<button type="button" id="vote-' . $answer_id . '" class="btn btn-success btn-sm voted">'.
+                              '<i class="far fa-thumbs-up">' .
+                              '</i>' .
+                              ' Like' .
+                          '</button>';
+
+            return $this->asJson([
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, '', 
+                                                     '', $voteButton, $likes, $answer_id),
+                'answer_id' => $answer_id,
+            ]);
         } 
     }
 
@@ -308,7 +405,7 @@ class AnswerController extends Controller
      *  Create the response as html container 
      * to integrate it into the view
      */
-    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $answer_id, $id)
+    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, $updateButton, $voteButton, $votes, $id)
     {
         if (Yii::$app->user->isGuest) {
             return '';
@@ -331,31 +428,13 @@ class AnswerController extends Controller
                             $content .
                         '</div>'.
                         '<hr>'.
-                        '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 
-                            '<i class="fas fa-minus-circle">' . 
-                            '</i>' . 
-                            ' Delete' . 
-                        '</button>' .
+                        $deleteButton .
                         ' ' .
-                        '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-' . $answer_id . '">' .
-                            '<i class="far fa-edit">' . 
-                            '</i>' . 
-                            ' Update' .
-                        '</button>' .
+                        $updateButton .
                         ' ' .
-                        '<button type="button" class="btn btn-success btn-sm">'.
-                            '<i class="fas fa-share">' .
-                            '</i>' .
-                            ' Share' .
-                        '</button>' .
-                        ' ' .
-                        '<button type="button" class="btn btn-default btn-sm">'.
-                            '<i class="far fa-thumbs-up">' .
-                            '</i>' .
-                            ' Like' .
-                        '</button>' .
+                        $voteButton .
                         '<span class="float-right text-muted">' .
-                            '45 likes - 2 comments' .
+                            $votes .
                         '</span>' .
                     '</div>' .
             '</div>' .

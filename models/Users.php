@@ -220,4 +220,17 @@ class Users extends \yii\db\ActiveRecord
             return '';
         }
     }
+
+    /**
+     * Check if that answer has already been voted by that user
+     *
+     * @return int
+     */
+    public static function checkVote($answer_id, $users_id)
+    {
+        return Votes::findOne([
+            'answer_id' => $answer_id,
+            'users_id' => $users_id,
+        ]);
+    }
 }

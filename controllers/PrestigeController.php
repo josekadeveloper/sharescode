@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Prestige;
+use app\models\Users;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -20,8 +21,11 @@ class PrestigeController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $antiquity = Users::getAntiquity($model->users_id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'antiquity' => $antiquity,
         ]);
     }
 
