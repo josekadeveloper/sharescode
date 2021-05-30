@@ -6,6 +6,7 @@ use app\models\NotRegistered;
 use Yii;
 use app\models\Portrait;
 use app\models\PortraitSearch;
+use app\models\Prestige;
 use app\models\Users;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -188,11 +189,13 @@ class PortraitController extends Controller
         }
         $model = $this->findModel($id);
         $model_portrait = Portrait::findOne(['id' => Yii::$app->user->id]);
+        $prestige_id = Users::getPrestigeId($id);
 
         return $this->render('view', [
             'model' => $model,
             'model_portrait' => $model_portrait,
             'user_id' => $user_id,
+            'prestige_id' => $prestige_id,
         ]);
     }
 
@@ -240,6 +243,19 @@ class PortraitController extends Controller
      */
     private function createUser() {
         $model = new Users();
+        $model->save();
+        $this->createPrestige($model->id);
+    }
+
+    /**
+     * Create a Prestige of the User.
+     */
+    private function createPrestige($users_id) {
+        $model = new Prestige([
+            'puntuation' => 0,
+            'type_prestige_id' => 1,
+            'users_id' => $users_id,
+        ]);
         $model->save();
     }
 }

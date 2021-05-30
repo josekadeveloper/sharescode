@@ -18,7 +18,7 @@ $urlPortrait = Url::to(['/portrait/view', 'id' => Yii::$app->user->id]);
 $img = Users::getImg();
 $nickname = Users::getNickname();
 $prestige = Users::getPrestige();
-$prestige_id = Users::getPrestigeId($prestige);
+$prestige_id = Users::getPrestigeId(Yii::$app->user->id);
 $urlPrestige = Url::to(['/prestige/view', 'id' => $prestige_id]);
 ?>
 <?php $this->beginPage() ?>

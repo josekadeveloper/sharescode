@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 ?>
 
 <div class="row justify-content-center">
-    <div class="prestige-view formulario col-md-6" style="margin-bottom: 2.7vw;">
+    <div class="prestige-view formulario col-md-6" style="margin-top: 1.5vw; margin-bottom: 20vw;">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
@@ -14,16 +14,9 @@ use yii\widgets\DetailView;
                             <?= DetailView::widget([
                                 'model' => $model,
                                 'attributes' => [
-                                    [
-                                        'label' => 'User',
-                                        'value' => $nickname,
-                                    ],
-                                    'type_prestige',
-                                    [
-                                        'label' => 'Antiquity',
-                                        'value' => $antiquity,
-                                    ],
-                                    'score',
+                                    'title',
+                                    'antiquity',
+                                    'puntuation',
                                 ],
                             ]) ?>
                         </div>

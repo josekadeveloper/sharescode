@@ -189,10 +189,10 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return int
      */
-    public static function getPrestigeId($prestige)
+    public static function getPrestigeId($id)
     {
         if (!Yii::$app->user->isGuest) {
-            return Prestige::findOne(['type_prestige' => $prestige])['id'];
+            return Prestige::findOne(['users_id' => $id])['id'];
         } else {
             return '';
         }
@@ -204,10 +204,10 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return string
      */
-    public static function getAntiquity()
+    public static function getAntiquity($id)
     {
         $time_registration = Portrait::findOne([
-            'id' => Yii::$app->user->id,
+            'id' => $id,
         ])['date_register'];
         $today = new DateTime();
         $time_registration = new DateTime($time_registration);
