@@ -31,6 +31,7 @@ use yii\helpers\Html;
                         [
                             'label' => 'Prestigie',
                             'icon' => 'fas fa-medal',
+                            'url' => $urlPrestige, 
                             'badge' => '<span class="right badge badge-info">' . $prestigie .  '</span>',
                         ],
                         ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'], 

@@ -35,8 +35,8 @@ class Answer extends \yii\db\ActiveRecord
         return [
             [['content', 'date_created', 'query_id'], 'required'],
             [['date_created'], 'safe'],
-            [['query_id', 'users_id'], 'default', 'value' => null],
-            [['query_id', 'users_id'], 'integer'],
+            [['likes', 'query_id', 'users_id'], 'default', 'value' => null],
+            [['likes', 'query_id', 'users_id'], 'integer'],
             [['content'], 'string', 'max' => 255],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['users_id' => 'id']],
             [['query_id'], 'exist', 'skipOnError' => true, 'targetClass' => Query::class, 'targetAttribute' => ['query_id' => 'id']],
@@ -52,6 +52,7 @@ class Answer extends \yii\db\ActiveRecord
             'id' => 'ID',
             'content' => 'Content',
             'date_created' => 'Date Created',
+            'likes' => 'Likes',
             'query_id' => 'Query ID',
             'users_id' => 'User ID',
         ];
@@ -119,5 +120,37 @@ class Answer extends \yii\db\ActiveRecord
             return $urlPortrait;
         }
         return null;
+    }
+
+    /**
+     *  
+     * Check if when you delete the answer you have 
+     * to delete the notifications as well
+     * @param integer $answer_id
+     * @return mixed string || null
+     */
+    public static function checkAnswer($answer_id)
+    {
+        $query_id = Answer::findOne(['id' => $answer_id])['query_id'];
+
+        return Query::findOne([
+            'id' => $query_id
+        ])['users_id'];
+    }
+
+    /**
+     *  Return the best-scored answer
+     * 
+     * @param integer $answer_id
+     * @return mixed string || null
+     */
+    public static function bestAnswer($answer_id)
+    {
+        $otherAnswer = Answer::findOne(['id' => $answer_id])['likes'];
+        $theBest = Answer::find()->max('likes');
+        if ($theBest === 0) {
+            return null;
+        }
+        return $otherAnswer === $theBest;
     }
 }

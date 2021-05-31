@@ -64,17 +64,6 @@ class Users extends \yii\db\ActiveRecord
         return true;
     }
 
-
-    /**
-     * Gets query for [[Prestiges]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPrestiges()
-    {
-        return $this->hasMany(Prestige::class, ['users_id' => 'id'])->inverseOf('users');
-    }
-
     /**
      * Gets query for [[Queries]].
      *
@@ -193,5 +182,55 @@ class Users extends \yii\db\ActiveRecord
         } else {
             return '';
         }
+    }
+
+    /**
+     * Returns the id of prestige of the user
+     *
+     * @return int
+     */
+    public static function getPrestigeId($id)
+    {
+        if (!Yii::$app->user->isGuest) {
+            return Prestige::findOne(['users_id' => $id])['id'];
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     *  Returns the antiquity of the user since he was registered 
+     * in the web application
+     *
+     * @return string
+     */
+    public static function getAntiquity($id)
+    {
+        $time_registration = Portrait::findOne([
+            'id' => $id,
+        ])['date_register'];
+        $today = new DateTime();
+        $time_registration = new DateTime($time_registration);
+        $time = $today->diff($time_registration);
+        $time = $time->format('%D days - %H hours - %I minutes - %S seconds');
+
+        if (!Yii::$app->user->isGuest) {
+            return $time;
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Check if that answer has already been voted by that user
+     *
+     * @return int
+     */
+    public static function checkVote($answer_id, $users_id)
+    {
+        return Votes::findOne([
+            'answer_id' => $answer_id,
+            'users_id' => $users_id,
+        ]);
     }
 }

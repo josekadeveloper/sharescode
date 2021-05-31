@@ -34,7 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'date_register:date',
                     'email:email',
                     'repository:url',
-                    'prestige_port',
+                    [
+                        'label' => 'Prestige Port',
+                        'format' => 'html',
+                        'value' => Html::a($model->prestige_port, ['/prestige/view', 'id' => $prestige_id]),
+                    ],
                     'sex',
             ],
         ]); ?>

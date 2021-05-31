@@ -147,3 +147,7 @@ a.desc:after {
     text-align: center;
     margin: 5%;
 }
+
+.bestAnswer {
+    border: green 10px groove !important;
+}

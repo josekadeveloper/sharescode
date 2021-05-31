@@ -76,4 +76,21 @@ class Reminder extends \yii\db\ActiveRecord
     {
         return Portrait::findOne(['id' => $this->users_id])['nickname'];
     }
+
+    /**
+     *  Check that the notification is correct
+     * to proceed to delete it
+     * @param integer $answer_id
+     * @return mixed string || null
+     */
+    public static function checkReminder($answer_id)
+    {
+        $date_created = Answer::findOne(['id' => $answer_id])['date_created'];
+        $users_id = Answer::checkAnswer($answer_id);
+    
+        return Reminder::findOne([
+            'date_created' => $date_created,
+            'users_id' => $users_id,
+        ])['id'];
+    }
 }

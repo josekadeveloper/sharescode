@@ -17,7 +17,9 @@ $notifications_time = Users::timeReminders();
 $urlPortrait = Url::to(['/portrait/view', 'id' => Yii::$app->user->id]);
 $img = Users::getImg();
 $nickname = Users::getNickname();
-$prestigie = Users::getPrestige();
+$prestige = Users::getPrestige();
+$prestige_id = Users::getPrestigeId(Yii::$app->user->id);
+$urlPrestige = Url::to(['/prestige/view', 'id' => $prestige_id]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -49,7 +51,8 @@ $prestigie = Users::getPrestige();
         'urlPortrait' => $urlPortrait,
         'nickname' => $nickname,
         'img' => $img,
-        'prestigie' => $prestigie,
+        'prestigie' => $prestige,
+        'urlPrestige' => $urlPrestige,
         ]) ?>
 
     <!-- Content Wrapper. Contains page content -->
