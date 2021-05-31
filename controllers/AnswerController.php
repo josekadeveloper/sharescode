@@ -414,7 +414,7 @@ class AnswerController extends Controller
             return '';
         } else {
             return
-            '<div class="card-footer card-comments">' .
+            '<div id="container-answer-' . $id . '" class="card-footer card-comments">' .
                     '<div class="card-comment">'.
                         '<div class="img-circle" alt="User Image">'.
                             $img .

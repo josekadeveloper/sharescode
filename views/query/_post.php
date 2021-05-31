@@ -64,7 +64,7 @@ $createAnswer = <<<EOT
                         }
                     })
                     .done(function (data) {
-                        let container = deleteButton.parent().parent();
+                        let container = $('#container-answer-'+id);
                         container.fadeOut('fast', function() {
                             container.remove();
                         });
@@ -91,14 +91,10 @@ $createAnswer = <<<EOT
                             }
                         })
                         .done(function (data) {
-                            location.reload();
-                            let container = $('.fade');
-                            container.fadeOut('fast', function() {
-                                container.hide();
-                            });
+                            $('.fade').modal('hide');
         
                             let answer_id = data.answer_id;
-                            let oldAnswer = $('#update-'+answer_id).parent().parent();
+                            let oldAnswer = $('#container-answer-'+answer_id);
                             oldAnswer.fadeOut('fast', function() {
                                 oldAnswer.remove();
                             });
@@ -120,8 +116,7 @@ $createAnswer = <<<EOT
                                 }
                             })
                             .done(function (data) {
-                                location.reload();
-                                let container = deleteButton.parent().parent();
+                                let container = $('#container-answer-'+answer_id);
   
                                 container.fadeOut('fast', function() {
                                     container.remove();
@@ -202,28 +197,22 @@ $updateAnswer = <<<EOT
                     }
                 })
                 .done(function (data) {
-                    location.reload();
-                    let container = $('.fade');
-                    container.fadeOut('fast', function() {
-                        container.hide();
-                    });
+                    $('.fade').modal('hide');
 
                     let answer_id = data.answer_id;
-                    let oldAnswer = $('#update-'+answer_id).parent().parent();
+                    let oldAnswer = $('#container-answer-'+answer_id);
                     oldAnswer.fadeOut('fast', function() {
                         oldAnswer.remove();
                     });
 
                     let newAnswer = $(data.response);
-                        
+                    
                     let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
                     $('#'+father_id).append(newAnswer);
                     newAnswer.fadeIn('fast');
                     $('#con-'+id).val('');
 
-                    let deleteButton = $('#delete-' + data.answer_id);
-
-                    $('.card-comment').on('click', deleteButton, function(){
+                    $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
                         var id = data.answer_id;
 
                         $.ajax({
@@ -234,9 +223,8 @@ $updateAnswer = <<<EOT
                             }
                         })
                         .done(function (data) {
-                            location.reload();
-                            let container = deleteButton.parent().parent();
-
+                            let container = $('#container-answer-'+answer_id);
+                            
                             container.fadeOut('fast', function() {
                                 container.remove();
                             });
@@ -277,7 +265,7 @@ $voteAnswer = <<<EOT
             })
             .done(function (data) {
                 let answer_id = data.answer_id;
-                let oldAnswer = $('#vote-'+answer_id).parent().parent();
+                let oldAnswer = $('#container-answer-'+answer_id);
                 oldAnswer.fadeOut('fast', function() {
                     oldAnswer.remove();
                 });
@@ -335,7 +323,7 @@ if (!Yii::$app->user->isGuest) {
                 <?php foreach ($answers_list as $answer): ?>
                     <?php if (Answer::bestAnswer($answer->id)): ?>
                         <!-- /.card-body -->
-                        <div class="card-footer card-comments bestAnswer">
+                        <div id="container-answer-<?= $answer->id ?>" class="card-footer card-comments bestAnswer">
                             <div class="card-comment">
                                 <!-- User image -->
                                 <div class="img-circle" alt="User Image">
@@ -373,7 +361,7 @@ if (!Yii::$app->user->isGuest) {
                         </div>
                     <?php else: ?>
                         <!-- /.card-body -->
-                        <div class="card-footer card-comments">
+                        <div id="container-answer-<?= $answer->id ?>" class="card-footer card-comments">
                             <div class="card-comment">
                                 <!-- User image -->
                                 <div class="img-circle" alt="User Image">
