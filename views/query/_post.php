@@ -91,6 +91,7 @@ $createAnswer = <<<EOT
                             }
                         })
                         .done(function (data) {
+                            location.reload();
                             let container = $('.fade');
                             container.fadeOut('fast', function() {
                                 container.hide();

@@ -123,6 +123,22 @@ class Answer extends \yii\db\ActiveRecord
     }
 
     /**
+     *  
+     * Check if when you delete the answer you have 
+     * to delete the notifications as well
+     * @param integer $answer_id
+     * @return mixed string || null
+     */
+    public static function checkAnswer($answer_id)
+    {
+        $query_id = Answer::findOne(['id' => $answer_id])['query_id'];
+
+        return Query::findOne([
+            'id' => $query_id
+        ])['users_id'];
+    }
+
+    /**
      *  Return the best-scored answer
      * 
      * @param integer $answer_id
@@ -130,12 +146,11 @@ class Answer extends \yii\db\ActiveRecord
      */
     public static function bestAnswer($answer_id)
     {
-        if (!Yii::$app->user->isGuest) {
-            $otherAnswer = Answer::findOne(['id' => $answer_id])['likes'];
-            $theBest = Answer::find()->max('likes');
-            return $otherAnswer === $theBest;
-        } else {
+        $otherAnswer = Answer::findOne(['id' => $answer_id])['likes'];
+        $theBest = Answer::find()->max('likes');
+        if ($theBest === 0) {
             return null;
         }
+        return $otherAnswer === $theBest;
     }
 }

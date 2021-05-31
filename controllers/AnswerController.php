@@ -12,6 +12,7 @@ use app\models\Reminder;
 use app\models\TypePrestige;
 use app\models\Users;
 use app\models\Votes;
+use DateTime;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -94,7 +95,6 @@ class AnswerController extends Controller
     public function actionCreate($id)
     {
         if (Yii::$app->request->isAjax) {
-
             $users_id = Yii::$app->user->id;
             $model_portrait = $this->findPortrait($users_id);
             $username = $model_portrait->nickname;
@@ -111,6 +111,7 @@ class AnswerController extends Controller
             $model = new Answer([
                 'content' => $content,
                 'date_created' => $date_created,
+                'likes' => 0,
                 'query_id' => $id,
                 'users_id' => $users_id,
             ]);
@@ -119,8 +120,8 @@ class AnswerController extends Controller
                 $this->createReminder($id, $sending_user_id);
                 $this->sendReminder($id, $sending_user_id);
             }
-            $answer_id = $model->id;
 
+            $answer_id = $model->id;
             $likes = $model->likes . ' likes';
 
             if ($model->likes === null) {
@@ -221,16 +222,17 @@ class AnswerController extends Controller
             $id = Yii::$app->request->post('id');
             $users_id = Yii::$app->user->id;
 
-            $model_reminder = $this->findReminder($id);
-
             if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
-                if ($this->findModel($id)->delete()) {
-                    $model_reminder->delete();
-                    Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
-                    return $this->asJson([
-                        'reminders' => $this->builderReminders(),
-                    ]);
-                }
+                $reminder_id = Reminder::checkReminder($id);
+                $model_reminder = $this->findReminder($reminder_id);
+                $model_reminder->delete();
+
+                $this->findModel($id)->delete();
+                Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
+
+                return $this->asJson([
+                    'reminders' => $this->builderReminders(),
+                ]);
             }
             Yii::$app->session->setFlash('error', 'You can only delete your own answer.');
         } 
@@ -354,6 +356,7 @@ class AnswerController extends Controller
         $name_query = Query::findOne(['id' => $query_id])['title'];
         $reminder = new Reminder(['title' => 'Se ha respondido a una de tus consultas', 
                                   'dispatch' => "Se ha respondido a la consulta $name_query",
+                                  'date_created' => date('Y-m-d H:i:s'),
                                   'users_id' => $users_id]);
         $reminder->save();
     }

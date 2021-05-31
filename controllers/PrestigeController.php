@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\Prestige;
 use app\models\Users;
 use yii\web\Controller;
@@ -26,44 +25,6 @@ class PrestigeController extends Controller
         return $this->render('view', [
             'model' => $model,
             'antiquity' => $antiquity,
-        ]);
-    }
-
-    /**
-     * Creates a new Prestige model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Prestige();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Prestige model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
         ]);
     }
 
