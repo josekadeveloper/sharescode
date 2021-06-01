@@ -264,9 +264,8 @@ class AnswerController extends Controller
             $model_prestige = Prestige::findOne(['users_id' => $model_answer->users_id]);
             $model_prestige->puntuation += 1;
 
-            $prestige_id = TypePrestige::find()
-                                ->where(['>=', 'score', $model_prestige->puntuation])->one()['id'];
-            $prestige = TypePrestige::findOne(['id' => $prestige_id-1])['prestige'];
+            $prestige = TypePrestige::find()
+                                ->where(['=', 'score', $model_prestige->puntuation])->one()['prestige'];
             $model_prestige->title = $prestige;
             $model_prestige->save();
 
