@@ -142,15 +142,29 @@ class Answer extends \yii\db\ActiveRecord
      *  Return the best-scored answer
      * 
      * @param integer $answer_id
-     * @return mixed string || null
+     * @return mixed boolean || null
      */
     public static function bestAnswer($answer_id)
     {
-        $otherAnswer = Answer::findOne(['id' => $answer_id])['likes'];
+        $otherAnswer = Answer::findOne(['id' => $answer_id]);
+        Yii::debug($otherAnswer);
         $theBest = Answer::find()->max('likes');
+        Yii::debug($theBest);
+        $date_created = Answer::find()->max('date_created');
+        Yii::debug($date_created);
+        Yii::debug($otherAnswer->date_created);
+
+        $cont = 0;
         if ($theBest === 0) {
             return null;
+        } 
+        if ($otherAnswer->likes === $theBest) {
+            $cont++;
+            if ($cont >= 2) {
+
+            } else {
+                return true;
+            }
         }
-        return $otherAnswer === $theBest;
     }
 }

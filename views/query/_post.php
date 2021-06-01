@@ -7,8 +7,6 @@ use app\models\Users;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js', ['position' => $this::POS_END]);
-
 $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
@@ -78,6 +76,11 @@ $createAnswer = <<<EOT
                 updateButton.click(function(ev) {
                     ev.preventDefault();
                     let id = data.answer_id;
+
+                    let cont1 = $('#container-answer-'+id).find('.comment-text').text();
+                    let cont2 = $.trim($.trim(cont1.substr(24)));
+                    let content = $('#con-'+id);
+                    content.val(cont2);
                 
                     $('#send-'+id).click(function (ev) {
                         var content = $('#con-'+id).val();
@@ -105,6 +108,7 @@ $createAnswer = <<<EOT
                             $('#'+father_id).append(newAnswer);
                             newAnswer.fadeIn('fast');
                             $('#con-'+id).val('');
+                            $('#con-'+id).val(content);
 
 
                         $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
@@ -152,6 +156,7 @@ $deleteAnswer = <<<EOT
         $('#'+elem).click(function (ev) {
             ev.preventDefault();
             var id = elem.substring(7);
+            console.log(id);
 
             $.ajax({
                 type: 'POST',
@@ -162,6 +167,7 @@ $deleteAnswer = <<<EOT
             })
             .done(function (data) {
                 let container = $('#'+elem).parent().parent();
+                console.log(container);
                 container.fadeOut('fast', function() {
                     container.remove();
                 });
@@ -185,6 +191,11 @@ $updateAnswer = <<<EOT
             ev.preventDefault();
             let id = elem.substring(7);
 
+            let cont1 = $('#container-answer-'+id).find('.comment-text').text();
+            let cont2 = $.trim($.trim(cont1.substr(23)).substr(131));
+            let content = $('#con-'+id);
+            content.val(cont2);
+            
             $('#send-'+id).click(function (ev) {
                 var content = $('#con-'+id).val();
 
@@ -211,6 +222,7 @@ $updateAnswer = <<<EOT
                     $('#'+father_id).append(newAnswer);
                     newAnswer.fadeIn('fast');
                     $('#con-'+id).val('');
+                    $('#con-'+id).val(content);
 
                     $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
                         var id = data.answer_id;
@@ -286,6 +298,8 @@ if (!Yii::$app->user->isGuest) {
     $this->registerJs($updateAnswer);
     $this->registerJs($voteAnswer);
 }
+
+Yii::debug($model->date_created);
 ?>
 <div class="row justify-content-center mt-5">
     <div class="col-md-9 card card-widget">
