@@ -78,7 +78,7 @@ $createAnswer = <<<EOT
                     let id = data.answer_id;
 
                     let cont1 = $('#container-answer-'+id).find('.comment-text').text();
-                    let cont2 = $.trim($.trim(cont1.substr(24)));
+                    let cont2 = $.trim($.trim(cont1.substr(23)));
                     let content = $('#con-'+id);
                     content.val(cont2);
                 
@@ -156,7 +156,6 @@ $deleteAnswer = <<<EOT
         $('#'+elem).click(function (ev) {
             ev.preventDefault();
             var id = elem.substring(7);
-            console.log(id);
 
             $.ajax({
                 type: 'POST',
@@ -167,7 +166,7 @@ $deleteAnswer = <<<EOT
             })
             .done(function (data) {
                 let container = $('#'+elem).parent().parent();
-                console.log(container);
+
                 container.fadeOut('fast', function() {
                     container.remove();
                 });
@@ -299,7 +298,6 @@ if (!Yii::$app->user->isGuest) {
     $this->registerJs($voteAnswer);
 }
 
-Yii::debug($model->date_created);
 ?>
 <div class="row justify-content-center mt-5">
     <div class="col-md-9 card card-widget">
@@ -335,7 +333,7 @@ Yii::debug($model->date_created);
         </div>
             <div id="answers-<?= $model->id ?>">
                 <?php foreach ($answers_list as $answer): ?>
-                    <?php if (Answer::bestAnswer($answer->id)): ?>
+                    <?php if (Answer::bestAnswer($model->id, $answer->id)): ?>
                         <!-- /.card-body -->
                         <div id="container-answer-<?= $answer->id ?>" class="card-footer card-comments bestAnswer">
                             <div class="card-comment">
