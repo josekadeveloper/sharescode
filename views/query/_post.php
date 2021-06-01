@@ -309,7 +309,7 @@ Yii::debug($model->date_created);
                     <?= $img ?>
                 </div>
                     <span class="username"><a href=<?= $urlPortrait ?>><?= Html::encode($username) ?></a></span>
-                    <span class="description">Created ago - <?= $model->date_created ?> </span>
+                    <span class="description">Created ago - <?= date("d/m/Y H:i:s", strtotime($model->date_created)) ?> </span>
             </div>
         <!-- /.user-block -->
         <div class="card-tools">
@@ -347,7 +347,7 @@ Yii::debug($model->date_created);
                                 <div class="comment-text">
                                     <span class="username">
                                         <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                                    <span class="text-muted float-right"><?= $answer->date_created ?></span>
+                                    <span class="text-muted float-right"><?= date("d/m/Y H:i:s", strtotime($answer->date_created)) ?></span>
                                     </span><!-- /.username -->
                                     <?= $answer->content ?>
                                 </div>
@@ -385,7 +385,7 @@ Yii::debug($model->date_created);
                                 <div class="comment-text">
                                     <span class="username">
                                         <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                                    <span class="text-muted float-right"><?= $answer->date_created ?></span>
+                                    <span class="text-muted float-right"><?= date("d/m/Y H:i:s", strtotime($answer->date_created)) ?></span>
                                     </span><!-- /.username -->
                                     <?= $answer->content ?>
                                 </div>
