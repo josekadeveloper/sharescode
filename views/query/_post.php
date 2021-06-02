@@ -7,8 +7,6 @@ use app\models\Users;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js', ['position' => $this::POS_END]);
-
 $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
@@ -64,7 +62,7 @@ $createAnswer = <<<EOT
                         }
                     })
                     .done(function (data) {
-                        let container = deleteButton.parent().parent();
+                        let container = $('#container-answer-'+id);
                         container.fadeOut('fast', function() {
                             container.remove();
                         });
@@ -78,6 +76,11 @@ $createAnswer = <<<EOT
                 updateButton.click(function(ev) {
                     ev.preventDefault();
                     let id = data.answer_id;
+
+                    let cont1 = $('#container-answer-'+id).find('.comment-text').text();
+                    let cont2 = $.trim($.trim(cont1.substr(23)));
+                    let content = $('#con-'+id);
+                    content.val(cont2);
                 
                     $('#send-'+id).click(function (ev) {
                         var content = $('#con-'+id).val();
@@ -91,14 +94,10 @@ $createAnswer = <<<EOT
                             }
                         })
                         .done(function (data) {
-                            location.reload();
-                            let container = $('.fade');
-                            container.fadeOut('fast', function() {
-                                container.hide();
-                            });
+                            $('.fade').modal('hide');
         
                             let answer_id = data.answer_id;
-                            let oldAnswer = $('#update-'+answer_id).parent().parent();
+                            let oldAnswer = $('#container-answer-'+answer_id);
                             oldAnswer.fadeOut('fast', function() {
                                 oldAnswer.remove();
                             });
@@ -109,6 +108,7 @@ $createAnswer = <<<EOT
                             $('#'+father_id).append(newAnswer);
                             newAnswer.fadeIn('fast');
                             $('#con-'+id).val('');
+                            $('#con-'+id).val(content);
 
 
                         $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
@@ -120,8 +120,7 @@ $createAnswer = <<<EOT
                                 }
                             })
                             .done(function (data) {
-                                location.reload();
-                                let container = deleteButton.parent().parent();
+                                let container = $('#container-answer-'+answer_id);
   
                                 container.fadeOut('fast', function() {
                                     container.remove();
@@ -167,6 +166,7 @@ $deleteAnswer = <<<EOT
             })
             .done(function (data) {
                 let container = $('#'+elem).parent().parent();
+
                 container.fadeOut('fast', function() {
                     container.remove();
                 });
@@ -190,6 +190,11 @@ $updateAnswer = <<<EOT
             ev.preventDefault();
             let id = elem.substring(7);
 
+            let cont1 = $('#container-answer-'+id).find('.comment-text').text();
+            let cont2 = $.trim($.trim(cont1.substr(23)).substr(131));
+            let content = $('#con-'+id);
+            content.val(cont2);
+            
             $('#send-'+id).click(function (ev) {
                 var content = $('#con-'+id).val();
 
@@ -202,28 +207,23 @@ $updateAnswer = <<<EOT
                     }
                 })
                 .done(function (data) {
-                    location.reload();
-                    let container = $('.fade');
-                    container.fadeOut('fast', function() {
-                        container.hide();
-                    });
+                    $('.fade').modal('hide');
 
                     let answer_id = data.answer_id;
-                    let oldAnswer = $('#update-'+answer_id).parent().parent();
+                    let oldAnswer = $('#container-answer-'+answer_id);
                     oldAnswer.fadeOut('fast', function() {
                         oldAnswer.remove();
                     });
 
                     let newAnswer = $(data.response);
-                        
+                    
                     let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
                     $('#'+father_id).append(newAnswer);
                     newAnswer.fadeIn('fast');
                     $('#con-'+id).val('');
+                    $('#con-'+id).val(content);
 
-                    let deleteButton = $('#delete-' + data.answer_id);
-
-                    $('.card-comment').on('click', deleteButton, function(){
+                    $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
                         var id = data.answer_id;
 
                         $.ajax({
@@ -234,9 +234,8 @@ $updateAnswer = <<<EOT
                             }
                         })
                         .done(function (data) {
-                            location.reload();
-                            let container = deleteButton.parent().parent();
-
+                            let container = $('#container-answer-'+answer_id);
+                            
                             container.fadeOut('fast', function() {
                                 container.remove();
                             });
@@ -277,7 +276,7 @@ $voteAnswer = <<<EOT
             })
             .done(function (data) {
                 let answer_id = data.answer_id;
-                let oldAnswer = $('#vote-'+answer_id).parent().parent();
+                let oldAnswer = $('#container-answer-'+answer_id);
                 oldAnswer.fadeOut('fast', function() {
                     oldAnswer.remove();
                 });
@@ -298,6 +297,7 @@ if (!Yii::$app->user->isGuest) {
     $this->registerJs($updateAnswer);
     $this->registerJs($voteAnswer);
 }
+
 ?>
 <div class="row justify-content-center mt-5">
     <div class="col-md-9 card card-widget">
@@ -307,7 +307,7 @@ if (!Yii::$app->user->isGuest) {
                     <?= $img ?>
                 </div>
                     <span class="username"><a href=<?= $urlPortrait ?>><?= Html::encode($username) ?></a></span>
-                    <span class="description">Created ago - <?= $model->date_created ?> </span>
+                    <span class="description">Created ago - <?= date("d/m/Y H:i:s", strtotime($model->date_created)) ?> </span>
             </div>
         <!-- /.user-block -->
         <div class="card-tools">
@@ -333,9 +333,9 @@ if (!Yii::$app->user->isGuest) {
         </div>
             <div id="answers-<?= $model->id ?>">
                 <?php foreach ($answers_list as $answer): ?>
-                    <?php if (Answer::bestAnswer($answer->id)): ?>
+                    <?php if (Answer::bestAnswer($model->id, $answer->id)): ?>
                         <!-- /.card-body -->
-                        <div class="card-footer card-comments bestAnswer">
+                        <div id="container-answer-<?= $answer->id ?>" class="card-footer card-comments bestAnswer">
                             <div class="card-comment">
                                 <!-- User image -->
                                 <div class="img-circle" alt="User Image">
@@ -345,7 +345,7 @@ if (!Yii::$app->user->isGuest) {
                                 <div class="comment-text">
                                     <span class="username">
                                         <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                                    <span class="text-muted float-right"><?= $answer->date_created ?></span>
+                                    <span class="text-muted float-right"><?= date("d/m/Y H:i:s", strtotime($answer->date_created)) ?></span>
                                     </span><!-- /.username -->
                                     <?= $answer->content ?>
                                 </div>
@@ -373,7 +373,7 @@ if (!Yii::$app->user->isGuest) {
                         </div>
                     <?php else: ?>
                         <!-- /.card-body -->
-                        <div class="card-footer card-comments">
+                        <div id="container-answer-<?= $answer->id ?>" class="card-footer card-comments">
                             <div class="card-comment">
                                 <!-- User image -->
                                 <div class="img-circle" alt="User Image">
@@ -383,7 +383,7 @@ if (!Yii::$app->user->isGuest) {
                                 <div class="comment-text">
                                     <span class="username">
                                         <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                                    <span class="text-muted float-right"><?= $answer->date_created ?></span>
+                                    <span class="text-muted float-right"><?= date("d/m/Y H:i:s", strtotime($answer->date_created)) ?></span>
                                     </span><!-- /.username -->
                                     <?= $answer->content ?>
                                 </div>

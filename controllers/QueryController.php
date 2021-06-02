@@ -8,6 +8,8 @@ use app\models\Portrait;
 use app\models\Query;
 use app\models\QuerySearch;
 use app\models\Users;
+use DateTime;
+use DateTimeZone;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -76,6 +78,7 @@ class QueryController extends Controller
     {
         $model = new Query();
         $users_id = Yii::$app->user->id;
+        $date_created = $this->formatDate();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -84,6 +87,7 @@ class QueryController extends Controller
         return $this->render('create', [
             'model' => $model,
             'users_id' => $users_id,
+            'date_created' => $date_created,
         ]);
     }
 
@@ -98,6 +102,7 @@ class QueryController extends Controller
     {
         $model = $this->findModel($id);
         $users_id = Yii::$app->user->id;
+        $date_created = $this->formatDate();
 
         if ($this->findOwnQuery($id, $users_id)) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -107,6 +112,7 @@ class QueryController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'users_id' => $users_id,
+                'date_created' => $date_created,
             ]);
         }
         Yii::$app->session->setFlash('error', 'You can only update your own query.');
@@ -186,5 +192,20 @@ class QueryController extends Controller
             return $model;
         }
         return null;
+    }
+
+    /**
+     * Formats UTC dateTime to Europe dateTime
+     * @param integer string
+     * @return mixed string
+     */
+    protected function formatDate()
+    {
+        $date_created = date('Y-m-d H:i:s');
+        $dt = new DateTime($date_created, new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone('Europe/Madrid'));
+        $dt = $dt->format('d-m-Y H:i:s');
+
+        return $dt;
     }
 }

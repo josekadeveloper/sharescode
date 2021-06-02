@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use DateTime;
 use Yii;
 use yii\helpers\Url;
 
@@ -139,18 +140,25 @@ class Answer extends \yii\db\ActiveRecord
     }
 
     /**
-     *  Return the best-scored answer
+     *  Check the best-scored answer
      * 
-     * @param integer $answer_id
-     * @return mixed string || null
+     * @param integer $query_id, $answer_id
+     * @return mixed boolean || null
      */
-    public static function bestAnswer($answer_id)
+    public static function bestAnswer($query_id, $answer_id)
     {
-        $otherAnswer = Answer::findOne(['id' => $answer_id])['likes'];
-        $theBest = Answer::find()->max('likes');
+        $otherAnswer = Answer::findOne(['id' => $answer_id]);
+        $theBest = Answer::find()->where(['query_id' => $query_id])->max('likes');
+        $dateTime = Answer::find()->where(['query_id' => $query_id])->min('date_created');
+
         if ($theBest === 0) {
             return null;
-        }
-        return $otherAnswer === $theBest;
+        } 
+        if ($otherAnswer->likes === $theBest) {
+            if ($otherAnswer->date_created === $dateTime) {
+                return true;
+            }
+        } 
+        return false;
     }
 }

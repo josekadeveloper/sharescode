@@ -13,7 +13,7 @@ use yii\bootstrap4\ActiveForm;
 
         <?= $form->field($model, 'explanation')->textarea(['rows' => 6]) ?>
 
-        <?= $form->field($model, 'date_created')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
+        <?= $form->field($model, 'date_created')->hiddenInput(['value' => $date_created])->label(false) ?>
 
         <?= $form->field($model, 'is_closed')->checkbox()->label(false) ?>
 

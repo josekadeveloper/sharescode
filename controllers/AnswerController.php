@@ -13,6 +13,7 @@ use app\models\TypePrestige;
 use app\models\Users;
 use app\models\Votes;
 use DateTime;
+use DateTimeZone;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -104,7 +105,7 @@ class AnswerController extends Controller
             : $url = '@web/img/woman.svg';
             $img_response = Html::img($url, ['class'=> 'img-answer']);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
-            $date_created = date('Y-m-d H:i:s');
+            $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
             $sending_user_id = Query::findOne(['id' => $id])['users_id'];
 
@@ -142,7 +143,7 @@ class AnswerController extends Controller
                             '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, 
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton,
                                                      $updateButton, '', $likes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
@@ -170,7 +171,7 @@ class AnswerController extends Controller
             $username = $model_portrait->nickname;
             $img = Portrait::devolverImg($model_portrait);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
-            $date_created = date('Y-m-d H:i:s');
+            $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
             
             $model->content = $content;
@@ -225,7 +226,7 @@ class AnswerController extends Controller
             if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
                 $reminder_id = Reminder::checkReminder($id);
                 $model_reminder = $this->findReminder($reminder_id);
-                $model_reminder->delete();
+                $model_reminder->delete();;
 
                 $this->findModel($id)->delete();
                 Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
@@ -262,9 +263,9 @@ class AnswerController extends Controller
 
             $model_prestige = Prestige::findOne(['users_id' => $model_answer->users_id]);
             $model_prestige->puntuation += 1;
+
             $prestige = TypePrestige::find()
-                                ->select('prestige')
-                                ->where(['<=', 'score', $model_prestige->puntuation])->one()['prestige'];
+                                ->where(['=', 'score', $model_prestige->puntuation])->one()['prestige'];
             $model_prestige->title = $prestige;
             $model_prestige->save();
 
@@ -354,9 +355,10 @@ class AnswerController extends Controller
     protected function createReminder($query_id, $users_id)
     {
         $name_query = Query::findOne(['id' => $query_id])['title'];
+        $date_created = $this->formatDate();
         $reminder = new Reminder(['title' => 'Se ha respondido a una de tus consultas', 
                                   'dispatch' => "Se ha respondido a la consulta $name_query",
-                                  'date_created' => date('Y-m-d H:i:s'),
+                                  'date_created' => $date_created,
                                   'users_id' => $users_id]);
         $reminder->save();
     }
@@ -403,6 +405,21 @@ class AnswerController extends Controller
         return null;
     }
 
+    /**
+     * Formats UTC dateTime to Europe dateTime
+     * @param integer string
+     * @return mixed string
+     */
+    protected function formatDate()
+    {
+        $date_created = date('Y-m-d H:i:s');
+        $dt = new DateTime($date_created, new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone('Europe/Madrid'));
+        $dt = $dt->format('d-m-Y H:i:s');
+
+        return $dt;
+    }
+
 
     /**
      *  Create the response as html container 
@@ -414,7 +431,7 @@ class AnswerController extends Controller
             return '';
         } else {
             return
-            '<div class="card-footer card-comments">' .
+            '<div id="container-answer-' . $id . '" class="card-footer card-comments">' .
                     '<div class="card-comment">'.
                         '<div class="img-circle" alt="User Image">'.
                             $img .
