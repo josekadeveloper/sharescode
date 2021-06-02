@@ -4,14 +4,15 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Url;
 
-$this->registerCssFile('@web/assets/checkPassword/password-strength.css', ['position' => $this::POS_HEAD]);
-$this->registerJsFile('@web/assets/checkPassword/password-strength.js', ['position' => $this::POS_END]);
+$this->registerCssFile('@web/css/password-strength.css', ['position' => $this::POS_HEAD]);
+$this->registerJsFile('@web/js/password-strength.js', ['position' => $this::POS_END]);
 
 $urlNickname = Url::to(['portrait/looking-for-nickname-ajax']);
 $urlEmail = Url::to(['portrait/looking-for-email-ajax']);
 $urlRepository = Url::to(['portrait/looking-for-repository-ajax']);
 
 $validation = <<<EOT
+
     $('#portrait-nickname').blur(function (ev) {
         var nickname = $(this).val();
 
@@ -27,13 +28,13 @@ $validation = <<<EOT
                 $('#nickname').show();
                 $('#nickname').html('Error: nickname is already in use');
                 $('#nickname').addClass('text-danger');
-                /*$('#portrait-nickname').removeClass('form-control is-valid');
-                $('#portrait-nickname').addClass('form-control is-invalid');*/
+                $('#portrait-nickname').removeClass('form-control is-valid');
+                $('#portrait-nickname').addClass('form-control is-invalid');
             } else {
                 $('#nickname').html(data.nickname);
                 $('#nickname').hide();
-                /*$('#portrait-nickname').removeClass('form-control is-invalid');
-                $('#portrait-nickname').addClass('form-control is-valid');*/
+                $('#portrait-nickname').removeClass('form-control is-invalid');
+                $('#portrait-nickname').addClass('form-control is-valid');
             }
         });
     });
