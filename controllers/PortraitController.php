@@ -258,4 +258,64 @@ class PortraitController extends Controller
         ]);
         $model->save();
     }
+
+    /**
+     * Searches the database if there is a registered user with the same nickname
+     *
+     * @param string $nickname
+     * @return Object Json
+     */
+    public function actionLookingForNicknameAjax($nickname)
+    {
+        if (Yii::$app->request->isAjax) {
+            $portrait = Portrait::findOne(['nickname' => $nickname]);
+            if ($portrait === null) {
+                return $this->asJson(['find' => false]);
+            }
+            return $this->asJson([
+                'find' => true,
+                'nickname' => $portrait->nickname,
+            ]);
+        }
+    }
+
+    /**
+     * Searches the database if there is a registered user with the same e-mail
+     *
+     * @param string $email
+     * @return Object Json
+     */
+    public function actionLookingForEmailAjax($email)
+    {
+        if (Yii::$app->request->isAjax) {
+            $portrait = Portrait::findOne(['email' => $email]);
+            if ($portrait === null) {
+                return $this->asJson(['find' => false]);
+            }
+            return $this->asJson([
+                'find' => true,
+                'email' => $portrait->email,
+            ]);
+        }
+    }
+
+    /**
+     * Searches the database if there is a registered user with the same repository
+     *
+     * @param string $repository
+     * @return Object Json
+     */
+    public function actionLookingForRepositoryAjax($repository)
+    {
+        if (Yii::$app->request->isAjax) {
+            $portrait = Portrait::findOne(['repository' => $repository]);
+            if ($portrait === null) {
+                return $this->asJson(['find' => false]);
+            }
+            return $this->asJson([
+                'find' => true,
+                'repository' => $portrait->repository,
+            ]);
+        }
+    }
 }
