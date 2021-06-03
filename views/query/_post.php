@@ -366,6 +366,7 @@ if (!Yii::$app->user->isGuest) {
                                         <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
                                     <?php endif ?>
                                 <?php endif ?>
+                                <i id="icon-check" class="ml-2 float-right fas fa-check"></i>
                                 <span class="float-right text-muted"><?= $answer->likes ?> likes</span>
                                 <!-- /.comment-text -->
                             </div>

@@ -148,6 +148,27 @@ a.desc:after {
     margin: 5%;
 }
 
+@keyframes mark-best-answer {
+    from {background-color:white;}
+    to {background-color:rgb(152, 255, 152);}
+}
+
 .bestAnswer {
-    border: green 10px groove !important;
+    background-color:rgb(152, 255, 152);
+    animation-name: mark-best-answer;
+    animation-duration: 5s;
+}
+
+#icon-check {
+    color: green;
+}
+
+@keyframes img-opacity {
+    from {opacity: 0%}
+    to {opacity: 100%;}
+}
+
+#img-portrait {
+    animation-name: img-opacity;
+    animation-duration: 2s;
 }
