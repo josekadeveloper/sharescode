@@ -3,9 +3,6 @@
 use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
 
-$this->title = $model->nickname;
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
 <div class="row justify-content-center">
     <div class="portrait-view formulario col-md-6" style="margin-bottom: 2.7vw;">
@@ -24,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </p>
         <?php endif ?>
     <?php endif ?>
-        <p>
+        <p id="img-portrait">
             <?= $img = $model->devolverImg($model) ?>
         </p>
         <?= DetailView::widget([
