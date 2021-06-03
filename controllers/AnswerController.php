@@ -176,6 +176,8 @@ class AnswerController extends Controller
             
             $model->content = $content;
             $model->date_created = $date_created;
+            $model->likes = 0;
+            $likes = 0 . ' likes';
 
             if ($model->save()) {
                 $this->createReminder($query_id, $sending_user_id);
@@ -183,11 +185,13 @@ class AnswerController extends Controller
             }
 
             $answer_id = $model->id;
+            
+            $votes = Votes::find()->where([
+                'answer_id' => $answer_id,
+            ])->all();
 
-            $likes = $model->likes . ' likes';
-
-            if ($model->likes === null) {
-                $likes = 0 . ' likes';
+            foreach ($votes as $vote) {
+                $vote->delete();   
             }
 
             $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 

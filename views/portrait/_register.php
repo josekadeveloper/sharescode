@@ -12,7 +12,6 @@ $urlEmail = Url::to(['portrait/looking-for-email-ajax']);
 $urlRepository = Url::to(['portrait/looking-for-repository-ajax']);
 
 $validation = <<<EOT
-
     $('#portrait-nickname').blur(function (ev) {
         var nickname = $(this).val();
 
@@ -25,16 +24,18 @@ $validation = <<<EOT
         })
         .done(function (data) {
             if (data.find) {
+                /*alert('encontrado');*/
                 $('#nickname').show();
                 $('#nickname').html('Error: nickname is already in use');
                 $('#nickname').addClass('text-danger');
-                $('#portrait-nickname').removeClass('form-control is-valid');
-                $('#portrait-nickname').addClass('form-control is-invalid');
+                /*$('#portrait-nickname').removeClass('form-control is-valid');
+                $('#portrait-nickname').addClass('form-control is-invalid');*/
             } else {
+                /*alert('no encontrado');*/
                 $('#nickname').html(data.nickname);
                 $('#nickname').hide();
-                $('#portrait-nickname').removeClass('form-control is-invalid');
-                $('#portrait-nickname').addClass('form-control is-valid');
+                /*$('#portrait-nickname').removeClass('form-control is-invalid');
+                $('#portrait-nickname').addClass('form-control is-valid');*/
             }
         });
     });

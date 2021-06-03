@@ -69,10 +69,13 @@ class PortraitController extends Controller
     {
         $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
         if ($model->load(Yii::$app->request->post())) {
-            $this->createUser();
-            $model->save();
-            Yii::$app->session->setFlash('success', 'User has been successfully created.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            $model_user = $this->createUser();
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'User has been successfully created.');
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                $model_user->delete();
+            } 
         }
         return $this->render('create', [
             'model' => $model,
@@ -88,33 +91,36 @@ class PortraitController extends Controller
     {
         $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
         if ($model->load(Yii::$app->request->post())) {
-            $this->createUser();
-            $model->save();
-            $notRegistered = new NotRegistered([
-                'id' => $model->id,
-                'token' => Yii::$app->security->generateRandomString(),
-            ]);
-            $notRegistered->save();
-            $body = 'To activate user click here: '
-                . Html::a (
-                    'Activate user',
-                    Url::to([
-                        'portrait/activate',
-                        'id' => $model->id,
-                        'token' => $notRegistered->token
-                    ], true)
+            $model_user = $this->createUser();
+            if ($model->save()) {
+                $notRegistered = new NotRegistered([
+                    'id' => $model->id,
+                    'token' => Yii::$app->security->generateRandomString(),
+                ]);
+                $notRegistered->save();
+                $body = 'To activate user click here: '
+                    . Html::a (
+                        'Activate user',
+                        Url::to([
+                            'portrait/activate',
+                            'id' => $model->id,
+                            'token' => $notRegistered->token
+                        ], true)
+                    );
+                Yii::$app->mailer->compose()
+                    ->setTo($model->email)
+                    ->setFrom(Yii::$app->params['smtpUsername'])
+                    ->setSubject('Activate user')
+                    ->setHtmlBody($body)
+                    ->send();
+                Yii::$app->session->setFlash(
+                    'success',
+                    'You must activate the user to validate the account'
                 );
-            Yii::$app->mailer->compose()
-                ->setTo($model->email)
-                ->setFrom(Yii::$app->params['smtpUsername'])
-                ->setSubject('Activate user')
-                ->setHtmlBody($body)
-                ->send();
-            Yii::$app->session->setFlash(
-                'success',
-                'You must activate the user to validate the account'
-            );
-            return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                $model_user->delete();
+            }
         }
         return $this->render('register', [
             'model' => $model,
@@ -245,6 +251,7 @@ class PortraitController extends Controller
         $model = new Users();
         $model->save();
         $this->createPrestige($model->id);
+        return $model;
     }
 
     /**
