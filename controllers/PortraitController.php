@@ -70,6 +70,7 @@ class PortraitController extends Controller
         $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
         if ($model->load(Yii::$app->request->post())) {
             $model_user = $this->createUser();
+            $model->id = $model_user->id;
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', 'User has been successfully created.');
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -92,6 +93,7 @@ class PortraitController extends Controller
         $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
         if ($model->load(Yii::$app->request->post())) {
             $model_user = $this->createUser();
+            $model->id = $model_user->id;
             if ($model->save()) {
                 $notRegistered = new NotRegistered([
                     'id' => $model->id,
