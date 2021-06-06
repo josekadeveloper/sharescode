@@ -4,8 +4,52 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1814fee3e6822433c474717d757ec7b0",
+    "content-hash": "4555bb1008259c957308877deba32084",
     "packages": [
+        {
+            "name": "abushamleh/yii2-toast",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Abdelhadi92/yii2-toast.git",
+                "reference": "71401cc5557c19a6583402dfd11a87d556c0d47e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Abdelhadi92/yii2-toast/zipball/71401cc5557c19a6583402dfd11a87d556c0d47e",
+                "reference": "71401cc5557c19a6583402dfd11a87d556c0d47e",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "abushamleh\\toast\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abdelhadi Abu-Shamleh",
+                    "email": "abushamleh92@gmail.com"
+                }
+            ],
+            "description": "Yii2 toast alert",
+            "keywords": [
+                "Abdelhadi Abu-Shamleh",
+                "Pjax alert",
+                "ajax alert",
+                "toast alert",
+                "yii2",
+                "yii2-toast"
+            ],
+            "time": "2018-11-04T22:41:25+00:00"
+        },
         {
             "name": "almasaeed2010/adminlte",
             "version": "v3.1.0",
@@ -8452,6 +8496,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "abushamleh/yii2-toast": 20,
         "yiisoft/yii2-apidoc": 20,
         "codeception/verify": 20
     },

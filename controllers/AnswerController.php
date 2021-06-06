@@ -233,13 +233,12 @@ class AnswerController extends Controller
                 $model_reminder->delete();;
 
                 $this->findModel($id)->delete();
-                Yii::$app->session->setFlash('success', 'Answer has been successfully deleted.');
 
                 return $this->asJson([
                     'reminders' => $this->builderReminders(),
                 ]);
             }
-            Yii::$app->session->setFlash('error', 'You can only delete your own answer.');
+            Users::builderAlert('error', 'Error', 'You can only delete your own answer.');
         } 
     }
 

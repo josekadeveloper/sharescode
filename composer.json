@@ -28,7 +28,8 @@
         "rmrevin/yii2-fontawesome": "^3.4",
         "hail812/yii2-adminlte3": "~1.1",
         "kartik-v/yii2-widget-alert": "*",
-        "kartik-v/yii2-widget-growl": "*"
+        "kartik-v/yii2-widget-growl": "*",
+        "abushamleh/yii2-toast": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

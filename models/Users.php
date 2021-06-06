@@ -2,10 +2,9 @@
 
 namespace app\models;
 
+use abushamleh\toast\ToastAlert;
 use DateTime;
 use Yii;
-use kartik\alert\Alert;
-use kartik\alert\AlertBlock;
 
 /**
  * This is the model class for table "users".
@@ -241,10 +240,13 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return boolean
      */
-    public static function builderAlert()
-    {?><?= AlertBlock::widget([
-        'type' => AlertBlock::TYPE_ALERT,
-        'useSessionFlash' => true
+    public static function builderAlert($type, $title, $message)
+    {?><?= ToastAlert::widget([
+        'options'   => [],
+        'heading'   => $title,
+        'text'      => $message,
+        'type'      => $type,
     ])?><?php
+        return true;
     }
 }

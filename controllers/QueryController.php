@@ -2,15 +2,14 @@
 
 namespace app\controllers;
 
-use app\models\Answer;
 use Yii;
 use app\models\Portrait;
 use app\models\Query;
 use app\models\QuerySearch;
+use app\models\Reminder;
 use app\models\Users;
 use DateTime;
 use DateTimeZone;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -104,9 +103,9 @@ class QueryController extends Controller
         $users_id = Yii::$app->user->id;
         $date_created = $this->formatDate();
 
-        if ($this->findOwnQuery($id, $users_id)) {
+        if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
     
             return $this->render('update', [
@@ -115,8 +114,7 @@ class QueryController extends Controller
                 'date_created' => $date_created,
             ]);
         }
-        Yii::$app->session->setFlash('error', 'You can only update your own query.');
-        return $this->redirect(['view', 'id' => $model->id]); 
+        return $this->redirect(['index']);
     }
 
     /**
@@ -129,17 +127,21 @@ class QueryController extends Controller
     public function actionDelete($id)
     {
         $users_id = Yii::$app->user->id;
-
+        $model = $this->findModel($id);
+        $dispatch = 'Se ha respondido a la consulta ' . $model->title;
+        $models_reminder = Reminder::find()->where([
+            'dispatch' => $dispatch, 
+        ])->all();
         if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
-            if ($this->findModel($id)->delete()) {
-                Yii::$app->session->setFlash('success', 'Query has been successfully deleted.');
+            if ($model->delete()) {
+                foreach ($models_reminder as $mod) {
+                    $mod->delete();
+                }
             } else {
-                Yii::$app->session->setFlash('error', 'Query is associated with some answers.');
+                Users::builderAlert('error', 'Error', 'Query is associated with some answers.');
             }
-            return $this->redirect(['index']);
         }
-        Yii::$app->session->setFlash('error', 'You can only delete your own query.');
-        return $this->redirect(['view', 'id' => $id]);    
+        return $this->redirect(['index']);    
     }
 
     /**

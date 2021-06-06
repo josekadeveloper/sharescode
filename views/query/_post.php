@@ -7,6 +7,7 @@ use app\models\Users;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$model_user_actually = Portrait::findOne(['id' => Yii::$app->user->id]);
 $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
@@ -314,6 +315,20 @@ if (!Yii::$app->user->isGuest) {
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
             </button>
+            <?php if (!Yii::$app->user->isGuest): ?>
+                <?php if ($model->users_id === Yii::$app->user->id || $model_user_actually->is_admin === true): ?>
+                    <?= Html::a('', ['query/delete', 'id' => $model->id], [
+                        'class' => 'fas fa-minus-circle btn-danger btn-sm',
+                        'data' => [
+                            'confirm' => 'Are you sure you want to delete this Query?',
+                            'method' => 'post',
+                        ],
+                    ])?>
+                    <?= Html::a('', ['query/update', 'id' => $model->id], [
+                        'class' => 'fas fa-edit btn-primary btn-sm',
+                    ])?>
+                <?php endif ?>
+            <?php endif ?>
             <span class="text-primary"><?= $model->title ?></span>
         </div>
         <!-- /.card-tools -->
@@ -350,7 +365,7 @@ if (!Yii::$app->user->isGuest) {
                                     <?= $answer->content ?>
                                 </div>
                                 <hr>
-                                <?php if ($answer->users_id === Yii::$app->user->id): ?>
+                                <?php if ($answer->users_id === Yii::$app->user->id || $model_user_actually->is_admin === true): ?>
                                     <!-- Delete or update answer -->
                                     <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
                                     <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
@@ -389,12 +404,14 @@ if (!Yii::$app->user->isGuest) {
                                     <?= $answer->content ?>
                                 </div>
                                 <hr>
-                                <?php if ($answer->users_id === Yii::$app->user->id): ?>
-                                    <!-- Delete or update answer -->
-                                    <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
-                                    <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
-                                        <i class="far fa-edit"></i> Update
-                                    </button>
+                                <?php if (!Yii::$app->user->isGuest): ?>
+                                    <?php if ($answer->users_id === Yii::$app->user->id || $model_user_actually->is_admin === true): ?>
+                                        <!-- Delete or update answer -->
+                                        <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                        <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
+                                            <i class="far fa-edit"></i> Update
+                                        </button>
+                                    <?php endif ?>
                                 <?php endif ?>
                                 <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
                                     <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>

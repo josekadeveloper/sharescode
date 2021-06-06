@@ -172,10 +172,3 @@ a.desc:after {
     animation-name: img-opacity;
     animation-duration: 2s;
 }
-
-.alerts {
-    width: 25%;
-    margin-top: 80px;
-    margin-left: 45%;
-    margin-right: 50%;
-}

@@ -10,9 +10,6 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * ReminderController implements the CRUD actions for Reminder model.
- */
 class ReminderController extends Controller
 {
     /**
@@ -29,10 +26,10 @@ class ReminderController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'delete'],
+                'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'delete'],
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
@@ -71,24 +68,6 @@ class ReminderController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-    }
-
-    /**
-     * Deletes an existing Reminder model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $reminder = Reminder::find(['id' => $id, 'users_id' => Yii::$app->user->id]);
-        if ($reminder !== null) {
-            $this->findModel($id)->delete();
-            return $this->redirect(['index']);
-        }
-        Yii::$app->session->setFlash('error', 'You can only delete your owns notifications.');
-        return $this->redirect(['index']);
     }
 
     /**

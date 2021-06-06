@@ -74,7 +74,7 @@ class PortraitController extends Controller
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
-                $model_user->delete() ? Users::builderAlert('danger', 'Data incorrect') : '';
+                $model_user->delete() ? Users::builderAlert('error', 'Error', 'Data incorrect') : '';
             } 
         }
         return $this->render('create', [
@@ -114,9 +114,9 @@ class PortraitController extends Controller
                     ->setSubject('Activate user')
                     ->setHtmlBody($body)
                     ->send();
-                Users::builderAlert();
+                Users::builderAlert('success', 'Success', 'You must activate your user from the email sent.');
             } else {
-                $model_user->delete() ? Users::builderAlert('danger', 'Data incorrect') : '';
+                $model_user->delete() ? Users::builderAlert('error', 'Error', 'Data incorrect') : '';
             }
         }
         return $this->render('register', [
@@ -134,7 +134,7 @@ class PortraitController extends Controller
             $user->notRegistered->delete();
             return $this->redirect(Yii::$app->user->loginUrl);
         }
-        Users::builderAlert('danger', "$token");
+        Users::builderAlert('error', 'Error', "$token");
         return $this->goHome();
     }
 
@@ -162,7 +162,6 @@ class PortraitController extends Controller
                 'id' => $id,
             ]);
         }
-        Yii::$app->session->setFlash('error', 'This is the message');
         return $this->redirect(['query/index']);
     }
 
@@ -176,8 +175,8 @@ class PortraitController extends Controller
     {
         $model_user = Users::findOne(['id' => $id]);
         if ($model_user->is_deleted === true) {
-            Users::builderAlert('danger', 'User has been deleted.');
-            return $this->redirect(['/query/index']); 
+            Users::builderAlert('error', 'Error', 'User has been deleted.');
+            return $this->redirect(['/query/index']);
         }
         if (Yii::$app->user->id !== null) {
             if (Portrait::find()->where(['id' => Yii::$app->user->id])->one() !== null) {
@@ -216,10 +215,8 @@ class PortraitController extends Controller
             $model_user->save();
             $model_portrait = $this->findModel($id);
             $model_portrait->delete();
-            Yii::$app->session->setFlash('success', 'User has been successfully deleted.');
             return $this->redirect(['/query/index']);
         }
-        Yii::$app->session->setFlash('error', 'You can only delete your own portrait.');
         return $this->redirect(['view', 'id' => $id]); 
     }
 
