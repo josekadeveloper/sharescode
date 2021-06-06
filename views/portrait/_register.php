@@ -12,6 +12,12 @@ $urlEmail = Url::to(['portrait/looking-for-email-ajax']);
 $urlRepository = Url::to(['portrait/looking-for-repository-ajax']);
 
 $validation = <<<EOT
+    $('#portrait-nickname').val('');
+    $('#portrait-password_repeat').val('');
+    $('#portrait-password').val('');
+    $('#portrait-email').val('');
+    $('#portrait-repository').val('');
+
     $('#portrait-nickname').blur(function (ev) {
         var nickname = $(this).val();
 

@@ -72,10 +72,9 @@ class PortraitController extends Controller
             $model_user = $this->createUser();
             $model->id = $model_user->id;
             if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'User has been successfully created.');
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
-                $model_user->delete();
+                $model_user->delete() ? Users::builderAlert('danger', 'Data incorrect') : '';
             } 
         }
         return $this->render('create', [
@@ -115,13 +114,9 @@ class PortraitController extends Controller
                     ->setSubject('Activate user')
                     ->setHtmlBody($body)
                     ->send();
-                Yii::$app->session->setFlash(
-                    'success',
-                    'You must activate the user to validate the account'
-                );
-                return $this->redirect(['view', 'id' => $model->id]);
+                Users::builderAlert();
             } else {
-                $model_user->delete();
+                $model_user->delete() ? Users::builderAlert('danger', 'Data incorrect') : '';
             }
         }
         return $this->render('register', [
@@ -137,10 +132,9 @@ class PortraitController extends Controller
         }
         if ($user->notRegistered->token === $token) {
             $user->notRegistered->delete();
-            Yii::$app->session->setFlash('success', 'User successfully activated.');
             return $this->redirect(Yii::$app->user->loginUrl);
         }
-        Yii::$app->session->setFlash('error', "$token");
+        Users::builderAlert('danger', "$token");
         return $this->goHome();
     }
 
@@ -156,12 +150,11 @@ class PortraitController extends Controller
         $model = $this->findModel($id);
         $model->scenario = Portrait::SCENARIO_UPDATE;
         $model->password = '';
-        $user_portrait = Portrait::find()->where(['id' => $id])->one()['id'];
+        $user_portrait = Portrait::find()->where(['id' => Yii::$app->user->id])->one()['id'];
 
         if ($id == $user_portrait || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Portrait has been successfully modified.');
-                return $this->redirect(['portrait/index']); 
+                return $this->redirect(['view', 'id' => $model->id]); 
             }
     
             return $this->render('update', [
@@ -169,8 +162,8 @@ class PortraitController extends Controller
                 'id' => $id,
             ]);
         }
-        Yii::$app->session->setFlash('error', 'You can only update your own portrait.');
-        return $this->redirect(['view', 'id' => $model->id]); 
+        Yii::$app->session->setFlash('error', 'This is the message');
+        return $this->redirect(['query/index']);
     }
 
     /**
@@ -183,7 +176,7 @@ class PortraitController extends Controller
     {
         $model_user = Users::findOne(['id' => $id]);
         if ($model_user->is_deleted === true) {
-            Yii::$app->session->setFlash('error', 'User has been deleted.');
+            Users::builderAlert('danger', 'User has been deleted.');
             return $this->redirect(['/query/index']); 
         }
         if (Yii::$app->user->id !== null) {

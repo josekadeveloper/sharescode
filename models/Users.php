@@ -4,6 +4,8 @@ namespace app\models;
 
 use DateTime;
 use Yii;
+use kartik\alert\Alert;
+use kartik\alert\AlertBlock;
 
 /**
  * This is the model class for table "users".
@@ -232,5 +234,17 @@ class Users extends \yii\db\ActiveRecord
             'answer_id' => $answer_id,
             'users_id' => $users_id,
         ]);
+    }
+
+    /**
+     * Returns an alert of the type and content passed by parameters
+     *
+     * @return boolean
+     */
+    public static function builderAlert()
+    {?><?= AlertBlock::widget([
+        'type' => AlertBlock::TYPE_ALERT,
+        'useSessionFlash' => true
+    ])?><?php
     }
 }
