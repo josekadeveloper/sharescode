@@ -29,87 +29,89 @@ $url_delete = Url::to(['answer/delete']);
 $url_update = Url::to(['answer/update']);
 $url_vote = Url::to(['answer/vote']);
 $createAnswer = <<<EOT
-    $('#content-$model->id').keydown(function (ev) {
-        if (ev.keyCode == 13) { 
-            ev.preventDefault();
-            var content = ev.target.value;
-            $.ajax({
-                type: 'POST',
-                url: '$url_create',
-                data: {
-                    content: content,
-                }
+$('#content-$model->id').on('focus', function() {
+    $('#content-$model->id').height('200');
+    $('#reply-$model->id').click(function (ev) {
+        ev.preventDefault();
+        var content = $('#content-$model->id').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '$url_create',
+            data: {
+                content: content,
+            }
+        })
+        .done(function (data) {
+            let newAnswer = $(data.response);
+            newAnswer.hide();
+            $('#answers-$model->id').append(newAnswer);
+            newAnswer.fadeIn('fast');
+            $('#content-$model->id').val(''); 
+            $('#modals-$model->id').append(data.modal);
+
+            let deleteButton = $('#delete-' + data.answer_id);
+            let updateButton = $('#update-' + data.answer_id);
+
+            deleteButton.click(function (ev) {
+                ev.preventDefault();
+                var id = data.answer_id;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '$url_delete',
+                    data: {
+                        id: id,
+                    }
+                })
+                .done(function (data) {
+                    let container = $('#container-answer-'+id);
+                    container.fadeOut('fast', function() {
+                        container.remove();
+                    });
+                        
+                    $('li.dropdown').remove();
+                    $('#notifications').append(data.reminders);
+                });
+                return false;
             })
-            .done(function (data) {
-                let newAnswer = $(data.response);
-                newAnswer.hide();
-                $('#answers-$model->id').append(newAnswer);
-                newAnswer.fadeIn('fast');
-                $('#content-$model->id').val(''); 
-                $('#modals-$model->id').append(data.modal); 
+                
+            updateButton.click(function(ev) {
+                ev.preventDefault();
+                let id = data.answer_id;
 
-                let deleteButton = $('#delete-' + data.answer_id);
-                let updateButton = $('#update-' + data.answer_id);
-
-                deleteButton.click(function (ev) {
-                    ev.preventDefault();
-                    var id = data.answer_id;
-
+                let cont1 = $('#container-answer-'+id).find('.comment-text').text();
+                let cont2 = $.trim($.trim(cont1.substr(23)));
+                let content = $('#con-'+id);
+                content.val(cont2);
+                
+                $('#send-'+id).click(function (ev) {
+                    var content = $('#con-'+id).val();
+    
                     $.ajax({
                         type: 'POST',
-                        url: '$url_delete',
+                        url: '$url_update',
                         data: {
                             id: id,
+                            content: content,
                         }
                     })
                     .done(function (data) {
-                        let container = $('#container-answer-'+id);
-                        container.fadeOut('fast', function() {
-                            container.remove();
+                        $('.fade').modal('hide');
+        
+                        let answer_id = data.answer_id;
+                        let oldAnswer = $('#container-answer-'+answer_id);
+                        oldAnswer.fadeOut('fast', function() {
+                            oldAnswer.remove();
                         });
-                        
-                        $('li.dropdown').remove();
-                        $('#notifications').append(data.reminders);
-                    });
-                    return false;
-                })
-                
-                updateButton.click(function(ev) {
-                    ev.preventDefault();
-                    let id = data.answer_id;
-
-                    let cont1 = $('#container-answer-'+id).find('.comment-text').text();
-                    let cont2 = $.trim($.trim(cont1.substr(23)));
-                    let content = $('#con-'+id);
-                    content.val(cont2);
-                
-                    $('#send-'+id).click(function (ev) {
-                        var content = $('#con-'+id).val();
-    
-                        $.ajax({
-                            type: 'POST',
-                            url: '$url_update',
-                            data: {
-                                id: id,
-                                content: content,
-                            }
-                        })
-                        .done(function (data) {
-                            $('.fade').modal('hide');
         
-                            let answer_id = data.answer_id;
-                            let oldAnswer = $('#container-answer-'+answer_id);
-                            oldAnswer.fadeOut('fast', function() {
-                                oldAnswer.remove();
-                            });
-        
-                            let newAnswer = $(data.response);
+                        let newAnswer = $(data.response);
                                 
-                            let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
-                            $('#'+father_id).append(newAnswer);
-                            newAnswer.fadeIn('fast');
-                            $('#con-'+id).val('');
-                            $('#con-'+id).val(content);
+                        let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
+                        $('#'+father_id).append(newAnswer);
+                        newAnswer.fadeIn('fast');
+                        $('#con-'+id).val('');
+                        $('#con-'+id).val(content);
 
 
                         $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
@@ -126,25 +128,27 @@ $createAnswer = <<<EOT
                                 container.fadeOut('fast', function() {
                                     container.remove();
                                 });
-                                    
+                                
                                 $('li.dropdown').remove();
                                 $('#notifications').append(data.reminders);
                             });
                             return false;
                         });
-        
-                            $('li.dropdown').remove();
-                            $('#notifications').append(data.reminders);
-                        })
-                        return false;
-                    });
-                })
-                $('li.dropdown').remove();
-                $('#notifications').append(data.reminders);
-            });
-            return false;
-        }
+                        $('li.dropdown').remove();
+                        $('#notifications').append(data.reminders);
+                    })
+                    return false;
+                });
+            })
+            $('li.dropdown').remove();
+            $('#notifications').append(data.reminders);
+        });
+        return false;
     });
+    $('#content-$model->id').on('blur', function() {
+        $('#content-$model->id').height('72');
+    });
+});
 EOT;
 
 $deleteAnswer = <<<EOT
@@ -465,16 +469,15 @@ if (!Yii::$app->user->isGuest) {
         <?php if ($user_actually_id): ?>
             <!-- /.card-footer -->
             <div class="card-footer mb-3">
-                <form action=<?= $url_create ?> method="post">
-                    <!-- User image -->
-                    <div class="img-fluid img-circle img-sm">
-                        <?= $img_response ?>
-                    </div>
-                    <!-- .img-push is used to add margin to elements next to floating images -->
-                    <div class="img-push">
-                        <input type="text" id="content-<?= $model->id ?>" class="form-control form-control-sm" placeholder="Press enter to post comment">
-                    </div>
-                </form>
+                <!-- User image -->
+                <div class="img-fluid img-circle img-sm">
+                    <?= $img_response ?>
+                </div>
+                <!-- .img-push is used to add margin to elements next to floating images -->
+                <div class="img-push">
+                    <textarea id="content-<?= $model->id ?>" rows="3" class="ml-3" style="width: 90%;"></textarea>
+                </div>
+                <button type="button" id="reply-<?= $model->id ?>" class="mt-3 float-right btn btn-success">Send reply</button>
             </div>
             <!-- /.card-footer -->
         <?php endif ?>

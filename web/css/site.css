@@ -172,3 +172,7 @@ a.desc:after {
     animation-name: img-opacity;
     animation-duration: 2s;
 }
+
+.input-text-answer {
+    height: 300px;
+}
