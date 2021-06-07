@@ -51,10 +51,7 @@
         "friendsofphp/php-cs-fixer": "^2.8",
         "phpoffice/phpspreadsheet": "^1.1",
         "symfony/dotenv": "^4.0",
-        "knplabs/github-api": "^2.11",
-        "php-http/guzzle6-adapter": "^1.1",
-        "kartik-v/yii2-widget-alert": "*",
-        "kartik-v/yii2-widget-growl": "*"
+        "knplabs/github-api": "^2.11"
     },
     "config": {
         "process-timeout": 1800,
