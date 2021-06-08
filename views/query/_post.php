@@ -8,10 +8,22 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->registerJsFile('@web/js/codemirror.js', ['position' => $this::POS_END]);
-$this->registerCssFile('@web/css/codemirror.css', ['position' => $this::POS_HEAD]);
-$this->registerCssFile('@web/theme/dracula.css', ['position' => $this::POS_HEAD]);
 $this->registerJsFile('@web/mode/javascript.js', ['position' => $this::POS_END]);
-$this->registerJsFile('@web/mode/php.js', ['position' => $this::POS_END]);
+$this->registerCssFile('@web/css/codemirror.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/abbott.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/ambiance.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/cobalt.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/dracula.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/eclipse.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/elegant.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/isotope.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/lucario.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/material.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/neo.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/night.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/oceanic-next.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/the-matrix.css', ['position' => $this::POS_HEAD]);
+$this->registerCssFile('@web/theme/yeti.css', ['position' => $this::POS_HEAD]);
 
 $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
@@ -35,40 +47,43 @@ $url_update = Url::to(['answer/update']);
 $url_vote = Url::to(['answer/vote']);
 $createAnswer = <<<EOT
 var cm = CodeMirror.fromTextArea(document.getElementById("codemirror-$model->id", {}));
-
-if (screen.width < 1024) {
-    cm.setSize(480, 200);
-    if (screen.width < 400) {
-        cm.setSize(280, 200);
-    }
-} else {
-    if (screen.width < 1280) {
-        cm.setSize(630, 200);
-    } 
-    if (screen.width > 1280) {
-        cm.setSize(730, 200);
-    }
-    if (screen.width >= 1920) {
-        cm.setSize(1070, 200);
-    }
-} 
-cm.setOption("lineNumbers", true);
-cm.setOption("tableSize", 5);
-cm.setOption("theme", "dracula");
-
-$(window).on('load', function() {
-    $('#select-$model->id').change(function(){
-        var modeInput = document.getElementById("select-$model->id")
-        var myindex  = modeInput.selectedIndex;
-        var modefly = modeInput.options[myindex].text.toLowerCase();
-        cm.setOption("mode", modefly);
-        cm.refresh();
+cm.setOption("theme", "abbott");
+$('#select-$model->id').change(function(){
+    $('#form-codemirror-$model->id .cm-s-default').fadeOut('fast', function() {
+        $('#form-codemirror-$model->id .cm-s-default').remove();
     });
+
+    if ($('#form-codemirror-$model->id .img-push').children()[1] != undefined) {
+        $('#form-codemirror-$model->id .img-push').children()[1].remove();
+    }
+
+    let cm = CodeMirror.fromTextArea(document.getElementById("codemirror-$model->id", {}));
+    
+    if (screen.width < 1024) {
+        cm.setSize(480, 300);
+        if (screen.width < 400) {
+            cm.setSize(280, 300);
+        }
+    } else {
+        if (screen.width < 1280) {
+            cm.setSize(630, 300);
+        } 
+        if (screen.width > 1280) {
+            cm.setSize(730, 300);
+        }
+        if (screen.width >= 1920) {
+            cm.setSize(1070, 300);
+        }
+    }
+    var modeInput = document.getElementById("select-$model->id")
+    var index  = modeInput.selectedIndex;
+    let theme = modeInput.options[index].text.toLowerCase();
+    cm.setOption("theme", theme);
 });
 
 $('#form-codemirror-$model->id').submit(function (ev) {
     ev.preventDefault();
-    var content = $('#codemirror-$model->id').val();
+    var content = $('#form-codemirror-$model->id .CodeMirror-lines')[0].innerText;
 
     $.ajax({
         type: 'POST',
@@ -504,20 +519,21 @@ if (!Yii::$app->user->isGuest) {
                 <form action="" method="post">
                     <div class="mb-5 ml-5 form-group">
                         <label for="select-<?= $model->id ?>">Select a theme: </label>
-                        <select class="form-control" name="idLanguage" id="select-<?= $model->id ?>">
-                            <option value="1">PHP</option>
-                            <option value="2">JavaScript</option>
-                            <option value="3">CSS</option>
-                            <option value="34">Clojure</option>
-                            <option value="35">Common Lisp</option>
-                            <option value="36">D</option>
-                            <option value="37">ECL</option>
-                            <option value="38">Go</option>
-                            <option value="39">Haskell</option>
-                            <option value="40">HTML</option>
-                            <option value="41">Jinja2</option>
-                            <option value="42">LiveScript</option>
-                            <option value="43">mIRC</option>
+                        <select class="form-control" name="theme" id="select-<?= $model->id ?>">
+                            <option value="1">abbott</option>
+                            <option value="2">ambiance</option>
+                            <option value="3">cobalt</option>
+                            <option value="4">dracula</option>
+                            <option value="5">eclipse</option>
+                            <option value="6">elegant</option>
+                            <option value="7">isotope</option>
+                            <option value="8">lucario</option>
+                            <option value="9">material</option>
+                            <option value="10">neo</option>
+                            <option value="11">night</option>
+                            <option value="12">oceanic-next</option>
+                            <option value="13">the-matrix</option>
+                            <option value="14">yeti</option>
                         </select>
                     </div>
                 </form>
