@@ -124,11 +124,11 @@ $sex = ['Men' => 'Men',
         <div id="check-password">
             <hr>
             <ul class="pswd_info" id="passwordCriterion">
-                <li data-criterion="length" class="invalid">8-15 <strong>Characters</strong></li>
-                <li data-criterion="capital" class="invalid">At least <strong>one capital letter</strong></li>
-                <li data-criterion="small" class="invalid">At least <strong>one small letter</strong></li>
-                <li data-criterion="number" class="invalid">At least <strong>one number</strong></li>
-                <li data-criterion="special" class="invalid">At least <strong>one Specail Characters </strong></li>
+                <li data-criterion="length">8-15 <strong>Characters</strong></li>
+                <li data-criterion="capital">At least <strong>one capital letter</strong></li>
+                <li data-criterion="small">At least <strong>one small letter</strong></li>
+                <li data-criterion="number">At least <strong>one number</strong></li>
+                <li data-criterion="special">At least <strong>one Specail Characters </strong></li>
             </ul>
             <div id="password-strength-status"></div>
             <hr>
