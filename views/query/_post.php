@@ -13,7 +13,6 @@ $this->registerCssFile('@web/theme/dracula.css', ['position' => $this::POS_HEAD]
 $this->registerJsFile('@web/mode/javascript.js', ['position' => $this::POS_END]);
 $this->registerJsFile('@web/mode/php.js', ['position' => $this::POS_END]);
 
-$model_user_actually = Portrait::findOne(['id' => Yii::$app->user->id]);
 $urlPortrait = Url::to(['portrait/view', 'id' => $model->users_id]);
 $username = Query::findUserName($model->id);
 $img = Query::findUserImage($model->id);
@@ -37,10 +36,35 @@ $url_vote = Url::to(['answer/vote']);
 $createAnswer = <<<EOT
 var cm = CodeMirror.fromTextArea(document.getElementById("codemirror-$model->id", {}));
 
-cm.setSize(600, 200);
+if (screen.width < 1024) {
+    cm.setSize(480, 200);
+    if (screen.width < 400) {
+        cm.setSize(280, 200);
+    }
+} else {
+    if (screen.width < 1280) {
+        cm.setSize(630, 200);
+    } 
+    if (screen.width > 1280) {
+        cm.setSize(730, 200);
+    }
+    if (screen.width >= 1920) {
+        cm.setSize(1070, 200);
+    }
+} 
 cm.setOption("lineNumbers", true);
 cm.setOption("tableSize", 5);
 cm.setOption("theme", "dracula");
+
+$(window).on('load', function() {
+    $('#select-$model->id').change(function(){
+        var modeInput = document.getElementById("select-$model->id")
+        var myindex  = modeInput.selectedIndex;
+        var modefly = modeInput.options[myindex].text.toLowerCase();
+        cm.setOption("mode", modefly);
+        cm.refresh();
+    });
+});
 
 $('#form-codemirror-$model->id').submit(function (ev) {
     ev.preventDefault();
@@ -375,20 +399,22 @@ if (!Yii::$app->user->isGuest) {
                                     <?= $answer->content ?>
                                 </div>
                                 <hr>
-                                <?php if ($answer->users_id === Yii::$app->user->id || $model_user_actually->is_admin === true): ?>
-                                    <!-- Delete or update answer -->
-                                    <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
-                                    <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
-                                        <i class="far fa-edit"></i> Update
-                                    </button>
-                                <?php endif ?>
-                                <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
-                                    <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
-                                        <!-- Social sharing buttons -->
-                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
-                                    <?php else: ?>
-                                        <!-- Social sharing buttons -->
-                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                <?php if (!Yii::$app->user->isGuest): ?>
+                                    <?php if ($answer->users_id === Yii::$app->user->id || Yii::$app->user->identity->is_admin === true): ?>
+                                        <!-- Delete or update answer -->
+                                        <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                        <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
+                                            <i class="far fa-edit"></i> Update
+                                        </button>
+                                    <?php endif ?>
+                                    <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
+                                        <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
+                                            <!-- Social sharing buttons -->
+                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
+                                        <?php else: ?>
+                                            <!-- Social sharing buttons -->
+                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                        <?php endif ?>
                                     <?php endif ?>
                                 <?php endif ?>
                                 <i id="icon-check" class="ml-2 float-right fas fa-check"></i>
@@ -415,21 +441,21 @@ if (!Yii::$app->user->isGuest) {
                                 </div>
                                 <hr>
                                 <?php if (!Yii::$app->user->isGuest): ?>
-                                    <?php if ($answer->users_id === Yii::$app->user->id || $model_user_actually->is_admin === true): ?>
+                                    <?php if ($answer->users_id === Yii::$app->user->id || Yii::$app->user->identity->is_admin === true): ?>
                                         <!-- Delete or update answer -->
                                         <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
                                         <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
                                             <i class="far fa-edit"></i> Update
                                         </button>
                                     <?php endif ?>
-                                <?php endif ?>
-                                <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
-                                    <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
-                                        <!-- Social sharing buttons -->
-                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
-                                    <?php else: ?>
-                                        <!-- Social sharing buttons -->
-                                        <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                    <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
+                                        <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
+                                            <!-- Social sharing buttons -->
+                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
+                                        <?php else: ?>
+                                            <!-- Social sharing buttons -->
+                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                        <?php endif ?>
                                     <?php endif ?>
                                 <?php endif ?>
                                 <span class="float-right text-muted"><?= $answer->likes ?> likes</span>
@@ -475,6 +501,26 @@ if (!Yii::$app->user->isGuest) {
         <?php if ($user_actually_id): ?>
             <!-- /.card-footer -->
             <div class="card-footer mb-3">
+                <form action="" method="post">
+                    <div class="mb-5 ml-5 form-group">
+                        <label for="select-<?= $model->id ?>">Select a theme: </label>
+                        <select class="form-control" name="idLanguage" id="select-<?= $model->id ?>">
+                            <option value="1">PHP</option>
+                            <option value="2">JavaScript</option>
+                            <option value="3">CSS</option>
+                            <option value="34">Clojure</option>
+                            <option value="35">Common Lisp</option>
+                            <option value="36">D</option>
+                            <option value="37">ECL</option>
+                            <option value="38">Go</option>
+                            <option value="39">Haskell</option>
+                            <option value="40">HTML</option>
+                            <option value="41">Jinja2</option>
+                            <option value="42">LiveScript</option>
+                            <option value="43">mIRC</option>
+                        </select>
+                    </div>
+                </form>
                 <!-- User image -->
                 <div class="img-fluid img-circle img-sm">
                     <?= $img_response ?>
