@@ -249,14 +249,26 @@ $updateAnswer = <<<EOT
             ev.preventDefault();
             let id = elem.substring(7);
 
-            let cont1 = $('#container-answer-'+id).find('.comment-text').text();
-            let cont2 = $.trim($.trim(cont1.substr(23)).substr(131));
-            let content = $('#con-'+id);
-            content.val(cont2);
-            
-            $('#send-'+id).click(function (ev) {
-                var content = $('#con-'+id).val();
+            var cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+            cmd.setOption("theme", "abbott");
 
+            $('#select-modal-'+id).change(function(){
+                if ($('#form-codemirror-modal-'+id).find('.img-push').children()[1] != undefined) {
+                    $('#form-codemirror-modal-'+id).find('.img-push').children()[1].remove();
+                }     
+                let cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+
+                cmd.setSize(380, 300);
+                
+                var modeInput = document.getElementById("select-modal-"+id)
+                var index  = modeInput.selectedIndex;
+                let theme = modeInput.options[index].text.toLowerCase();
+                cmd.setOption("theme", theme);
+            });
+            
+            $('#form-codemirror-modal-'+id).submit(function (ev) {
+                var content = $('#form-codemirror-modal-'+id).find('.CodeMirror-lines')[0].innerText;
+                
                 $.ajax({
                     type: 'POST',
                     url: '$url_update',
@@ -267,24 +279,20 @@ $updateAnswer = <<<EOT
                 })
                 .done(function (data) {
                     $('.fade').modal('hide');
-
+        
                     let answer_id = data.answer_id;
                     let oldAnswer = $('#container-answer-'+answer_id);
                     oldAnswer.fadeOut('fast', function() {
                         oldAnswer.remove();
                     });
-
+        
                     let newAnswer = $(data.response);
-                    
+                                
                     let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
                     $('#'+father_id).append(newAnswer);
                     newAnswer.fadeIn('fast');
-                    $('#con-'+id).val('');
-                    $('#con-'+id).val(content);
 
                     $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
-                        var id = data.answer_id;
-
                         $.ajax({
                             type: 'POST',
                             url: '$url_delete',
@@ -294,7 +302,7 @@ $updateAnswer = <<<EOT
                         })
                         .done(function (data) {
                             let container = $('#container-answer-'+answer_id);
-                            
+  
                             container.fadeOut('fast', function() {
                                 container.remove();
                             });
@@ -304,7 +312,6 @@ $updateAnswer = <<<EOT
                         });
                         return false;
                     });
-
                     $('li.dropdown').remove();
                     $('#notifications').append(data.reminders);
                 })
