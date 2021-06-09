@@ -57,16 +57,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->redirect('index');
-    }
-
-    /**
      * Login action.
      *
      * @return Response|string
@@ -79,19 +69,18 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post())) {
-            $model_user = Portrait::findOne(['nickname' => $model->username]);
-            if ($model_user === null || !$model_user->validatePassword($model->password)) {
-                Yii::$app->session->setFlash('error', 'data entered is incorrect.');
-                return $this->redirect(['/site/login']); 
+            $model_portrait = Portrait::findOne(['nickname' => $model->username]);
+            if ($model_portrait === null || !$model_portrait->validatePassword($model->password)) {
+                Users::builderAlert('error', 'Error', 'Data entered is incorrect.');
             }
-            $portrait_id = Portrait::findOne(['nickname' => $model->username])['id'];
-            $model_user = Users::findOne(['id' => $portrait_id]);
-            if ($model_user->is_deleted === true) {
-                Yii::$app->session->setFlash('error', 'User has been deleted.');
-                return $this->redirect(['/site/login']); 
+            if ($model_portrait !== null) {
+                $portrait_id = Portrait::findOne(['nickname' => $model->username])['id'];
+                $model_portrait = Users::findOne(['id' => $portrait_id]);
+
+                if ($model->login()) {
+                    return $this->goBack();
+                }
             }
-            $model->login();
-            return $this->goBack();
         }
 
         $model->password = '';

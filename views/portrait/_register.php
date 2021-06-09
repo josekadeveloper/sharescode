@@ -12,6 +12,11 @@ $urlEmail = Url::to(['portrait/looking-for-email-ajax']);
 $urlRepository = Url::to(['portrait/looking-for-repository-ajax']);
 
 $validation = <<<EOT
+    $('#portrait-nickname').val('');
+    $('#portrait-password_repeat').val('');
+    $('#portrait-password').val('');
+    $('#portrait-email').val('');
+    $('#portrait-repository').val('');
 
     $('#portrait-nickname').blur(function (ev) {
         var nickname = $(this).val();
@@ -25,16 +30,18 @@ $validation = <<<EOT
         })
         .done(function (data) {
             if (data.find) {
+                /*alert('encontrado');*/
                 $('#nickname').show();
                 $('#nickname').html('Error: nickname is already in use');
                 $('#nickname').addClass('text-danger');
-                $('#portrait-nickname').removeClass('form-control is-valid');
-                $('#portrait-nickname').addClass('form-control is-invalid');
+                /*$('#portrait-nickname').removeClass('form-control is-valid');
+                $('#portrait-nickname').addClass('form-control is-invalid');*/
             } else {
+                /*alert('no encontrado');*/
                 $('#nickname').html(data.nickname);
                 $('#nickname').hide();
-                $('#portrait-nickname').removeClass('form-control is-invalid');
-                $('#portrait-nickname').addClass('form-control is-valid');
+                /*$('#portrait-nickname').removeClass('form-control is-invalid');
+                $('#portrait-nickname').addClass('form-control is-valid');*/
             }
         });
     });
@@ -117,11 +124,11 @@ $sex = ['Men' => 'Men',
         <div id="check-password">
             <hr>
             <ul class="pswd_info" id="passwordCriterion">
-                <li data-criterion="length" class="invalid">8-15 <strong>Characters</strong></li>
-                <li data-criterion="capital" class="invalid">At least <strong>one capital letter</strong></li>
-                <li data-criterion="small" class="invalid">At least <strong>one small letter</strong></li>
-                <li data-criterion="number" class="invalid">At least <strong>one number</strong></li>
-                <li data-criterion="special" class="invalid">At least <strong>one Specail Characters </strong></li>
+                <li data-criterion="length">8-15 <strong>Characters</strong></li>
+                <li data-criterion="capital">At least <strong>one capital letter</strong></li>
+                <li data-criterion="small">At least <strong>one small letter</strong></li>
+                <li data-criterion="number">At least <strong>one number</strong></li>
+                <li data-criterion="special">At least <strong>one Specail Characters </strong></li>
             </ul>
             <div id="password-strength-status"></div>
             <hr>

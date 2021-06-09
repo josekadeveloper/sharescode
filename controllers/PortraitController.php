@@ -69,10 +69,13 @@ class PortraitController extends Controller
     {
         $model = new Portrait(['scenario' => Portrait::SCENARIO_CREATE]);
         if ($model->load(Yii::$app->request->post())) {
-            $this->createUser();
-            $model->save();
-            Yii::$app->session->setFlash('success', 'User has been successfully created.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            $model_user = $this->createUser();
+            $model->id = $model_user->id;
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                $model_user->delete() ? Users::builderAlert('error', 'Error', 'Data incorrect') : '';
+            } 
         }
         return $this->render('create', [
             'model' => $model,
@@ -88,33 +91,33 @@ class PortraitController extends Controller
     {
         $model = new Portrait(['scenario' => Portrait::SCENARIO_REGISTER]);
         if ($model->load(Yii::$app->request->post())) {
-            $this->createUser();
-            $model->save();
-            $notRegistered = new NotRegistered([
-                'id' => $model->id,
-                'token' => Yii::$app->security->generateRandomString(),
-            ]);
-            $notRegistered->save();
-            $body = 'To activate user click here: '
-                . Html::a (
-                    'Activate user',
-                    Url::to([
-                        'portrait/activate',
-                        'id' => $model->id,
-                        'token' => $notRegistered->token
-                    ], true)
-                );
-            Yii::$app->mailer->compose()
-                ->setTo($model->email)
-                ->setFrom(Yii::$app->params['smtpUsername'])
-                ->setSubject('Activate user')
-                ->setHtmlBody($body)
-                ->send();
-            Yii::$app->session->setFlash(
-                'success',
-                'You must activate the user to validate the account'
-            );
-            return $this->redirect(['view', 'id' => $model->id]);
+            $model_user = $this->createUser();
+            $model->id = $model_user->id;
+            if ($model->save()) {
+                $notRegistered = new NotRegistered([
+                    'id' => $model->id,
+                    'token' => Yii::$app->security->generateRandomString(),
+                ]);
+                $notRegistered->save();
+                $body = 'To activate user click here: '
+                    . Html::a (
+                        'Activate user',
+                        Url::to([
+                            'portrait/activate',
+                            'id' => $model->id,
+                            'token' => $notRegistered->token
+                        ], true)
+                    );
+                Yii::$app->mailer->compose()
+                    ->setTo($model->email)
+                    ->setFrom(Yii::$app->params['smtpUsername'])
+                    ->setSubject('Activate user')
+                    ->setHtmlBody($body)
+                    ->send();
+                Users::builderAlert('success', 'Success', 'You must activate your user from the email sent.');
+            } else {
+                $model_user->delete() ? Users::builderAlert('error', 'Error', 'Data incorrect') : '';
+            }
         }
         return $this->render('register', [
             'model' => $model,
@@ -129,10 +132,9 @@ class PortraitController extends Controller
         }
         if ($user->notRegistered->token === $token) {
             $user->notRegistered->delete();
-            Yii::$app->session->setFlash('success', 'User successfully activated.');
             return $this->redirect(Yii::$app->user->loginUrl);
         }
-        Yii::$app->session->setFlash('error', "$token");
+        Users::builderAlert('error', 'Error', "$token");
         return $this->goHome();
     }
 
@@ -148,12 +150,11 @@ class PortraitController extends Controller
         $model = $this->findModel($id);
         $model->scenario = Portrait::SCENARIO_UPDATE;
         $model->password = '';
-        $user_portrait = Portrait::find()->where(['id' => $id])->one()['id'];
+        $user_portrait = Portrait::find()->where(['id' => Yii::$app->user->id])->one()['id'];
 
         if ($id == $user_portrait || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Portrait has been successfully modified.');
-                return $this->redirect(['portrait/index']); 
+                return $this->redirect(['view', 'id' => $model->id]); 
             }
     
             return $this->render('update', [
@@ -161,8 +162,7 @@ class PortraitController extends Controller
                 'id' => $id,
             ]);
         }
-        Yii::$app->session->setFlash('error', 'You can only update your own portrait.');
-        return $this->redirect(['view', 'id' => $model->id]); 
+        return $this->redirect(['query/index']);
     }
 
     /**
@@ -175,8 +175,8 @@ class PortraitController extends Controller
     {
         $model_user = Users::findOne(['id' => $id]);
         if ($model_user->is_deleted === true) {
-            Yii::$app->session->setFlash('error', 'User has been deleted.');
-            return $this->redirect(['/query/index']); 
+            Users::builderAlert('error', 'Error', 'User has been deleted.');
+            return $this->redirect(['/query/index']);
         }
         if (Yii::$app->user->id !== null) {
             if (Portrait::find()->where(['id' => Yii::$app->user->id])->one() !== null) {
@@ -215,10 +215,8 @@ class PortraitController extends Controller
             $model_user->save();
             $model_portrait = $this->findModel($id);
             $model_portrait->delete();
-            Yii::$app->session->setFlash('success', 'User has been successfully deleted.');
             return $this->redirect(['/query/index']);
         }
-        Yii::$app->session->setFlash('error', 'You can only delete your own portrait.');
         return $this->redirect(['view', 'id' => $id]); 
     }
 
@@ -245,6 +243,7 @@ class PortraitController extends Controller
         $model = new Users();
         $model->save();
         $this->createPrestige($model->id);
+        return $model;
     }
 
     /**
