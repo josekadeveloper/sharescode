@@ -227,14 +227,26 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return int
      */
-    public static function checkVote($answer_id, $users_id)
+    public static function checkLike($answer_id, $users_id)
     {
-        return Votes::findOne([
+        return Likes::findOne([
             'answer_id' => $answer_id,
             'users_id' => $users_id,
         ]);
     }
 
+    /**
+     * Check if that answer has already been voted by that user
+     *
+     * @return int
+     */
+    public static function checkDislike($answer_id, $users_id)
+    {
+        return Dislikes::findOne([
+            'answer_id' => $answer_id,
+            'users_id' => $users_id,
+        ]);
+    }
     /**
      * Returns an alert of the type and content passed by parameters
      *

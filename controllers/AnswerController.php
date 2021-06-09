@@ -5,13 +5,14 @@ namespace app\controllers;
 use Yii;
 use app\models\Answer;
 use app\models\AnswerSearch;
+use app\models\Dislikes;
+use app\models\Likes;
 use app\models\Portrait;
 use app\models\Prestige;
 use app\models\Query;
 use app\models\Reminder;
 use app\models\TypePrestige;
 use app\models\Users;
-use app\models\Votes;
 use DateTime;
 use DateTimeZone;
 use yii\filters\AccessControl;
@@ -115,6 +116,7 @@ class AnswerController extends Controller
                 'content' => $content,
                 'date_created' => $date_created,
                 'likes' => 0,
+                'dislikes' => 0,
                 'query_id' => $id,
                 'users_id' => $users_id,
             ]);
@@ -126,9 +128,14 @@ class AnswerController extends Controller
 
             $answer_id = $model->id;
             $likes = $model->likes . ' likes';
+            $dislikes = $model->dislikes . ' dislikes';
 
             if ($model->likes === null) {
                 $likes = 0 . ' likes';
+            }
+
+            if ($model->dislikes === null) {
+                $dislikes = 0 . ' dislikes';
             }
 
             $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 
@@ -146,7 +153,7 @@ class AnswerController extends Controller
 
             return $this->asJson([
                 'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton,
-                                                     $updateButton, '', $likes, $answer_id),
+                                                     $updateButton, '', '', $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
                 'modal' => $this->builderModal($answer_id, $img_response),
@@ -182,6 +189,8 @@ class AnswerController extends Controller
             $model->date_created = $date_created;
             $model->likes = 0;
             $likes = 0 . ' likes';
+            $model->dislikes = 0;
+            $dislikes = 0 . ' dislikes';
 
             if ($model->save()) {
                 $this->createReminder($query_id, $sending_user_id);
@@ -190,7 +199,7 @@ class AnswerController extends Controller
 
             $answer_id = $model->id;
             
-            $votes = Votes::find()->where([
+            $votes = Likes::find()->where([
                 'answer_id' => $answer_id,
             ])->all();
 
@@ -213,7 +222,7 @@ class AnswerController extends Controller
 
             return $this->asJson([
                 'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, 
-                                                     $updateButton, '', $likes, $answer_id),
+                                                     $updateButton, '', '', $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
             ]);
@@ -251,21 +260,33 @@ class AnswerController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionVote()
+    public function actionLike()
     {
         if (Yii::$app->request->isAjax) {
             $answer_id = Yii::$app->request->post('id');
             $users_id = Yii::$app->user->id;
             $nickname = Portrait::findOne(['id' => $users_id])['nickname'];
-            $model_votes = new Votes([
+            $model_likes = new Likes([
                 'nickname' => $nickname,
                 'answer_id' => $answer_id,
                 'users_id' => $users_id,
             ]);
-            $model_votes->save();
+            $model_likes->save();
+
+            $model_dislikes = Dislikes::findOne([
+                'nickname' => $nickname,
+                'answer_id' => $answer_id,
+                'users_id' => $users_id,
+            ]);
+            if ($model_dislikes !== null) {
+                $model_dislikes->delete();
+            }
     
             $model_answer = $this->findModel($answer_id);
             $model_answer->likes += 1;
+            if ($model_answer->dislikes !== 0) {
+                $model_answer->dislikes -= 1;
+            }
             $model_answer->save();
 
             $model_prestige = Prestige::findOne(['users_id' => $model_answer->users_id]);
@@ -292,16 +313,87 @@ class AnswerController extends Controller
             $date_created = $model_answer->date_created;
             $content = $model_answer->content;
             $likes = $model_answer->likes . ' likes';
+            $dislikes = $model_answer->dislikes . ' dislikes';
 
-            $voteButton = '<button type="button" id="vote-' . $answer_id . '" class="btn btn-success btn-sm voted">'.
+            $likeButton = '<button type="button" id="like-' . $answer_id . '" class="btn btn-success btn-sm liked">'.
                               '<i class="far fa-thumbs-up">' .
                               '</i>' .
                               ' Like' .
                           '</button>';
 
+            $dislikeButton = '<button type="button" id="dislike-' . $answer_id . '" class="btn btn-default btn-sm dislike">'.
+                                '<i class="far fa-thumbs-down">' .
+                                '</i>' .
+                                ' Dislike' .
+                             '</button>';
+
             return $this->asJson([
                 'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, '', 
-                                                     '', $voteButton, $likes, $answer_id),
+                                                     '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
+                'answer_id' => $answer_id,
+            ]);
+        } 
+    }
+
+    /**
+     * Vote an existing Answer model.
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDislike()
+    {
+        if (Yii::$app->request->isAjax) {
+            $answer_id = Yii::$app->request->post('id');
+            $users_id = Yii::$app->user->id;
+            $nickname = Portrait::findOne(['id' => $users_id])['nickname'];
+            $model_dislikes = new Dislikes([
+                'nickname' => $nickname,
+                'answer_id' => $answer_id,
+                'users_id' => $users_id,
+            ]);
+            $model_dislikes->save();
+
+            $model_likes = Likes::findOne([
+                'nickname' => $nickname,
+                'answer_id' => $answer_id,
+                'users_id' => $users_id,
+            ]);
+            if ($model_likes !== null) {
+                $model_likes->delete();
+            }
+            
+            $model_answer = $this->findModel($answer_id);
+            $model_answer->dislikes += 1;
+            if ($model_answer->likes !== 0) {
+                $model_answer->likes -= 1;
+            }
+            $model_answer->save();
+
+            $model_portrait = Portrait::findOne(['id' => $model_answer->users_id]);
+
+            $img = Portrait::devolverImg($model_portrait);
+            $urlPortrait = Url::toRoute(['portrait/view', 'id' => $model_portrait->id]);
+            $username = $model_portrait->nickname;
+            $date_created = $model_answer->date_created;
+            $content = $model_answer->content;
+            $likes = $model_answer->likes . ' likes';
+            $dislikes = $model_answer->dislikes . ' dislikes';
+
+            $likeButton = '<button type="button" id="like-' . $answer_id . '" class="btn btn-default btn-sm like">'.
+                              '<i class="far fa-thumbs-up">' .
+                              '</i>' .
+                              ' Like' .
+                          '</button>';
+
+            $dislikeButton = '<button type="button" id="dislike-' . $answer_id . '" class="btn btn-danger btn-sm disliked">'.
+                                '<i class="far fa-thumbs-down">' .
+                                '</i>' .
+                                ' Dislike' .
+                             '</button>';
+
+            return $this->asJson([
+                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, '', 
+                                                     '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
             ]);
         } 
@@ -438,7 +530,8 @@ class AnswerController extends Controller
      *  Create the response as html container 
      * to integrate it into the view
      */
-    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, $updateButton, $voteButton, $votes, $id)
+    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, $updateButton, 
+                                    $likeButton, $dislikeButton, $likes, $dislikes, $id)
     {
         if (Yii::$app->user->isGuest) {
             return '';
@@ -465,9 +558,14 @@ class AnswerController extends Controller
                         ' ' .
                         $updateButton .
                         ' ' .
-                        $voteButton .
+                        $likeButton .
+                        ' ' .
+                        $dislikeButton .
+                        ' ' .
                         '<span class="float-right text-muted">' .
-                            $votes .
+                            $likes .
+                            ' - ' .
+                            $dislikes .
                         '</span>' .
                     '</div>' .
             '</div>' .

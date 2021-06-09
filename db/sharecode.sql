@@ -59,9 +59,19 @@ CREATE TABLE query
   , users_id        bigint       REFERENCES users (id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS votes CASCADE;
+DROP TABLE IF EXISTS likes CASCADE;
 
-CREATE TABLE votes
+CREATE TABLE likes
+(
+    id              bigserial    PRIMARY KEY
+  , nickname        varchar(255) NOT NULL
+  , answer_id       bigint       REFERENCES answer (id) ON DELETE CASCADE
+  , users_id        bigint       REFERENCES users (id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS dislikes CASCADE;
+
+CREATE TABLE dislikes
 (
     id              bigserial    PRIMARY KEY
   , nickname        varchar(255) NOT NULL
@@ -77,6 +87,7 @@ CREATE TABLE answer
   , content         varchar(255) NOT NULL
   , date_created    timestamp    NOT NULL DEFAULT current_timestamp
   , likes           integer      NOT NULL DEFAULT 0
+  , dislikes        integer      NOT NULL DEFAULT 0
   , query_id        bigint       NOT NULL REFERENCES query (id) ON DELETE CASCADE
   , users_id        bigint       REFERENCES users (id) ON DELETE CASCADE
 );

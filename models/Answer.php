@@ -35,8 +35,8 @@ class Answer extends \yii\db\ActiveRecord
         return [
             [['content', 'date_created', 'query_id'], 'required'],
             [['date_created'], 'safe'],
-            [['likes', 'query_id', 'users_id'], 'default', 'value' => null],
-            [['likes', 'query_id', 'users_id'], 'integer'],
+            [['likes', 'dislikes', 'query_id', 'users_id'], 'default', 'value' => null],
+            [['likes', 'dislikes', 'query_id', 'users_id'], 'integer'],
             [['content'], 'string', 'max' => 255],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['users_id' => 'id']],
             [['query_id'], 'exist', 'skipOnError' => true, 'targetClass' => Query::class, 'targetAttribute' => ['query_id' => 'id']],
@@ -53,6 +53,7 @@ class Answer extends \yii\db\ActiveRecord
             'content' => 'Content',
             'date_created' => 'Date Created',
             'likes' => 'Likes',
+            'dislikes' => 'Dislikes',
             'query_id' => 'Query ID',
             'users_id' => 'User ID',
         ];
@@ -148,14 +149,23 @@ class Answer extends \yii\db\ActiveRecord
     {
         $otherAnswer = Answer::findOne(['id' => $answer_id]);
         $theBest = Answer::find()->where(['query_id' => $query_id])->max('likes');
+        $theWorst = Answer::find()->where(['query_id' => $query_id])->max('dislikes');
         $dateTime = Answer::find()->where(['query_id' => $query_id])->min('date_created');
 
         if ($theBest === 0) {
             return null;
         } 
         if ($otherAnswer->likes === $theBest) {
-            if ($otherAnswer->date_created === $dateTime) {
-                return true;
+            if ($theWorst === 0) {
+                if ($otherAnswer->date_created === $dateTime) {
+                    return true;
+                }
+            } else {
+                if ($otherAnswer->dislikes !== $theWorst) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         } 
         return false;

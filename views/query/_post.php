@@ -44,165 +44,166 @@ if (Yii::$app->user->id !== null) {
 $url_create = Url::to(['answer/create', 'id' => $model->id]);
 $url_delete = Url::to(['answer/delete']);
 $url_update = Url::to(['answer/update']);
-$url_vote = Url::to(['answer/vote']);
+$url_like = Url::to(['answer/like']);
+$url_dislike = Url::to(['answer/dislike']);
 $createAnswer = <<<EOT
-var cm = CodeMirror.fromTextArea(document.getElementById("codemirror-$model->id", {}));
-cm.setOption("theme", "abbott");
-$('#select-$model->id').change(function(){
-    $('#form-codemirror-$model->id .cm-s-default').fadeOut('fast', function() {
-        $('#form-codemirror-$model->id .cm-s-default').remove();
+    var cm = CodeMirror.fromTextArea(document.getElementById("codemirror-$model->id", {}));
+    cm.setOption("theme", "abbott");
+    $('#select-$model->id').change(function(){
+        $('#form-codemirror-$model->id .cm-s-default').fadeOut('fast', function() {
+            $('#form-codemirror-$model->id .cm-s-default').remove();
+        });
+
+        if ($('#form-codemirror-$model->id .img-push').children()[1] != undefined) {
+            $('#form-codemirror-$model->id .img-push').children()[1].remove();
+        }
+
+        let cm = CodeMirror.fromTextArea(document.getElementById("codemirror-$model->id", {}));
+        
+        if (screen.width < 1024) {
+            cm.setSize(480, 300);
+            if (screen.width < 400) {
+                cm.setSize(280, 300);
+            }
+        } else {
+            if (screen.width < 1280) {
+                cm.setSize(630, 300);
+            } 
+            if (screen.width > 1280) {
+                cm.setSize(730, 300);
+            }
+            if (screen.width >= 1920) {
+                cm.setSize(1070, 300);
+            }
+        }
+        var modeInput = document.getElementById("select-$model->id")
+        var index  = modeInput.selectedIndex;
+        let theme = modeInput.options[index].text.toLowerCase();
+        cm.setOption("theme", theme);
     });
 
-    if ($('#form-codemirror-$model->id .img-push').children()[1] != undefined) {
-        $('#form-codemirror-$model->id .img-push').children()[1].remove();
-    }
+    $('#form-codemirror-$model->id').submit(function (ev) {
+        ev.preventDefault();
+        var content = $('#form-codemirror-$model->id .CodeMirror-lines')[0].innerText;
 
-    let cm = CodeMirror.fromTextArea(document.getElementById("codemirror-$model->id", {}));
-    
-    if (screen.width < 1024) {
-        cm.setSize(480, 300);
-        if (screen.width < 400) {
-            cm.setSize(280, 300);
-        }
-    } else {
-        if (screen.width < 1280) {
-            cm.setSize(630, 300);
-        } 
-        if (screen.width > 1280) {
-            cm.setSize(730, 300);
-        }
-        if (screen.width >= 1920) {
-            cm.setSize(1070, 300);
-        }
-    }
-    var modeInput = document.getElementById("select-$model->id")
-    var index  = modeInput.selectedIndex;
-    let theme = modeInput.options[index].text.toLowerCase();
-    cm.setOption("theme", theme);
-});
-
-$('#form-codemirror-$model->id').submit(function (ev) {
-    ev.preventDefault();
-    var content = $('#form-codemirror-$model->id .CodeMirror-lines')[0].innerText;
-
-    $.ajax({
-        type: 'POST',
-        url: '$url_create',
-        data: {
-            content: content,
-        }
-    })
-    .done(function (data) {
-        let newAnswer = $(data.response);
-        newAnswer.hide();
-        $('#answers-$model->id').append(newAnswer);
-        newAnswer.fadeIn('fast');
-        $('#modals-$model->id').append(data.modal);
-
-        let deleteButton = $('#delete-' + data.answer_id);
-        let updateButton = $('#update-' + data.answer_id);
-
-        deleteButton.click(function (ev) {
-            ev.preventDefault();
-            var id = data.answer_id;
-
-            $.ajax({
-                type: 'POST',
-                url: '$url_delete',
-                data: {
-                    id: id,
-                }
-            })
-            .done(function (data) {
-                let container = $('#container-answer-'+id);
-                container.fadeOut('fast', function() {
-                    container.remove();
-                });
-                        
-                $('li.dropdown').remove();
-                $('#notifications').append(data.reminders);
-            });
-            return false;
+        $.ajax({
+            type: 'POST',
+            url: '$url_create',
+            data: {
+                content: content,
+            }
         })
-                
-        updateButton.click(function(ev) {
-            ev.preventDefault();
-            let id = data.answer_id;
+        .done(function (data) {
+            let newAnswer = $(data.response);
+            newAnswer.hide();
+            $('#answers-$model->id').append(newAnswer);
+            newAnswer.fadeIn('fast');
+            $('#modals-$model->id').append(data.modal);
 
-            var cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
-            cmd.setOption("theme", "abbott");
+            let deleteButton = $('#delete-' + data.answer_id);
+            let updateButton = $('#update-' + data.answer_id);
 
-            $('#select-modal-'+id).change(function(){
-                if ($('#form-codemirror-modal-'+id).find('.img-push').children()[1] != undefined) {
-                    $('#form-codemirror-modal-'+id).find('.img-push').children()[1].remove();
-                }     
-                let cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+            deleteButton.click(function (ev) {
+                ev.preventDefault();
+                var id = data.answer_id;
 
-                cmd.setSize(380, 300);
-                
-                var modeInput = document.getElementById("select-modal-"+id)
-                var index  = modeInput.selectedIndex;
-                let theme = modeInput.options[index].text.toLowerCase();
-                cmd.setOption("theme", theme);
-            });
-            
-            $('#form-codemirror-modal-'+id).submit(function (ev) {
-                var content = $('#form-codemirror-modal-'+id).find('.CodeMirror-lines')[0].innerText;
-                
                 $.ajax({
                     type: 'POST',
-                    url: '$url_update',
+                    url: '$url_delete',
                     data: {
                         id: id,
-                        content: content,
                     }
                 })
                 .done(function (data) {
-                    $('.fade').modal('hide');
-        
-                    let answer_id = data.answer_id;
-                    let oldAnswer = $('#container-answer-'+answer_id);
-                    oldAnswer.fadeOut('fast', function() {
-                        oldAnswer.remove();
+                    let container = $('#container-answer-'+id);
+                    container.fadeOut('fast', function() {
+                        container.remove();
                     });
-        
-                    let newAnswer = $(data.response);
-                                
-                    let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
-                    $('#'+father_id).append(newAnswer);
-                    newAnswer.fadeIn('fast');
-
-                    $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
-                        $.ajax({
-                            type: 'POST',
-                            url: '$url_delete',
-                            data: {
-                                id: id,
-                            }
-                        })
-                        .done(function (data) {
-                            let container = $('#container-answer-'+answer_id);
-  
-                            container.fadeOut('fast', function() {
-                                container.remove();
-                            });
-                                
-                            $('li.dropdown').remove();
-                            $('#notifications').append(data.reminders);
-                        });
-                        return false;
-                    });
+                            
                     $('li.dropdown').remove();
                     $('#notifications').append(data.reminders);
-                })
+                });
                 return false;
-            });
-        })
-        $('li.dropdown').remove();
-        $('#notifications').append(data.reminders);
+            })
+                    
+            updateButton.click(function(ev) {
+                ev.preventDefault();
+                let id = data.answer_id;
+
+                var cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+                cmd.setOption("theme", "abbott");
+
+                $('#select-modal-'+id).change(function(){
+                    if ($('#form-codemirror-modal-'+id).find('.img-push').children()[1] != undefined) {
+                        $('#form-codemirror-modal-'+id).find('.img-push').children()[1].remove();
+                    }     
+                    let cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+
+                    cmd.setSize(380, 300);
+                    
+                    var modeInput = document.getElementById("select-modal-"+id)
+                    var index  = modeInput.selectedIndex;
+                    let theme = modeInput.options[index].text.toLowerCase();
+                    cmd.setOption("theme", theme);
+                });
+                
+                $('#form-codemirror-modal-'+id).submit(function (ev) {
+                    var content = $('#form-codemirror-modal-'+id).find('.CodeMirror-lines')[0].innerText;
+                    
+                    $.ajax({
+                        type: 'POST',
+                        url: '$url_update',
+                        data: {
+                            id: id,
+                            content: content,
+                        }
+                    })
+                    .done(function (data) {
+                        $('.fade').modal('hide');
+            
+                        let answer_id = data.answer_id;
+                        let oldAnswer = $('#container-answer-'+answer_id);
+                        oldAnswer.fadeOut('fast', function() {
+                            oldAnswer.remove();
+                        });
+            
+                        let newAnswer = $(data.response);
+                                    
+                        let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
+                        $('#'+father_id).append(newAnswer);
+                        newAnswer.fadeIn('fast');
+
+                        $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
+                            $.ajax({
+                                type: 'POST',
+                                url: '$url_delete',
+                                data: {
+                                    id: id,
+                                }
+                            })
+                            .done(function (data) {
+                                let container = $('#container-answer-'+answer_id);
+    
+                                container.fadeOut('fast', function() {
+                                    container.remove();
+                                });
+                                    
+                                $('li.dropdown').remove();
+                                $('#notifications').append(data.reminders);
+                            });
+                            return false;
+                        });
+                        $('li.dropdown').remove();
+                        $('#notifications').append(data.reminders);
+                    })
+                    return false;
+                });
+            })
+            $('li.dropdown').remove();
+            $('#notifications').append(data.reminders);
+        });
+        return false;
     });
-    return false;
-});
 EOT;
 
 $deleteAnswer = <<<EOT
@@ -322,9 +323,9 @@ $updateAnswer = <<<EOT
     
 EOT;
 
-$voteAnswer = <<<EOT
+$likeAnswer = <<<EOT
     var list = [];
-    $(".vote").each(function(index) {
+    $(".like").each(function(index) {
         list.push($(this).attr("id"));
     });
 
@@ -335,7 +336,7 @@ $voteAnswer = <<<EOT
 
             $.ajax({
                 type: 'POST',
-                url: '$url_vote',
+                url: '$url_like',
                 data: {
                     id: id,
                 }
@@ -349,19 +350,105 @@ $voteAnswer = <<<EOT
 
                 let newAnswer = $(data.response);
   
-                let father_id = $('#vote-'+answer_id).parent().parent().parent().attr("id");
+                let father_id = $('#like-'+answer_id).parent().parent().parent().attr("id");
                 $('#'+father_id).append(newAnswer);
                 newAnswer.fadeIn('fast');
+
+                $('.card-comment').on('click', '#dislike-' + data.answer_id, function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: '$url_dislike',
+                        data: {
+                            id: id,
+                        }
+                    })
+                    .done(function (data) {
+                        let answer_id = data.answer_id;
+                        let oldAnswer = $('#container-answer-'+answer_id);
+                        oldAnswer.fadeOut('fast', function() {
+                            oldAnswer.remove();
+                        });
+        
+                        let newAnswer = $(data.response);
+          
+                        let father_id = $('#dislike-'+answer_id).parent().parent().parent().attr("id");
+                        $('#'+father_id).append(newAnswer);
+                        newAnswer.fadeIn('fast');
+                    });
+                    return false;
+                });
             });
             return false;
         });
     });
 EOT;
+
+$dislikeAnswer = <<<EOT
+    var list = [];
+    $(".dislike").each(function(index) {
+        list.push($(this).attr("id"));
+    });
+
+    $.each(list, function (ind, elem) {
+        $('#'+elem).click(function (ev) {
+            ev.preventDefault();
+            var id = elem.substring(8);
+            console.log(id);
+            $.ajax({
+                type: 'POST',
+                url: '$url_dislike',
+                data: {
+                    id: id,
+                }
+            })
+            .done(function (data) {
+                let answer_id = data.answer_id;
+                let oldAnswer = $('#container-answer-'+answer_id);
+                oldAnswer.fadeOut('fast', function() {
+                    oldAnswer.remove();
+                });
+
+                let newAnswer = $(data.response);
+  
+                let father_id = $('#dislike-'+answer_id).parent().parent().parent().attr("id");
+                $('#'+father_id).append(newAnswer);
+                newAnswer.fadeIn('fast');
+                console.log('#like-' + data.answer_id);
+                $('.card-comment').on('click', '#like-' + data.answer_id, function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: '$url_like',
+                        data: {
+                            id: id,
+                        }
+                    })
+                    .done(function (data) {
+                        let answer_id = data.answer_id;
+                        let oldAnswer = $('#container-answer-'+answer_id);
+                        oldAnswer.fadeOut('fast', function() {
+                            oldAnswer.remove();
+                        });
+        
+                        let newAnswer = $(data.response);
+          
+                        let father_id = $('#like-'+answer_id).parent().parent().parent().attr("id");
+                        $('#'+father_id).append(newAnswer);
+                        newAnswer.fadeIn('fast');
+                    });
+                    return false;
+                });
+            });
+            return false;
+        });
+    });
+EOT;
+
 if (!Yii::$app->user->isGuest) {
     $this->registerJs($createAnswer);
     $this->registerJs($deleteAnswer);
     $this->registerJs($updateAnswer);
-    $this->registerJs($voteAnswer);
+    $this->registerJs($likeAnswer);
+    $this->registerJs($dislikeAnswer);
 }
 
 ?>
@@ -381,7 +468,7 @@ if (!Yii::$app->user->isGuest) {
                 <i class="fas fa-minus"></i>
             </button>
             <?php if (!Yii::$app->user->isGuest): ?>
-                <?php if ($model->users_id === Yii::$app->user->id || $model_user_actually->is_admin === true): ?>
+                <?php if ($model->users_id === Yii::$app->user->id || Yii::$app->user->identity->is_admin === true): ?>
                     <?= Html::a('', ['query/delete', 'id' => $model->id], [
                         'class' => 'fas fa-minus-circle btn-danger btn-sm',
                         'data' => [
@@ -439,17 +526,23 @@ if (!Yii::$app->user->isGuest) {
                                         </button>
                                     <?php endif ?>
                                     <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
-                                        <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
+                                        <?php if (Users::checkLike($answer->id, Yii::$app->user->id)): ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-success btn-sm liked"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                        <?php elseif (Users::checkDislike($answer->id, Yii::$app->user->id)): ?>
+                                            <!-- Social sharing buttons -->
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-danger btn-sm disliked"><i class="far fa-thumbs-down"></i> Dislike</button>
                                         <?php else: ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
                                         <?php endif ?>
                                     <?php endif ?>
                                 <?php endif ?>
                                 <i id="icon-check" class="ml-2 float-right fas fa-check"></i>
-                                <span class="float-right text-muted"><?= $answer->likes ?> likes</span>
+                                <span class="float-right text-muted"><?= $answer->likes ?> likes - <?= $answer->dislikes ?> dislikes</span>
                                 <!-- /.comment-text -->
                             </div>
                             <!-- /.card-comment -->
@@ -480,16 +573,22 @@ if (!Yii::$app->user->isGuest) {
                                         </button>
                                     <?php endif ?>
                                     <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
-                                        <?php if (Users::checkVote($answer->id, Yii::$app->user->id)): ?>
+                                        <?php if (Users::checkLike($answer->id, Yii::$app->user->id)): ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-success btn-sm voted"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-success btn-sm liked"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                        <?php elseif (Users::checkDislike($answer->id, Yii::$app->user->id)): ?>
+                                            <!-- Social sharing buttons -->
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-danger btn-sm disliked"><i class="far fa-thumbs-down"></i> Dislike</button>
                                         <?php else: ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="vote-<?= $answer->id ?>" class="btn btn-default btn-sm vote"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
                                         <?php endif ?>
                                     <?php endif ?>
                                 <?php endif ?>
-                                <span class="float-right text-muted"><?= $answer->likes ?> likes</span>
+                                <span class="float-right text-muted"><?= $answer->likes ?> likes - <?= $answer->dislikes ?> dislikes</span>
                                 <!-- /.comment-text -->
                             </div>
                             <!-- /.card-comment -->

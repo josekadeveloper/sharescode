@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "votes".
+ * This is the model class for table "dislikes".
  *
  * @property int $id
  * @property string $nickname
@@ -14,14 +14,14 @@ use Yii;
  *
  * @property Users $users
  */
-class Votes extends \yii\db\ActiveRecord
+class Dislikes extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'votes';
+        return 'dislikes';
     }
 
     /**
@@ -47,7 +47,7 @@ class Votes extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nickname' => 'Nickname',
             'answer_id' => 'Answer ID',
-            'users_id' => 'User',
+            'users_id' => 'Users ID',
         ];
     }
 
@@ -58,6 +58,6 @@ class Votes extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasOne(Users::class, ['id' => 'users_id'])->inverseOf('votes');
+        return $this->hasOne(Users::class, ['id' => 'users_id'])->inverseOf('dislikes');
     }
 }
