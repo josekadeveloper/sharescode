@@ -293,7 +293,7 @@ $updateAnswer = <<<EOT
                     $('#'+father_id).append(newAnswer);
                     newAnswer.fadeIn('fast');
 
-                    $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
+                    $('.card-comment').on('click', '#delete-' + data.answer_id, function() {
                         $.ajax({
                             type: 'POST',
                             url: '$url_delete',
@@ -354,7 +354,7 @@ $likeAnswer = <<<EOT
                 $('#'+father_id).append(newAnswer);
                 newAnswer.fadeIn('fast');
 
-                $('.card-comment').on('click', '#dislike-' + data.answer_id, function(){
+                $('.card-comment').on('click', '#dislike-' + data.answer_id, function() {
                     $.ajax({
                         type: 'POST',
                         url: '$url_dislike',
@@ -374,6 +374,7 @@ $likeAnswer = <<<EOT
                         let father_id = $('#dislike-'+answer_id).parent().parent().parent().attr("id");
                         $('#'+father_id).append(newAnswer);
                         newAnswer.fadeIn('fast');
+                        location.reload();
                     });
                     return false;
                 });
@@ -393,7 +394,7 @@ $dislikeAnswer = <<<EOT
         $('#'+elem).click(function (ev) {
             ev.preventDefault();
             var id = elem.substring(8);
-            console.log(id);
+
             $.ajax({
                 type: 'POST',
                 url: '$url_dislike',
@@ -413,8 +414,8 @@ $dislikeAnswer = <<<EOT
                 let father_id = $('#dislike-'+answer_id).parent().parent().parent().attr("id");
                 $('#'+father_id).append(newAnswer);
                 newAnswer.fadeIn('fast');
-                console.log('#like-' + data.answer_id);
-                $('.card-comment').on('click', '#like-' + data.answer_id, function(){
+
+                $('.card-comment').on('click', '#like-' + data.answer_id, function() {
                     $.ajax({
                         type: 'POST',
                         url: '$url_like',
@@ -434,6 +435,7 @@ $dislikeAnswer = <<<EOT
                         let father_id = $('#like-'+answer_id).parent().parent().parent().attr("id");
                         $('#'+father_id).append(newAnswer);
                         newAnswer.fadeIn('fast');
+                        location.reload();
                     });
                     return false;
                 });

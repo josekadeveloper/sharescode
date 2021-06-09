@@ -247,6 +247,7 @@ class Users extends \yii\db\ActiveRecord
             'users_id' => $users_id,
         ]);
     }
+    
     /**
      * Returns an alert of the type and content passed by parameters
      *
