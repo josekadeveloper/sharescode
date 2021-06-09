@@ -129,14 +129,26 @@ $('#form-codemirror-$model->id').submit(function (ev) {
             ev.preventDefault();
             let id = data.answer_id;
 
-            let cont1 = $('#container-answer-'+id).find('.comment-text').text();
-            let cont2 = $.trim($.trim(cont1.substr(23)));
-            let content = $('#con-'+id);
-            content.val(cont2);
-                
-            $('#send-'+id).click(function (ev) {
-                var content = $('#con-'+id).val();
+            var cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+            cmd.setOption("theme", "abbott");
 
+            $('#select-modal-'+id).change(function(){
+                if ($('#form-codemirror-modal-'+id).find('.img-push').children()[1] != undefined) {
+                    $('#form-codemirror-modal-'+id).find('.img-push').children()[1].remove();
+                }     
+                let cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+
+                cmd.setSize(380, 300);
+                
+                var modeInput = document.getElementById("select-modal-"+id)
+                var index  = modeInput.selectedIndex;
+                let theme = modeInput.options[index].text.toLowerCase();
+                cmd.setOption("theme", theme);
+            });
+            
+            $('#form-codemirror-modal-'+id).submit(function (ev) {
+                var content = $('#form-codemirror-modal-'+id).find('.CodeMirror-lines')[0].innerText;
+                
                 $.ajax({
                     type: 'POST',
                     url: '$url_update',
@@ -159,9 +171,6 @@ $('#form-codemirror-$model->id').submit(function (ev) {
                     let father_id = $('#update-'+answer_id).parent().parent().parent().attr("id");
                     $('#'+father_id).append(newAnswer);
                     newAnswer.fadeIn('fast');
-                    $('#con-'+id).val('');
-                    $('#con-'+id).val(content);
-
 
                     $('.card-comment').on('click', '#delete-' + data.answer_id, function(){
                         $.ajax({
@@ -492,19 +501,41 @@ if (!Yii::$app->user->isGuest) {
                                         <div class="modal-body">
                                             <!-- /.card-footer -->
                                             <div class="card-footer mb-3">
+                                                <form action="<?= $url_update ?>" method="post">
+                                                    <div class="mb-5 ml-5 form-group">
+                                                        <label for="select-modal-<?= $answer->id ?>">Select a theme: </label>
+                                                        <select class="form-control" name="theme" id="select-modal-<?= $answer->id ?>">
+                                                            <option value="1">abbott</option>
+                                                            <option value="2">ambiance</option>
+                                                            <option value="3">cobalt</option>
+                                                            <option value="4">dracula</option>
+                                                            <option value="5">eclipse</option>
+                                                            <option value="6">elegant</option>
+                                                            <option value="7">isotope</option>
+                                                            <option value="8">lucario</option>
+                                                            <option value="9">material</option>
+                                                            <option value="10">neo</option>
+                                                            <option value="11">night</option>
+                                                            <option value="12">oceanic-next</option>
+                                                            <option value="13">the-matrix</option>
+                                                            <option value="14">yeti</option>
+                                                        </select>
+                                                    </div>
+                                                </form>
                                                 <!-- User image -->
                                                 <div class="img-fluid img-circle img-sm">
                                                     <?= $img_response ?>
                                                 </div>
-                                                <!-- .img-push is used to add margin to elements next to floating images -->
-                                                <div class="img-push">
-                                                    <input type="text" id="con-<?= $answer->id ?>" class="form-control form-control-sm" placeholder="Press enter to post comment">
-                                                </div>
+                                                <form action="" method="post" id="form-codemirror-modal-<?= $answer->id ?>">
+                                                    <!-- .img-push is used to add margin to elements next to floating images -->
+                                                    <div class="ml-5 img-push">
+                                                        <textarea id="codemirror-modal-<?= $answer->id ?>"></textarea>
+                                                    </div>
+                                                    <button type="submit" name="preview-form-submit-modal" id="preview-form-submit-modal-<?= $answer->id ?>" 
+                                                            value="Submit" class="mt-3 float-right btn btn-success">Send reply</button>
+                                                </form>
                                             </div>
                                             <!-- /.card-footer -->
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" id="send-<?= $answer->id ?>" class="btn btn-primary">Save changes</button>
                                         </div>
                                     </div>
                                 </div>

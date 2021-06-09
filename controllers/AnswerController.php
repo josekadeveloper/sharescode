@@ -108,6 +108,7 @@ class AnswerController extends Controller
             $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
             $content = str_replace("\n", "<br>", $content);
+            $content = str_replace(" ", "&nbsp", $content);
             $sending_user_id = Query::findOne(['id' => $id])['users_id'];
 
             $model = new Answer([
@@ -174,6 +175,8 @@ class AnswerController extends Controller
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
             $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
+            $content = str_replace("\n", "<br>", $content);
+            $content = str_replace(" ", "&nbsp", $content);
             
             $model->content = $content;
             $model->date_created = $date_created;
@@ -530,18 +533,70 @@ class AnswerController extends Controller
                         '</div>' .
                         '<div class="modal-body">' .
                             '<div class="card-footer mb-3">' .
+                                '<form action="" method="post">' .
+                                    '<div class="mb-5 ml-5 form-group">' .
+                                        '<label for="select-' . $answer_id . '">' .
+                                            'Select a theme: ' .
+                                        '</label>' .
+                                        '<select class="form-control" name="theme" id="select-modal-' . $answer_id . '">' .
+                                            '<option value="1">' .
+                                                'abbott' .
+                                            '</option>' .
+                                            '<option value="2">' .
+                                                'ambiance' .
+                                            '</option>' .
+                                            '<option value="3">' .
+                                                'cobalt' .
+                                            '</option>' .
+                                            '<option value="4">' .
+                                                'dracula' .
+                                            '</option>' .
+                                            '<option value="5">' .
+                                                'eclipse' .
+                                            '</option>' .
+                                            '<option value="6">' .
+                                                'elegant' .
+                                            '</option>' .
+                                            '<option value="7">' .
+                                                'isotope' .
+                                            '</option>' .
+                                            '<option value="8">' .
+                                                'lucario' .
+                                            '</option>' .
+                                            '<option value="9">' .
+                                                'material' .
+                                            '</option>' .
+                                            '<option value="10">' .
+                                                'neo' .
+                                            '</option>' .
+                                            '<option value="11">' .
+                                                'night' .
+                                            '</option>' .
+                                            '<option value="12">' .
+                                                'oceanic-next' .
+                                            '</option>' .
+                                            '<option value="13">' .
+                                                'the-matrix' .
+                                            '</option>' .
+                                            '<option value="14">' .
+                                                'abbott' .
+                                            '</option>' .
+                                        '</select>' .
+                                    '</div>' .
+                                '</form>' .
                                 '<div class="img-fluid img-circle img-sm">' .
                                     $img_response .
                                 '</div>' .
-                                '<div class="img-push">' .
-                                    '<input type="text" id="con-' . $answer_id . '" class="form-control form-control-sm" placeholder="Press enter to post comment">' .
+                            '<form action="" method="post" id="form-codemirror-modal-' . $answer_id . '">' .
+                                '<div class="ml-5 img-push">' .
+                                    '<textarea id="codemirror-modal-' . $answer_id . '">' .
+                                    '</textarea>' .
                                 '</div>' .
-                            '</div>' .
-                        '</div>' .
-                        '<div class="modal-footer">' .
-                            '<button type="button" id="send-' . $answer_id . '" class="btn btn-primary">' .
-                                'Save changes' .
-                            '</button>' .
+                                '<button type="submit" name="preview-form-submit-modal" id="preview-form-submit-modal-' . $answer_id . '" 
+                                         value="Submit" class="mt-3 float-right btn btn-success">' .
+                                         'Send reply' .
+                                '</button>' .
+                            '</form>' .
                         '</div>' .
                     '</div>' .
                 '</div>' .
