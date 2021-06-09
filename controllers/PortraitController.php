@@ -189,13 +189,11 @@ class PortraitController extends Controller
         }
         $model = $this->findModel($id);
         $model_portrait = Portrait::findOne(['id' => Yii::$app->user->id]);
-        $prestige_id = Users::getPrestigeId($id);
 
         return $this->render('view', [
             'model' => $model,
             'model_portrait' => $model_portrait,
             'user_id' => $user_id,
-            'prestige_id' => $prestige_id,
         ]);
     }
 

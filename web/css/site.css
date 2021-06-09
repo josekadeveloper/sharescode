@@ -176,3 +176,27 @@ a.desc:after {
 .input-text-answer {
     height: 300px;
 }
+
+#firstTable {
+    font-family: 'Open Sans', sans-serif;
+    width: 750px;
+    border-collapse: collapse;
+    border: 3px solid #44475C;
+    margin: 10px 10px 0 10px;
+}
+  
+#firstTable .title {
+    text-transform: uppercase;
+    text-align: left;
+    background: #44475C;
+    color: #FFF;
+    padding: 8px;
+    min-width: 30px;
+}
+  
+#firstTable td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid black;
+}
+  
