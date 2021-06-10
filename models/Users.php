@@ -214,12 +214,8 @@ class Users extends \yii\db\ActiveRecord
         $time_registration = new DateTime($time_registration);
         $time = $today->diff($time_registration);
         $time = $time->format('%D days - %H hours - %I minutes - %S seconds');
-
-        if (!Yii::$app->user->isGuest) {
-            return $time;
-        } else {
-            return '';
-        }
+        
+        return $time;
     }
 
     /**
