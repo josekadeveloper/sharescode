@@ -106,7 +106,7 @@ class Users extends \yii\db\ActiveRecord
             return Reminder::find()->where([
                     'users_id' => Yii::$app->user->id,
                     'is_read' => false
-            ])->count();;
+            ])->count();
         } else {
             return 0;
         }

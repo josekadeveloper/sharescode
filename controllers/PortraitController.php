@@ -395,5 +395,4 @@ class PortraitController extends Controller
         ->setSubject($title)
         ->send();
     }
-
 }

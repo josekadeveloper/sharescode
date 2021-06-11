@@ -105,6 +105,24 @@ CREATE TABLE reminder
   , users_id        bigint       NOT NULL REFERENCES users (id)
 );
 
+DROP TABLE IF EXISTS votes CASCADE;
+
+CREATE TABLE votes
+(
+    id              bigserial    PRIMARY KEY
+  , typ             varchar(255) NOT NULL
+  , puntuation      integer      NOT NULL
+  , users_id        bigint       NOT NULL REFERENCES users (id)
+);
+
+DROP TABLE IF EXISTS assessment CASCADE;
+
+CREATE TABLE assessment
+(
+    id              bigserial    PRIMARY KEY
+  , total_percent   decimal      NOT NULL DEFAULT 0.0
+  , votes_id        bigint       NOT NULL REFERENCES votes (id)
+);
 --- Fixtures ---
 
 INSERT INTO users (is_deleted)
