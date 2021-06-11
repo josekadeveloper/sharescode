@@ -2,7 +2,8 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$url_register = Url::to(['/portrait/register'])
+$url_register = Url::to(['/portrait/register']);
+$url_recovery = Url::to(['/portrait/recovery-pass']);
 ?>
 <div class="row justify-content-center">
     <div class="card col-md-6" style="margin-top: 10vw; margin-bottom: 16vw;">
@@ -31,13 +32,6 @@ $url_register = Url::to(['/portrait/register'])
 
             <div class="row">
                 <div class="col-8">
-                    <?= $form->field($model, 'rememberMe')->checkbox([
-                        'template' => '<div class="icheck-primary">{input}{label}</div>',
-                        'labelOptions' => [
-                            'class' => ''
-                        ],
-                        'uncheck' => null
-                    ]) ?>
                 </div>
                 <div class="col-4">
                     <?= Html::submitButton('Sign In', ['class' => 'btn btn-primary btn-block']) ?>
@@ -47,7 +41,7 @@ $url_register = Url::to(['/portrait/register'])
             <?php \yii\bootstrap4\ActiveForm::end(); ?>
 
             <p class="mb-1">
-                <a href="forgot-password.html">I forgot my password</a>
+                <a href="<?= $url_recovery ?>">I forgot my password</a>
             </p>
             <p class="mb-0">
                 <a href="<?= $url_register ?>" class="text-center">Register a new membership</a>

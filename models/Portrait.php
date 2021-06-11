@@ -18,6 +18,7 @@ use yii\web\IdentityInterface;
  * @property string $repository
  * @property string $prestige_port
  * @property string $sex
+ * @property string|null $token_pass
  *
  * @property Users $us
  */
@@ -26,6 +27,7 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
     const SCENARIO_REGISTER = 'register';
+    const SCENARIO_RECOVERY = 'recovery';
 
     public $password_repeat;
     /**
@@ -45,14 +47,16 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
             [['is_admin'], 'boolean'],
             [['nickname', 'password', 'date_register', 'email', 'repository', 'sex'], 'required'],
             [['date_register'], 'safe'],
-            [['nickname', 'password', 'email', 'repository', 'prestige_port'], 'string', 'max' => 255],
+            [['nickname', 'password', 'email', 'repository', 'prestige_port', 'token_pass'], 'string', 'max' => 255],
             [['sex'], 'string'],
             [['email'], 'unique'],
+            [['email'], 'email'],
             [['nickname'], 'unique'],
             [['repository'], 'unique'],
-            [['password', 'password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_REGISTER]],
-            [['password'], 'compare', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE, self::SCENARIO_REGISTER]],
-            [['password_repeat'], 'safe', 'on' => [self::SCENARIO_UPDATE, self::SCENARIO_REGISTER]],
+            [['token_pass'], 'unique'],
+            [['password', 'password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_REGISTER, self::SCENARIO_RECOVERY]],
+            [['password'], 'compare', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE, self::SCENARIO_REGISTER, self::SCENARIO_RECOVERY]],
+            [['password_repeat'], 'safe', 'on' => [self::SCENARIO_UPDATE, self::SCENARIO_REGISTER, self::SCENARIO_RECOVERY]],
         ];
     }
 
@@ -76,6 +80,7 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
             'repository' => 'Repository',
             'prestige_port' => 'Prestige Port',
             'sex' => 'Sex',
+            'token_pass' => 'Token Pass',
         ];
     }
 
@@ -90,7 +95,8 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
                 goto salto;
             }
         } else {
-            if ($this->scenario === self::SCENARIO_UPDATE) {
+            if ($this->scenario === self::SCENARIO_UPDATE || 
+                $this->scenario === self::SCENARIO_RECOVERY) {
                 if ($this->password === '') {
                     $this->password = $this->getOldAttribute('password');
                 } else {
