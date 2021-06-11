@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Assessment;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -11,6 +12,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Portrait;
 use app\models\Users;
+use app\models\Votes;
 
 class SiteController extends Controller
 {
@@ -90,12 +92,80 @@ class SiteController extends Controller
     }
 
     /**
-     * Logout action.
+     *  Logout action.
+     *  If the user is less than one day old at the end of the session, 
+     * they will be given a questionnaire in order to improve the website.
      *
      * @return Response
      */
     public function actionLogout()
     {
+        $antiquity = Users::getAntiquity(Yii::$app->user->id);
+        $antiquity = substr($antiquity, 0, 2);
+        $old_assessment = 0.0;
+
+        if (Assessment::find()->all() !== null) {
+            foreach (Assessment::find()->all() as $key) {
+                $old_assessment = $key->total_percent;
+            }
+        }
+        
+        if ($antiquity === '00') {
+            $model = new Votes();
+            if ($model->load(Yii::$app->request->post())) {
+                $vote_type = $model->typ;
+                switch ($vote_type) {
+                    case 'wrong':
+                        $vote = -1;
+                        break;
+                    case 'regular':
+                        $vote = 1;
+                        break;
+                    case 'good':
+                        $vote = 2;
+                        break;
+                    case 'very good':
+                        $vote = 3;
+                        break;
+                }
+                $model->typ = $vote_type;
+                $model->puntuation = $vote;
+                $model->users_id = Yii::$app->user->id;
+
+                if ($model->save()) {
+                    $assessment = new Assessment();
+                    $num_votes = Votes::find()->count();
+                    $puntuation_total = [];
+                    foreach (Votes::find()->all() as $key) {
+                        foreach ($key as $k => $v) {
+                            if ($k === "puntuation") {
+                                $v = intval($v);
+                                array_push($puntuation_total, $v);
+                            }
+                        }
+                    }
+                    $puntuation_total = array_sum($puntuation_total);
+                    $puntuation_perfect = $num_votes * 3;
+                    $percent = (100 * $puntuation_total) / $puntuation_perfect;
+                    $percent = round($percent, 2);
+                    $assessment->total_percent = $percent;
+                    $assessment->votes_id = $model->id;
+                    
+                    foreach (Assessment::find()->all() as $key) {
+                        $key->delete();
+                    }
+                    if ($assessment->save()) {
+                        Yii::$app->user->logout();
+
+                        return $this->goHome();
+                    }
+                }
+            }
+            return $this->render('assessment', [
+                'model' => $model,
+                'old_assessment' => intval($old_assessment),
+            ]);
+        }
         Yii::$app->user->logout();
 
         return $this->goHome();
