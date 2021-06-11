@@ -108,8 +108,10 @@ class AnswerController extends Controller
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
             $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
-            $content = str_replace("\n", "<br>", $content);
             $content = str_replace(" ", "&nbsp", $content);
+            $content = str_replace(">", "&gt", $content);
+            $content = str_replace("<", "&lt", $content);
+            $content = str_replace("\n", "<br>", $content);
             $sending_user_id = Query::findOne(['id' => $id])['users_id'];
 
             $model = new Answer([
@@ -182,8 +184,10 @@ class AnswerController extends Controller
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
             $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
-            $content = str_replace("\n", "<br>", $content);
             $content = str_replace(" ", "&nbsp", $content);
+            $content = str_replace(">", "&gt", $content);
+            $content = str_replace("<", "&lt", $content);
+            $content = str_replace("\n", "<br>", $content);
             
             $model->content = $content;
             $model->date_created = $date_created;

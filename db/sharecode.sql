@@ -23,6 +23,7 @@ CREATE TABLE portrait
   , repository     varchar(255)  NOT NULL UNIQUE
   , prestige_port  varchar(255)  NOT NULL DEFAULT 'Initiate'
   , sex            varchar(255)  NOT NULL 
+  , token_pass     varchar(255)  UNIQUE
 );
 
 DROP TABLE IF EXISTS type_prestige CASCADE;

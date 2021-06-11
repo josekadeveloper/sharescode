@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\EmailRecoveryForm;
 use app\models\NotRegistered;
 use Yii;
 use app\models\Portrait;
@@ -99,21 +100,7 @@ class PortraitController extends Controller
                     'token' => Yii::$app->security->generateRandomString(),
                 ]);
                 $notRegistered->save();
-                $body = 'To activate user click here: '
-                    . Html::a (
-                        'Activate user',
-                        Url::to([
-                            'portrait/activate',
-                            'id' => $model->id,
-                            'token' => $notRegistered->token
-                        ], true)
-                    );
-                Yii::$app->mailer->compose()
-                    ->setTo($model->email)
-                    ->setFrom(Yii::$app->params['smtpUsername'])
-                    ->setSubject('Activate user')
-                    ->setHtmlBody($body)
-                    ->send();
+                $this->sendEmail($model, $notRegistered);
                 Users::builderAlert('success', 'Success', 'You must activate your user from the email sent.');
             } else {
                 $model_user->delete() ? Users::builderAlert('error', 'Error', 'Data incorrect') : '';
@@ -315,4 +302,98 @@ class PortraitController extends Controller
             ]);
         }
     }
+
+    /**
+     * Render a form to reset a user password.
+     * @param  string $token The user password token
+     * @return mixed
+     */
+    public function actionRestorePass($token)
+    {
+        if (($model = Portrait::findOne(['token_pass' => $token])) === null) {
+            return $this->goHome();
+        }
+
+        $model->scenario = Portrait::SCENARIO_RECOVERY;
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->token_pass = null;
+            $model->save();
+            Users::builderAlert('success', 'Success', 'Your password has been changed correctly');
+        }
+        $model->password = '';
+
+        return $this->render('recovery', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Send an email to the user who has requested to recover their password.
+     * @return mixed
+     */
+    public function actionRecoveryPass()
+    {
+        $form = new EmailRecoveryForm();
+        $email = Yii::$app->request->post('email');
+        if ($email !== null) {
+            $form->email = $email;
+            if ($form->validate()) {
+                $token = Yii::$app->security->generateRandomString();
+                $model = Portrait::findOne(['email' => $email]);
+                $model->token_pass = $token;
+                if ($model->save()) {
+                    $this->sendEmail($model, $token, true);
+                    Users::builderAlert('info', 'Info', 'You will receive an email with instructions to reset your password.');
+                }
+            } else {
+                Users::builderAlert('error', 'Error', 'Email does not exist');
+            }
+        }
+
+        return $this->render('recovery-email', [
+            'model' => $form,
+        ]);
+    }
+
+    /**
+     * Send a confirmation email to the user who registers.
+     * @param  Portrait $model The user to whom the email is sent
+     * @param mixed $recover True if the email is password recovery
+     * @return bool               returns true if it has been sent successfully,
+     *                            false otherwise                      
+     */
+    public function sendEmail($model, $notRegistered, $recover = false)
+    {
+        if ($recover) {
+            $title = 'Password reset';
+            $content = 'You have requested a password change';
+            $link = Html::a('Modify password', Url::to([
+                    'portrait/restore-pass',
+                    'token' => $notRegistered,
+                ], true));
+        } else {
+            $title = 'Account validation';
+            $content = 'You have successfully registered in <strong>Sharecode</strong>';
+            $link = Html::a(
+                'Click here to activate your account',
+                Url::to([
+                    'portrait/activate',
+                    'id' => $model->id,
+                    'token' => $notRegistered->token
+                ], true)
+            );
+        }
+        $header = "Welcome to Sharecode!!!";
+        $body = "¡Hello $model->nickname!<br>$content.<br><br>$link";
+        return Yii::$app->mailer->compose('template', [
+            'user' => $model,
+            'header' => $header,
+            'body' => $body,
+        ])
+        ->setFrom(Yii::$app->params['adminEmail'])
+        ->setTo($model->email)
+        ->setSubject($title)
+        ->send();
+    }
+
 }
