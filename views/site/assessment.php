@@ -9,7 +9,7 @@ $votes = [
   'good' => 'good',
   'very good' => 'very good',
 ];
-Yii::debug($old_assessment);
+
 ?>
 <div class="card text-center justify-content-center formulario">
   <div class="card-header">
