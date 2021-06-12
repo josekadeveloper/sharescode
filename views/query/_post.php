@@ -455,7 +455,7 @@ if (!Yii::$app->user->isGuest) {
 
 ?>
 <div class="row justify-content-center mt-5">
-    <div class="col-md-9 card card-widget">
+    <div class="col-md-9 card card-widget-<?=$model->id?>">
         <div class="card-header">
             <div class="user-block">
                 <div class="img-circle" alt="User Image">
