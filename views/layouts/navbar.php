@@ -2,34 +2,6 @@
 
 use yii\helpers\Html;
 
-$globalSearch = <<<EOT
-    let listTitles = [];
-
-    $('.card-body').find('h3').each(function(index) {
-        listTitles.push($(this).text());
-    });
-
-    $('#search').keydown(function(ev) {
-        if (ev.which === 13) {
-            ev.preventDefault();
-            let textSearch = $.trim($('#search').val());
-            $('.listview').hide();
-            listTitles.forEach(function(title, ind) {
-                if (title.indexOf(textSearch) != -1) {
-                    $('.card-body').find('h3').each(function(index) {
-                        if ($(this).text() === title) {
-                            $(this).parent().parent().show();
-                        } else {
-                            $(this).parent().parent().hide();
-                        }
-                    });
-                }
-            })
-        }
-    });
-EOT;
-
-$this->registerJs($globalSearch);
 ?>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top">
@@ -58,18 +30,6 @@ $this->registerJs($globalSearch);
             <?= Html::a('Contact', ['site/contact'], ['class' => 'nav-link']) ?>
         </li>
     </ul>
-
-    <!-- SEARCH FORM -->
-    <form class="form-inline ml-5">
-        <div class="input-group input-group-sm" data-widget="sidebar-search">
-            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" id="search">
-            <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </form>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">

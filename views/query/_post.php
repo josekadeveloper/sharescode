@@ -445,6 +445,35 @@ $dislikeAnswer = <<<EOT
     });
 EOT;
 
+$globalSearch = <<<EOT
+    let listTitles = [];
+
+    $('.card-body').find('h3').each(function(index) {
+        listTitles.push($(this).text().toLowerCase());
+    });
+
+    $('#search').keyup(function(ev) {
+        ev.preventDefault();
+        let textSearch = $.trim($('#search').val()).toLowerCase();
+
+        listTitles.forEach(function(title, ind) {
+            if (title.indexOf(textSearch) != -1) {
+                $('.card-body').find('h3').each(function(index) {
+                    if ($(this).text().toLowerCase() === title) {
+                        $(this).parent().parent().show();
+                    } else if (textSearch === '') {
+                        $(this).parent().parent().show();
+                    } else {
+                        $(this).parent().parent().hide();
+                    }
+                });
+            }
+        })
+    });
+EOT;
+
+$this->registerJs($globalSearch);
+
 if (!Yii::$app->user->isGuest) {
     $this->registerJs($createAnswer);
     $this->registerJs($deleteAnswer);
@@ -455,7 +484,7 @@ if (!Yii::$app->user->isGuest) {
 
 ?>
 <div class="row justify-content-center mt-5">
-    <div class="col-md-9 card card-widget-<?=$model->id?>">
+    <div class="col-md-9 card card-widget">
         <div class="card-header">
             <div class="user-block">
                 <div class="img-circle" alt="User Image">
