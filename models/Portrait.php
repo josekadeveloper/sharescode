@@ -136,6 +136,11 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
         return static::findOne(['nickname' => $nickname]);
     }
 
+    public static function findNicknameById($id)
+    {
+        return static::findOne(['id' => $id])['nickname'];
+    }
+
     public function validatePassword($password)
     {
         return Yii::$app->security

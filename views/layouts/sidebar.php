@@ -79,6 +79,8 @@ use yii\helpers\Html;
                 <?php
                 echo Menu::widget([
                     'items' => [
+                        ['label' => 'WEB RATING', 'header' => true],
+                        ['label' => 'Suggestions Mailbox', 'icon' => 'fas fa-mail-bulk', 'url' => ['votes/index']],
                         ['label' => 'USER OPTIONS', 'header' => true],
                         ['label' => 'Users Lists', 'icon' => 'fas fa-users', 'url' => ['users/index']],
                         ['label' => 'Create Users', 'icon' => 'fas fa-user-plus', 'url' => ['users/create'], 
