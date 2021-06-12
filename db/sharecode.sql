@@ -112,6 +112,7 @@ CREATE TABLE votes
     id              bigserial    PRIMARY KEY
   , typ             varchar(255) NOT NULL
   , puntuation      integer      NOT NULL
+  , suggesting      varchar(255)
   , users_id        bigint       NOT NULL REFERENCES users (id)
 );
 

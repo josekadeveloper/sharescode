@@ -205,3 +205,11 @@ a.desc:after {
     border-radius: 5px solid black;
 }
   
+.search {
+    padding-top: 100px !important;
+}
+
+.search button {
+    height: 37px;
+    margin-top: 33px;
+}

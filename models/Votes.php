@@ -34,7 +34,7 @@ class Votes extends \yii\db\ActiveRecord
             [['typ', 'puntuation', 'users_id'], 'required'],
             [['puntuation', 'users_id'], 'default', 'value' => null],
             [['puntuation', 'users_id'], 'integer'],
-            [['typ'], 'string', 'max' => 255],
+            [['typ', 'suggesting'], 'string', 'max' => 255],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['users_id' => 'id']],
         ];
     }
@@ -48,6 +48,7 @@ class Votes extends \yii\db\ActiveRecord
             'id' => 'ID',
             'typ' => 'Typ',
             'puntuation' => 'Puntuation',
+            'suggesting' => 'Suggesting',
             'users_id' => 'Users ID',
         ];
     }

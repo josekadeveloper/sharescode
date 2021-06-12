@@ -23,6 +23,9 @@ $votes = [
                            'style' => 'width: 150px !important; display: inline;',
       ])->label(false) ?>
 
+      <?= $form->field($model, 'suggesting')->textarea(['rows' => '6', 'placeholder' => 'Post your opinion', 
+                                                        'style'=>'width:50%; display:inline;'])->label(false) ?>
+
       <div class="form-group">
           <?= Html::submitButton('Send opinion', ['class' => 'btn btn-primary']) ?>
       </div>
