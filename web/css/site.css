@@ -120,7 +120,100 @@ a.desc:after {
     color: var(--danger);
 }
 
-.formulario {
+/* MY CSS */
+
+.wrapper {
+    background-color: #f4f6f9;
+}
+
+.main-footer {
+    margin-top: 2.2vw;
+}
+
+@media screen and (max-width: 400px) {
+    
+    /* Index */
+    #search {
+        width: auto !important;
+    }
+
+    .card-tools {
+        padding-right: 30px;
+        padding-top: 25px;
+    }  
+}
+
+.fullscreen-modal .modal-dialog {
+    margin: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+  }
+  @media (max-width: 400px) {
+    .fullscreen-modal .modal-dialog {
+      width: 350px !important;
+    }
+    .modal {
+        height: 50% !important;
+    }
+  }
+  @media (min-width: 768px) {
+    .fullscreen-modal .modal-dialog {
+      width: 750px !important;
+    }
+    .modal {
+        height: 50% !important;
+    }
+  }
+  @media (min-width: 992px) {
+    .fullscreen-modal .modal-dialog {
+      width: 970px !important;
+    }
+    .modal {
+        height: 30% !important;
+        width: 50% !important;
+        margin-left: 35%;
+        margin-top: 15%;
+        padding: 0px !important;
+    }
+  }
+  @media (min-width: 1200px) {
+    .fullscreen-modal .modal-dialog {
+       width: 1170px !important;
+    }
+    .modal {
+        height: 30% !important;
+        width: 50% !important;
+        margin-left: 35%;
+        margin-top: 15%;
+        padding: 0px !important;
+    }
+  }
+
+/* Index */
+.index {
+    padding: 6vw;
+    text-align: center;
+    justify-content: center;
+    padding-top: 100px !important;
+}
+
+#search {
+    width: 20vw;
+}
+
+.index button {
+    height: 37px;
+    margin-top: 33px;
+}
+
+.empty {
+    font-size: large;
+    text-align: center;
+    padding-right: 5%;
+}
+
+.form {
     padding: 6vw;
     margin-bottom: 7vw;
     text-align: center;
@@ -131,21 +224,8 @@ a.desc:after {
     margin-top: -10px;
 }
 
-.modal {
-    height: 30% !important;
-    width: 50% !important;
-    margin-left: 35%;
-    margin-top: 15%;
-    padding: 0px !important;
-}
-
 .send {
     margin-top: 5px;
-}
-
-.empty {
-    text-align: center;
-    margin: 5%;
 }
 
 @keyframes mark-best-answer {
@@ -203,13 +283,4 @@ a.desc:after {
 .email {
     background-color: #999;
     border-radius: 5px solid black;
-}
-  
-.search {
-    padding-top: 100px !important;
-}
-
-.search button {
-    height: 37px;
-    margin-top: 33px;
 }
