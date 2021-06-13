@@ -9,7 +9,6 @@ use app\models\QuerySearch;
 use app\models\Reminder;
 use app\models\Users;
 use DateTime;
-use DateTimeZone;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -204,15 +203,14 @@ class QueryController extends Controller
     }
 
     /**
-     * Formats UTC dateTime to Europe dateTime
+     * Create object DateTime
      * @param integer string
      * @return mixed string
      */
     protected function date()
     {
         $date_created = date('Y-m-d H:i:s');
-        $dt = new DateTime($date_created, new DateTimeZone('UTC'));
-        $dt = $dt->format('d-m-Y H:i:s');
+        $dt = new DateTime($date_created);
 
         return $dt;
     }
