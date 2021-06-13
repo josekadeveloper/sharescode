@@ -212,7 +212,6 @@ class QueryController extends Controller
     {
         $date_created = date('Y-m-d H:i:s');
         $dt = new DateTime($date_created, new DateTimeZone('UTC'));
-        $dt = $dt->format('d-m-Y H:i:s');
 
         return $dt;
     }
