@@ -193,6 +193,85 @@ a.desc:after {
         text-align: center;
         font-size: 15px;
     }
+
+    .form-assessment h3 {
+        font-size: 17px;
+    }
+
+    .form-assessment h5 {
+        font-size: 17px;
+    }
+
+    #votes-typ {
+        display: inline;
+        width: 200px;
+        margin-left: -80%;
+        margin-top: 20%;
+        margin-bottom: 20%;
+    }
+
+    #votes-suggesting {
+        display: inline;
+        width: 200px;
+        margin-left: -80%;
+        margin-top: 20%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 27vw;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 18vw;
+        text-align: center;
+        font-size: 15px;
+    }      
+}
+
+@media (min-width: 375px) {
+    /* Assessment */
+    #votes-typ {
+        margin-left: -55%;
+    }
+
+    #votes-suggesting {
+        margin-left: -55%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 22vw;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 17vw;
+    }    
+}
+
+@media (min-width: 425px) {
+    /* Assessment */
+    #votes-typ {
+        margin-left: -38%;
+    }
+
+    #votes-suggesting {
+        margin-left: -38%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 15vw;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 14vw;
+    }    
 }
 
 @media (min-width: 768px) {
@@ -232,6 +311,46 @@ a.desc:after {
         padding: 15vw;
         text-align: center;
     }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 15vw;
+        text-align: center;
+        font-size: 18px;
+    }
+    
+    .form-assessment h3 {
+        font-size: 18px;
+    }
+    
+    .form-assessment h5 {
+        font-size: 17px;
+    }
+    
+    #votes-typ {
+        width: 450px;
+        margin-left: 0%;
+        margin-top: 8%;
+        margin-bottom: 0%;
+    }
+    
+    #votes-suggesting {
+        width: 450px;
+        margin-left: 0%;
+        margin-top: 0%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 18vw;
+        font-size: 18px;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 10vw;
+        font-size: 16px;
+    }    
 }
 
 @media (min-width: 992px) {
@@ -270,6 +389,22 @@ a.desc:after {
         padding: 8vw;
         text-align: center;
     }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 10vw;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 13vw;
+    }
+    
+    /* Form Votes */
+    .form-votes {
+        padding: 8vw;
+        font-size: 18px;
+    }      
 }
 
 @media (min-width: 1400px) {
@@ -313,6 +448,21 @@ a.desc:after {
     .search {
         margin-left: 120px;
     }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 7vw;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 7vw;
+    }
+    
+    /* Form Votes */
+    .form-votes {
+        padding: 7vw;
+    }    
 }
 
 @media (min-width: 1800px) {
@@ -352,6 +502,20 @@ a.desc:after {
         padding: 3.8vw;
         text-align: center;
     }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 5.5vw;
+    }
+
+    #votes-typ {
+        margin-top: 0%;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 3.5vw;
+    }     
 }
 
 /* Index */

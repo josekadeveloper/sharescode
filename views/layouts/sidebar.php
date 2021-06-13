@@ -37,6 +37,7 @@ use yii\helpers\Html;
                         ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'], 
                                                     'badge' => '<span class="right badge badge-success">New</span>'],
                         ['label' => 'Answers List', 'icon' => 'fad fa-reply-all', 'url' => ['answer/index']],
+                        ['label' => 'Users Profiles', 'icon' => 'fas fa-id-badge', 'url' => ['portrait/index']],
                     ],
                 ]);
                 ?>
@@ -82,7 +83,8 @@ use yii\helpers\Html;
                         ['label' => 'WEB RATING', 'header' => true],
                         ['label' => 'Suggestions Mailbox', 'icon' => 'fas fa-mail-bulk', 'url' => ['votes/index']],
                         ['label' => 'USER OPTIONS', 'header' => true],
-                        ['label' => 'Users Lists', 'icon' => 'fas fa-users', 'url' => ['users/index']],
+                        ['label' => 'Users Profiles', 'icon' => 'fas fa-id-badge', 'url' => ['portrait/index']],
+                        ['label' => 'Users List', 'icon' => 'fas fa-users', 'url' => ['users/index']],
                         ['label' => 'Create Users', 'icon' => 'fas fa-user-plus', 'url' => ['users/create'], 
                                                     'badge' => '<span class="right badge badge-success">New</span>'],
                         ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'], 

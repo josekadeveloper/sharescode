@@ -11,7 +11,7 @@ $votes = [
 ];
 
 ?>
-<div class="card text-center justify-content-center form-assessment">
+<div class="card justify-content-center form-assessment">
   <div class="card-header">
     <h3><strong>Give us your objective opinion to improve</strong></h3>
   </div>
@@ -19,12 +19,9 @@ $votes = [
     <h5 class="card-text text-info">Select according to opinion of wrong, regular, good and very good</h5>
     <?php $form = ActiveForm::begin(); ?>
 
-      <?= $form->field($model, 'typ')->textInput(['maxlength' => true])->dropDownList($votes, [
-                           'style' => 'width: 150px !important; display: inline;',
-      ])->label(false) ?>
+      <?= $form->field($model, 'typ')->textInput(['maxlength' => true])->dropDownList($votes)->label(false) ?>
 
-      <?= $form->field($model, 'suggesting')->textarea(['rows' => '6', 'placeholder' => 'Post your opinion', 
-                                                        'style'=>'width:50%; display:inline;'])->label(false) ?>
+      <?= $form->field($model, 'suggesting')->textarea(['rows' => '6', 'placeholder' => 'Post your opinion'])->label(false) ?>
 
       <div class="form-group">
           <?= Html::submitButton('Send opinion', ['class' => 'btn btn-primary']) ?>

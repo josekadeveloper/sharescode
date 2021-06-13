@@ -1,9 +1,5 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\ContactForm */
-
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 use yii\captcha\Captcha;
@@ -12,7 +8,7 @@ $this->title = 'Contact';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row justify-content-center">
-    <div class="site-contact formulario col-md-6" style="margin-bottom: 10.7vw;">
+    <div class="site-contact form-contact col-md-9">
 
         <?php if (Yii::$app->session->hasFlash('contactFormSubmitted')): ?>
 

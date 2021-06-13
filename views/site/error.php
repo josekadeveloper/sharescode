@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 ?>
 <div class="row justify-content-center">
-    <div class="site-error formulario col-md-6" style="margin-bottom: 30.1vw;">
+    <div class="site-error form col-md-6">
 
         <div class="alert alert-danger">
             <?= nl2br(Html::encode($message)) ?>
