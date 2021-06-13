@@ -34,7 +34,7 @@ use yii\helpers\Html;
                             'url' => $urlPrestige, 
                             'badge' => '<span class="right badge badge-info">' . $prestigie .  '</span>',
                         ],
-                        ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'], 
+                        ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'],
                                                     'badge' => '<span class="right badge badge-success">New</span>'],
                         ['label' => 'Answers List', 'icon' => 'fad fa-reply-all', 'url' => ['answer/index']],
                         ['label' => 'Users Profiles', 'icon' => 'fas fa-id-badge', 'url' => ['portrait/index']],
