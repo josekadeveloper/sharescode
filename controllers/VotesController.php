@@ -22,7 +22,8 @@ class VotesController extends Controller
     {
         $searchModel = new VotesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $old_assessment = 0.0;
+        
         if (Assessment::find()->all() !== null) {
             foreach (Assessment::find()->all() as $key) {
                 $old_assessment = $key->total_percent;
