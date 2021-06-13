@@ -9795,19 +9795,20 @@
 
   // EXTENSIONS
 
-  CodeMirror.defineExtension = function (name, func) {
-    CodeMirror.prototype[name] = func;
-  };
-  CodeMirror.defineDocExtension = function (name, func) {
-    Doc.prototype[name] = func;
-  };
+		CodeMirror.defineExtension = function (name, func) {
+			CodeMirror.prototype[name] = func;
+		};
 
-  CodeMirror.fromTextArea = fromTextArea;
+    CodeMirror.defineDocExtension = function (name, func) {
+        Doc.prototype[name] = func;
+    };
 
-  addLegacyProps(CodeMirror);
+    CodeMirror.fromTextArea = fromTextArea;
 
-  CodeMirror.version = "5.61.1";
+    addLegacyProps(CodeMirror);
+    
+    CodeMirror.version = "5.61.1";
 
-  return CodeMirror;
+    return CodeMirror;
 
 })));

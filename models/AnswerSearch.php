@@ -25,7 +25,7 @@ class AnswerSearch extends Answer
 
     public function attributes()
     {
-       return array_merge(parent::attributes(), ['query.title', 'user.portrait.nickname']);
+        return array_merge(parent::attributes(), ['query.title', 'user.portrait.nickname']);
     }
 
     /**

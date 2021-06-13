@@ -136,22 +136,21 @@ class AnswerController extends Controller
                 $dislikes = 0 . ' dislikes';
             }
 
-            $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 
-                                '<i class="fas fa-minus-circle">' . 
-                                '</i>' . 
-                                ' Delete' . 
+            $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' .
+                                '<i class="fas fa-minus-circle">' .
+                                '</i>' .
+                                ' Delete' .
                             '</button>';
 
-            $updateButton = '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" 
+            $updateButton = '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update"
                                 data-toggle="modal" data-target="#ex-' . $answer_id . '">' .
-                                '<i class="far fa-edit">' . 
-                                '</i>' . 
+                                '<i class="far fa-edit">' .
+                                '</i>' .
                                 ' Update' .
                             '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, $deleteButton,
-                                                     $updateButton, '', '', $likes, $dislikes, $answer_id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, $deleteButton, $updateButton, '', '', $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
                 'modal' => $this->builderModal($answer_id, $img_response),
@@ -201,25 +200,24 @@ class AnswerController extends Controller
             ])->all();
 
             foreach ($votes as $vote) {
-                $vote->delete();   
+                $vote->delete();
             }
 
-            $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' . 
-                                '<i class="fas fa-minus-circle">' . 
-                                '</i>' . 
-                                ' Delete' . 
+            $deleteButton = '<button type="button" id="delete-' . $answer_id . '" class="btn btn-danger btn-sm delete">' .
+                                '<i class="fas fa-minus-circle">' .
+                                '</i>' .
+                                ' Delete' .
                             '</button>';
 
-            $updateButton = '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update" 
+            $updateButton = '<button type="button" id="update-' . $answer_id . '" class="btn btn-primary btn-sm update"
                                 data-toggle="modal" data-target="#ex-' . $answer_id . '">' .
-                                '<i class="far fa-edit">' . 
-                                '</i>' . 
+                                '<i class="far fa-edit">' .
+                                '</i>' .
                                 ' Update' .
                             '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, $deleteButton, 
-                                                     $updateButton, '', '', $likes, $dislikes, $answer_id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, $deleteButton, $updateButton, '', '', $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
             ]);
@@ -240,7 +238,7 @@ class AnswerController extends Controller
             if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
                 $reminder_id = Reminder::checkReminder($id);
                 $model_reminder = $this->findReminder($reminder_id);
-                $model_reminder->delete();;
+                $model_reminder->delete();
 
                 $this->findModel($id)->delete();
 
@@ -249,7 +247,7 @@ class AnswerController extends Controller
                 ]);
             }
             Users::builderAlert('error', 'Error', 'You can only delete your own answer.');
-        } 
+        }
     }
 
     /**
@@ -312,24 +310,23 @@ class AnswerController extends Controller
             $likes = $model_answer->likes . ' likes';
             $dislikes = $model_answer->dislikes . ' dislikes';
 
-            $likeButton = '<button type="button" id="like-' . $answer_id . '" class="btn btn-success btn-sm liked">'.
+            $likeButton = '<button type="button" id="like-' . $answer_id . '" class="btn btn-success btn-sm liked">' .
                               '<i class="far fa-thumbs-up">' .
                               '</i>' .
                               ' Like' .
                           '</button>';
 
-            $dislikeButton = '<button type="button" id="dislike-' . $answer_id . '" class="btn btn-default btn-sm dislike">'.
+            $dislikeButton = '<button type="button" id="dislike-' . $answer_id . '" class="btn btn-default btn-sm dislike">' .
                                 '<i class="far fa-thumbs-down">' .
                                 '</i>' .
                                 ' Dislike' .
                              '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, '', 
-                                                     '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, '', '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
             ]);
-        } 
+        }
     }
 
     /**
@@ -376,24 +373,23 @@ class AnswerController extends Controller
             $likes = $model_answer->likes . ' likes';
             $dislikes = $model_answer->dislikes . ' dislikes';
 
-            $likeButton = '<button type="button" id="like-' . $answer_id . '" class="btn btn-default btn-sm like">'.
+            $likeButton = '<button type="button" id="like-' . $answer_id . '" class="btn btn-default btn-sm like">' .
                               '<i class="far fa-thumbs-up">' .
                               '</i>' .
                               ' Like' .
                           '</button>';
 
-            $dislikeButton = '<button type="button" id="dislike-' . $answer_id . '" class="btn btn-danger btn-sm disliked">'.
+            $dislikeButton = '<button type="button" id="dislike-' . $answer_id . '" class="btn btn-danger btn-sm disliked">' .
                                 '<i class="far fa-thumbs-down">' .
                                 '</i>' .
                                 ' Dislike' .
                              '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, '', 
-                                                     '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, '', '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
             ]);
-        } 
+        }
     }
 
     /**
@@ -443,14 +439,14 @@ class AnswerController extends Controller
                             'id' => $id,
                             'users_id' => $users_id,
                       ])->one()) !== null
-            ){
+            ) {
             return $model;
         }
         return null;
     }
 
     /**
-     *  A reminder will be created when creating or 
+     *  A reminder will be created when creating or
      * modifying an answer referring to a query
      * @param integer $query_id && $users_id
      */
@@ -458,7 +454,7 @@ class AnswerController extends Controller
     {
         $name_query = Query::findOne(['id' => $query_id])['title'];
         $date_created = date('Y-m-d H:i:s');
-        $reminder = new Reminder(['title' => 'Se ha respondido a una de tus consultas', 
+        $reminder = new Reminder(['title' => 'Se ha respondido a una de tus consultas',
                                   'dispatch' => "Se ha respondido a la consulta $name_query",
                                   'date_created' => $date_created,
                                   'users_id' => $users_id]);
@@ -477,40 +473,39 @@ class AnswerController extends Controller
                         ->where([
                             'id' => $id,
                       ])->one()) !== null
-            ){
+            ) {
             return $model;
         }
         return null;
     }
 
     /**
-     *  Create the response as html container 
+     *  Create the response as html container
      * to integrate it into the view
      */
-    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, $updateButton, 
-                                    $likeButton, $dislikeButton, $likes, $dislikes, $id)
+    public function builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, $updateButton, $likeButton, $dislikeButton, $likes, $dislikes, $id)
     {
         if (Yii::$app->user->isGuest) {
             return '';
         } else {
             return
             '<div id="container-answer-' . $id . '" class="card-footer card-comments">' .
-                    '<div class="card-comment">'.
-                        '<div class="img-circle" alt="User Image">'.
+                    '<div class="card-comment">' .
+                        '<div class="img-circle" alt="User Image">' .
                             $img .
-                        '</div>'.
-                        '<div class="comment-text">'.
-                            '<span class="username">'.
+                        '</div>' .
+                        '<div class="comment-text">' .
+                            '<span class="username">' .
                                 '<a href=' . $urlPortrait . '>' .
                                     $username .
                                 '</a>' .
-                                '<span class="text-muted float-right">'.
+                                '<span class="text-muted float-right">' .
                                     $date_created .
-                                '</span>'.
-                            '</span>'.
+                                '</span>' .
+                            '</span>' .
                             $content .
-                        '</div>'.
-                        '<hr>'.
+                        '</div>' .
+                        '<hr>' .
                         $deleteButton .
                         ' ' .
                         $updateButton .
@@ -532,7 +527,7 @@ class AnswerController extends Controller
     }
 
     /**
-     *  Create the reminders as html container 
+     *  Create the reminders as html container
      * to integrate it into the view
      */
     public function builderReminders()
@@ -546,16 +541,16 @@ class AnswerController extends Controller
             return
             '<ul class="navbar-nav ml-5">' .
                 '<li class="nav-item dropdown">' .
-                    '<a class="nav-link" data-toggle="dropdown" href="#">'.
-                        '<i class="far fa-bell"></i>'.
-                        '<span class="badge badge-warning navbar-badge">'.
+                    '<a class="nav-link" data-toggle="dropdown" href="#">' .
+                        '<i class="far fa-bell"></i>' .
+                        '<span class="badge badge-warning navbar-badge">' .
                             $notifications_no_read .
-                        '</span>'.
-                    '</a>'.
-                    '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">' . 
+                        '</span>' .
+                    '</a>' .
+                    '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">' .
                         '<span class="dropdown-header">' .
                             $notifications_no_read . ' Notifications' .
-                        '</span>' .  
+                        '</span>' .
                         '<div class="dropdown-divider"></div>' .
                         '<a href=' . $urlReminder . ' class="dropdown-item">' .
                             '<i class="fas fa-envelope mr-2"></i>' .
@@ -563,7 +558,7 @@ class AnswerController extends Controller
                             '<span class="float-right text-muted text-sm">' .
                                 $notifications_time .
                             '</span>' .
-                        '</a>' . 
+                        '</a>' .
                     '</div>' .
                 '</li>' .
             '</ul>';
@@ -571,7 +566,7 @@ class AnswerController extends Controller
     }
 
     /**
-     *  Create the modal window as html container 
+     *  Create the modal window as html container
      * to integrate it into the view
      */
     public function builderModal($answer_id, $img_response)
@@ -666,11 +661,12 @@ class AnswerController extends Controller
      *
      * @return string
      */
-    public function changeToHtml($content) {
-        $content = str_replace(" ", "&nbsp", $content);
-        $content = str_replace(">", "&gt", $content);
-        $content = str_replace("<", "&lt", $content);
-        $content = str_replace("\n", "<br>", $content);
+    public function changeToHtml($content)
+    {
+        $content = str_replace(' ', '&nbsp', $content);
+        $content = str_replace('>', '&gt', $content);
+        $content = str_replace('<', '&lt', $content);
+        $content = str_replace("\n", '<br>', $content);
         return $content;
     }
 
@@ -679,11 +675,12 @@ class AnswerController extends Controller
      *
      * @return string
      */
-    public function changeToTextPlain($content) {
-        $content = str_replace("<br>", "\n", $content);
-        $content = str_replace("&nbsp", " ", $content);
-        $content = str_replace("&gt", ">", $content);
-        $content = str_replace("&lt", "<", $content);
+    public function changeToTextPlain($content)
+    {
+        $content = str_replace('<br>', "\n", $content);
+        $content = str_replace('&nbsp', ' ', $content);
+        $content = str_replace('&gt', '>', $content);
+        $content = str_replace('&lt', '<', $content);
         return $content;
     }
 }

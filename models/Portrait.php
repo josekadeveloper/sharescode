@@ -95,7 +95,7 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
                 goto salto;
             }
         } else {
-            if ($this->scenario === self::SCENARIO_UPDATE || 
+            if ($this->scenario === self::SCENARIO_UPDATE ||
                 $this->scenario === self::SCENARIO_RECOVERY) {
                 if ($this->password === '') {
                     $this->password = $this->getOldAttribute('password');
@@ -147,7 +147,8 @@ class Portrait extends \yii\db\ActiveRecord implements IdentityInterface
             ->validatePassword($password, $this->password);
     }
 
-    public static function devolverImg($model) {
+    public static function devolverImg($model)
+    {
         $sexo = $model->sex;
         if ($sexo !== null) {
             if ($sexo === 'Men') {

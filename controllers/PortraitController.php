@@ -51,7 +51,7 @@ class PortraitController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    { 
+    {
         $searchModel = new PortraitSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -76,11 +76,11 @@ class PortraitController extends Controller
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 $model_user->delete() ? Users::builderAlert('error', 'Error', 'Data incorrect') : '';
-            } 
+            }
         }
         return $this->render('create', [
             'model' => $model,
-        ]); 
+        ]);
     }
 
     /**
@@ -108,7 +108,7 @@ class PortraitController extends Controller
         }
         return $this->render('register', [
             'model' => $model,
-        ]);     
+        ]);
     }
 
     public function actionActivate($id, $token)
@@ -141,7 +141,7 @@ class PortraitController extends Controller
 
         if ($id == $user_portrait || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]); 
+                return $this->redirect(['view', 'id' => $model->id]);
             }
     
             return $this->render('update', [
@@ -202,7 +202,7 @@ class PortraitController extends Controller
             $model_portrait->delete();
             return $this->redirect(['/query/index']);
         }
-        return $this->redirect(['view', 'id' => $id]); 
+        return $this->redirect(['view', 'id' => $id]);
     }
 
     /**
@@ -224,7 +224,8 @@ class PortraitController extends Controller
     /**
      * Register a User.
      */
-    private function createUser() {
+    private function createUser()
+    {
         $model = new Users();
         $model->save();
         $this->createPrestige($model->id);
@@ -234,7 +235,8 @@ class PortraitController extends Controller
     /**
      * Create a Prestige of the User.
      */
-    private function createPrestige($users_id) {
+    private function createPrestige($users_id)
+    {
         $model = new Prestige([
             'puntuation' => 0,
             'type_prestige_id' => 1,
@@ -360,7 +362,7 @@ class PortraitController extends Controller
      * @param  Portrait $model The user to whom the email is sent
      * @param mixed $recover True if the email is password recovery
      * @return bool               returns true if it has been sent successfully,
-     *                            false otherwise                      
+     *                            false otherwise
      */
     public function sendEmail($model, $notRegistered, $recover = false)
     {
@@ -383,7 +385,7 @@ class PortraitController extends Controller
                 ], true)
             );
         }
-        $header = "Welcome to Sharecode!!!";
+        $header = 'Welcome to Sharecode!!!';
         $body = "¡Hello $model->nickname!<br>$content.<br><br>$link";
         return Yii::$app->mailer->compose('template', [
             'user' => $model,
