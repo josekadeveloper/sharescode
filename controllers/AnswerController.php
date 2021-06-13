@@ -493,8 +493,7 @@ class AnswerController extends Controller
     protected function date()
     {
         $date_created = date('Y-m-d H:i:s');
-        $dt = new DateTime($date_created, new DateTimeZone('UTC'));
-        $dt = $dt->format('d-m-Y H:i:s');
+        $dt = new DateTime($date_created);
 
         return $dt;
     }
