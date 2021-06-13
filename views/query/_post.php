@@ -496,7 +496,7 @@ if (!Yii::$app->user->isGuest) {
         <!-- /.user-block -->
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
+                <em class="fas fa-minus"></em>
             </button>
             <?php if (!Yii::$app->user->isGuest): ?>
                 <?php if ($model->users_id === Yii::$app->user->id || Yii::$app->user->identity->is_admin === true): ?>
@@ -551,28 +551,28 @@ if (!Yii::$app->user->isGuest) {
                                 <?php if (!Yii::$app->user->isGuest): ?>
                                     <?php if ($answer->users_id === Yii::$app->user->id): ?>
                                         <!-- Delete or update answer -->
-                                        <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                        <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><em class="fas fa-minus-circle"></em> Delete</button>
                                         <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
-                                            <i class="far fa-edit"></i> Update
+                                            <em class="far fa-edit"></em> Update
                                         </button>
                                     <?php endif ?>
                                     <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
                                         <?php if (Users::checkLike($answer->id, Yii::$app->user->id)): ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-success btn-sm liked"><i class="far fa-thumbs-up"></i> Like</button>
-                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-success btn-sm liked"><em class="far fa-thumbs-up"></em> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><em class="far fa-thumbs-down"></em> Dislike</button>
                                         <?php elseif (Users::checkDislike($answer->id, Yii::$app->user->id)): ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
-                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-danger btn-sm disliked"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><em class="far fa-thumbs-up"></em> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-danger btn-sm disliked"><em class="far fa-thumbs-down"></em> Dislike</button>
                                         <?php else: ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
-                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><em class="far fa-thumbs-up"></em> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><em class="far fa-thumbs-down"></em> Dislike</button>
                                         <?php endif ?>
                                     <?php endif ?>
                                 <?php endif ?>
-                                <i id="icon-check" class="ml-2 float-right fas fa-check"></i>
+                                <em id="icon-check" class="ml-2 float-right fas fa-check"></em>
                                 <span class="float-right text-muted"><?= $answer->likes ?> likes - <?= $answer->dislikes ?> dislikes</span>
                                 <!-- /.comment-text -->
                             </div>
@@ -598,24 +598,24 @@ if (!Yii::$app->user->isGuest) {
                                 <?php if (!Yii::$app->user->isGuest): ?>
                                     <?php if ($answer->users_id === Yii::$app->user->id): ?>
                                         <!-- Delete or update answer -->
-                                        <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
+                                        <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><em class="fas fa-minus-circle"></em> Delete</button>
                                         <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
-                                            <i class="far fa-edit"></i> Update
+                                            <em class="far fa-edit"></em> Update
                                         </button>
                                     <?php endif ?>
                                     <?php if (Yii::$app->user->id && $answer->users_id !== Yii::$app->user->id): ?>
                                         <?php if (Users::checkLike($answer->id, Yii::$app->user->id)): ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-success btn-sm liked"><i class="far fa-thumbs-up"></i> Like</button>
-                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-success btn-sm liked"><em class="far fa-thumbs-up"></em> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><em class="far fa-thumbs-down"></em> Dislike</button>
                                         <?php elseif (Users::checkDislike($answer->id, Yii::$app->user->id)): ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
-                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-danger btn-sm disliked"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><em class="far fa-thumbs-up"></em> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-danger btn-sm disliked"><em class="far fa-thumbs-down"></em> Dislike</button>
                                         <?php else: ?>
                                             <!-- Social sharing buttons -->
-                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><i class="far fa-thumbs-up"></i> Like</button>
-                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><i class="far fa-thumbs-down"></i> Dislike</button>
+                                            <button type="button" id="like-<?= $answer->id ?>" class="btn btn-default btn-sm like"><em class="far fa-thumbs-up"></em> Like</button>
+                                            <button type="button" id="dislike-<?= $answer->id ?>" class="btn btn-default btn-sm dislike"><em class="far fa-thumbs-down"></em> Dislike</button>
                                         <?php endif ?>
                                     <?php endif ?>
                                 <?php endif ?>
