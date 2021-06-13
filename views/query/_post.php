@@ -487,7 +487,7 @@ if (!Yii::$app->user->isGuest) {
     <div class="col-md-9 card card-widget">
         <div class="card-header">
             <div class="user-block">
-                <div class="img-circle" alt="User Image">
+                <div class="img-circle" alt="">
                     <?= $img ?>
                 </div>
                     <span class="username"><a href=<?= $urlPortrait ?>><?= Html::encode($username) ?></a></span>
@@ -536,7 +536,7 @@ if (!Yii::$app->user->isGuest) {
                         <div id="container-answer-<?= $answer->id ?>" class="card-footer card-comments bestAnswer">
                             <div class="card-comment">
                                 <!-- User image -->
-                                <div class="img-circle" alt="User Image">
+                                <div class="img-circle" alt="">
                                     <?= Answer::findUserImage($answer->users_id) ?>
                                 </div>
 
@@ -583,7 +583,7 @@ if (!Yii::$app->user->isGuest) {
                         <div id="container-answer-<?= $answer->id ?>" class="card-footer card-comments">
                             <div class="card-comment">
                                 <!-- User image -->
-                                <div class="img-circle" alt="User Image">
+                                <div class="img-circle" alt="">
                                     <?= Answer::findUserImage($answer->users_id) ?>
                                 </div>
 

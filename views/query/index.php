@@ -2,6 +2,7 @@
 
 use yii\widgets\ListView;
 
+$this->title = 'Sharecode App';
 ?>
 <div class="row index">
     <div class="text-info">
