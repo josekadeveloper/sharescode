@@ -6,17 +6,21 @@ $this->title = 'Answers';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row justify-content-center">
-    <div class="answer-index formulario col-md-6" style="margin-bottom: 28.2vw;">
+    <div class="answer-index form col-md-12">
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'columns' => [
                 'content',
-                'query_id',
-                'us_id',
+                'query.title',
+                'user.portrait.nickname',
                 ['class' => 'yii\grid\ActionColumn'],
             ],
+            'options' => [
+                'class' => 'table table-responsive',
+            ]
+            
         ]); ?>
 
 

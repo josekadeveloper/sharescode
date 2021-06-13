@@ -9,7 +9,7 @@ $this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row justify-content-center">
-    <div class="users-index formulario col-md-6" style="margin-bottom: 12.1vw;">
+    <div class="users-index form col-md-6">
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,

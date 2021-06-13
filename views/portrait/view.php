@@ -30,7 +30,7 @@ $this->registerJs($js);
 $url_prestige = Url::to(['/prestige/view', 'id' => $model->id]);
 ?>
 <div class="row justify-content-center">
-    <div class="portrait-view formulario col-md-6" style="margin-bottom: 2.7vw;">
+    <div class="portrait-view form-potrait col-md-12">
     <?php if (Yii::$app->user->id): ?>
         <?php if ($model->id == $user_id || $model_portrait->is_admin === true): ?>
             <p>

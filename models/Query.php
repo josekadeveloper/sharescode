@@ -137,4 +137,14 @@ class Query extends \yii\db\ActiveRecord
         }
         return null;
     }
+
+    /**
+     * Find the title of the query from the id of the query.
+     * @param integer $id
+     * @return mixed String || null
+     */
+    public static function findTitleQuery($id)
+    {
+        return Query::findOne(['id' => $id])['title'];
+    }
 }

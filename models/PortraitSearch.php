@@ -17,7 +17,7 @@ class PortraitSearch extends Portrait
     public function rules()
     {
         return [
-            [['nickname', 'date_register', 'email', 'repository', 'prestige_port', 'sex'], 'safe'],
+            [['nickname', 'email', 'repository', 'prestige_port', 'sex'], 'safe'],
         ];
     }
 
@@ -50,15 +50,8 @@ class PortraitSearch extends Portrait
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'date_register' => $this->date_register,
-        ]);
 
         $query->andFilterWhere(['ilike', 'nickname', $this->nickname])
             ->andFilterWhere(['ilike', 'email', $this->email])

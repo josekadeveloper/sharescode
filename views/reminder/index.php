@@ -4,12 +4,10 @@ use hail812\adminlte3\yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$this->title = 'Reminders';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="formulario col-md-9" style="margin-bottom: 20.3vw;">
+        <div class="form col-md-12">
             <div class="card">
                 <div class="card-body">
 
@@ -39,6 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
+                        ],
+                        'options' => [
+                            'class' => 'table table-responsive',
                         ]
                     ]); ?>
 

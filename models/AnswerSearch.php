@@ -19,8 +19,13 @@ class AnswerSearch extends Answer
     {
         return [
             [['id', 'query_id', 'users_id'], 'integer'],
-            [['content', 'date_created'], 'safe'],
+            [['content', 'date_created', 'query.title', 'user.portrait.nickname'], 'safe'],
         ];
+    }
+
+    public function attributes()
+    {
+       return array_merge(parent::attributes(), ['query.title', 'user.portrait.nickname']);
     }
 
     /**
@@ -41,23 +46,32 @@ class AnswerSearch extends Answer
      */
     public function search($params)
     {
-        $query = Answer::find()->orderBy('date_created DESC');
-
-        // add conditions that should always apply here
+        $query = Answer::find()
+                    ->joinWith('query t')
+                    ->joinWith('user.portrait p');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['query.title'] = [
+            'asc' => ['t.title' => SORT_ASC],
+            'desc' => ['t.title' => SORT_DESC],
+            
+        ];
+
+        $dataProvider->sort->attributes['user.portrait.nickname'] = [
+            'asc' => ['p.nickname' => SORT_ASC],
+            'desc' => ['p.nickname' => SORT_DESC],
+            
+        ];
+
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'date_created' => $this->date_created,
@@ -66,7 +80,8 @@ class AnswerSearch extends Answer
         ]);
 
         $query->andFilterWhere(['ilike', 'content', $this->content])
-              ->andFilterWhere(['users_id' => Yii::$app->user->id]);
+              ->andFilterWhere(['ilike', 't.title', $this->getAttributes(['query.title'])])
+              ->andFilterWhere(['ilike', 'p.nickname', $this->getAttributes(['user.portrait.nickname'])]);
 
         return $dataProvider;
     }

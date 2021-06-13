@@ -85,7 +85,7 @@ $sex = ['Men' => 'Men',
         'Woman' => 'Woman'];
 ?>
 <div class="row justify-content-center">
-    <div class="portrait-form formulario col-md-4" style="margin-bottom: 5vw;">
+    <div class="portrait-form form col-md-4">
 
         <?php $form = ActiveForm::begin(); ?>
 

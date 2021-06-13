@@ -11,7 +11,7 @@ $votes = [
 ];
 
 ?>
-<div class="card text-center justify-content-center formulario">
+<div class="card text-center justify-content-center form-assessment">
   <div class="card-header">
     <h3><strong>Give us your objective opinion to improve</strong></h3>
   </div>

@@ -7,8 +7,7 @@ use yii\widgets\DetailView;
 
 ?>
 <div class="row justify-content-center">
-    <div class="answer-view formulario col-md-6" style="margin-bottom: 32vw;">
-
+    <div class="answer-view form col-md-6">
         <p>
             <?= Html::a('', ['update', 'id' => $model->id], ['class' => 'fas fa-user-edit btn-sm btn-primary']) ?>
             <?= Html::a('', ['delete', 'id' => $model->id], [
@@ -19,13 +18,11 @@ use yii\widgets\DetailView;
                 ],
             ]) ?>
         </p>
-
         <?= DetailView::widget([
             'model' => $model,
             'attributes' => [
                 'content',
             ],
         ]) ?>
-
     </div>
 </div>

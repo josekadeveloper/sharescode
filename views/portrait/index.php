@@ -2,11 +2,9 @@
 
 use yii\grid\GridView;
 
-$this->title = 'Portrait List';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row justify-content-center">
-    <div class="portrait-index formulario col-md-6" style="margin-bottom: 21.6vw;">
+    <div class="portrait-index form col-md-12">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
@@ -19,6 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'sex',
                 ['class' => 'yii\grid\ActionColumn'],
             ],
+            'options' => [
+                'class' => 'table table-responsive',
+            ]
         ]); ?>
     </div>
 </div>
