@@ -13,8 +13,6 @@ use app\models\Query;
 use app\models\Reminder;
 use app\models\TypePrestige;
 use app\models\Users;
-use DateTime;
-use DateTimeZone;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -108,7 +106,7 @@ class AnswerController extends Controller
             : $url = '@web/img/woman.svg';
             $img_response = Html::img($url, ['class'=> 'img-answer']);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
-            $date_created = $this->date();
+            $date_created = date('Y-m-d H:i:s');
             $content = Yii::$app->request->post('content');
             $content = $this->changeToHtml($content);
             $sending_user_id = Query::findOne(['id' => $id])['users_id'];
@@ -181,7 +179,7 @@ class AnswerController extends Controller
             $username = $model_portrait->nickname;
             $img = Portrait::devolverImg($model_portrait);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
-            $date_created = $this->date();
+            $date_created = date('Y-m-d H:i:s');
             $content = Yii::$app->request->post('content');
             $content = $this->changeToHtml($content);
             
@@ -459,7 +457,7 @@ class AnswerController extends Controller
     protected function createReminder($query_id, $users_id)
     {
         $name_query = Query::findOne(['id' => $query_id])['title'];
-        $date_created = $this->date();
+        $date_created = date('Y-m-d H:i:s');
         $reminder = new Reminder(['title' => 'Se ha respondido a una de tus consultas', 
                                   'dispatch' => "Se ha respondido a la consulta $name_query",
                                   'date_created' => $date_created,
@@ -484,20 +482,6 @@ class AnswerController extends Controller
         }
         return null;
     }
-
-    /**
-     * Formats UTC dateTime to Europe dateTime
-     * @param integer string
-     * @return mixed string
-     */
-    protected function date()
-    {
-        $date_created = date('Y-m-d H:i:s');
-        $dt = new DateTime($date_created);
-
-        return $dt;
-    }
-
 
     /**
      *  Create the response as html container 
