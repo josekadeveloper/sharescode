@@ -105,7 +105,7 @@ class QueryController extends Controller
 
         if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post())) {
-                $model->explanation = str_replace("\n", "<br>", $model->explanation);
+                $model->explanation = str_replace("\n", '<br>', $model->explanation);
                 if ($model->save()) {
                     return $this->redirect(['index']);
                 }
@@ -132,7 +132,7 @@ class QueryController extends Controller
         $model = $this->findModel($id);
         $dispatch = 'Se ha respondido a la consulta ' . $model->title;
         $models_reminder = Reminder::find()->where([
-            'dispatch' => $dispatch, 
+            'dispatch' => $dispatch,
         ])->all();
         if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
             if ($model->delete()) {
@@ -143,7 +143,7 @@ class QueryController extends Controller
                 Users::builderAlert('error', 'Error', 'Query is associated with some answers.');
             }
         }
-        return $this->redirect(['index']);    
+        return $this->redirect(['index']);
     }
 
     /**
@@ -192,7 +192,7 @@ class QueryController extends Controller
                             'id' => $id,
                             'users_id' => $users_id,
                       ])->one()) !== null
-            ){
+            ) {
             return $model;
         }
         return null;
@@ -203,11 +203,12 @@ class QueryController extends Controller
      *
      * @return string
      */
-    public function changeToHtml($content) {
-        $content = str_replace(" ", "&nbsp", $content);
-        $content = str_replace(">", "&gt", $content);
-        $content = str_replace("<", "&lt", $content);
-        $content = str_replace("\n", "<br>", $content);
+    public function changeToHtml($content)
+    {
+        $content = str_replace(' ', '&nbsp', $content);
+        $content = str_replace('>', '&gt', $content);
+        $content = str_replace('<', '&lt', $content);
+        $content = str_replace("\n", '<br>', $content);
         return $content;
     }
 
@@ -216,11 +217,12 @@ class QueryController extends Controller
      *
      * @return string
      */
-    public function changeToTextPlain($content) {
-        $content = str_replace("<br>", "\n", $content);
-        $content = str_replace("&nbsp", " ", $content);
-        $content = str_replace("&gt", ">", $content);
-        $content = str_replace("&lt", "<", $content);
+    public function changeToTextPlain($content)
+    {
+        $content = str_replace('<br>', "\n", $content);
+        $content = str_replace('&nbsp', ' ', $content);
+        $content = str_replace('&gt', '>', $content);
+        $content = str_replace('&lt', '<', $content);
         return $content;
     }
 }

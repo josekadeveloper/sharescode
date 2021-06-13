@@ -86,7 +86,7 @@ class Answer extends \yii\db\ActiveRecord
      */
     public static function findUserName($users_id)
     {
-        if ((Portrait::findOne(['id' => $users_id])) !== null){
+        if ((Portrait::findOne(['id' => $users_id])) !== null) {
             $model_user = Portrait::findOne(['id' => $users_id]);
             $username = $model_user->nickname;
             return $username;
@@ -101,7 +101,7 @@ class Answer extends \yii\db\ActiveRecord
      */
     public static function findUserImage($users_id)
     {
-        if ((Portrait::findOne(['id' => $users_id])) !== null){
+        if ((Portrait::findOne(['id' => $users_id])) !== null) {
             $model_user = Portrait::findOne(['id' => $users_id]);
             $img = $model_user->devolverImg($model_user);
             return $img;
@@ -116,7 +116,7 @@ class Answer extends \yii\db\ActiveRecord
      */
     public static function findUserPortrait($users_id)
     {
-        if ((Portrait::findOne(['id' => $users_id])) !== null){
+        if ((Portrait::findOne(['id' => $users_id])) !== null) {
             $urlPortrait = Url::to(['portrait/view', 'id' => $users_id]);
             return $urlPortrait;
         }
@@ -124,8 +124,7 @@ class Answer extends \yii\db\ActiveRecord
     }
 
     /**
-     *  
-     * Check if when you delete the answer you have 
+     * Check if when you delete the answer you have
      * to delete the notifications as well
      * @param integer $answer_id
      * @return mixed string || null
@@ -141,7 +140,6 @@ class Answer extends \yii\db\ActiveRecord
 
     /**
      *  Check the best-scored answer
-     * 
      * @param integer $query_id, $answer_id
      * @return mixed boolean || null
      */
@@ -154,7 +152,7 @@ class Answer extends \yii\db\ActiveRecord
 
         if ($theBest === 0) {
             return null;
-        } 
+        }
         if ($otherAnswer->likes === $theBest) {
             if ($theWorst === 0) {
                 if ($otherAnswer->date_created === $dateTime) {
@@ -167,7 +165,7 @@ class Answer extends \yii\db\ActiveRecord
                     return false;
                 }
             }
-        } 
+        }
         return false;
     }
 }

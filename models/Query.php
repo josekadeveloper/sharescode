@@ -98,7 +98,7 @@ class Query extends \yii\db\ActiveRecord
     public function getLastAnswer()
     {
         $last_date = $this->getAnswers()->max('date_created');
-        return Answer::findOne(['date_created' => $last_date])['content'] === null ? '' 
+        return Answer::findOne(['date_created' => $last_date])['content'] === null ? ''
                 : Answer::findOne(['date_created' => $last_date])['content'];
     }
     
@@ -112,7 +112,7 @@ class Query extends \yii\db\ActiveRecord
         if (($model = Query::find()
                     ->where(['id' => $id])
                     ->one()) !== null
-            ){
+            ) {
             $user_id = $model->users_id;
             $model_user = Portrait::findOne(['id' => $user_id]);
             $username = $model_user->nickname;
@@ -131,7 +131,7 @@ class Query extends \yii\db\ActiveRecord
         if (($model = Query::find()
                     ->where(['id' => $id])
                     ->one()) !== null
-            ){
+            ) {
             $user_id = $model->users_id;
             $model_user = Portrait::findOne(['id' => $user_id]);
             $img = $model_user->devolverImg($model_user);

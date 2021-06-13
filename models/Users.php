@@ -11,7 +11,6 @@ use Yii;
  *
  * @property int $id
  * @property bool $is_deleted
- * 
  * @property Portrait[] $portraits
  */
 class Users extends \yii\db\ActiveRecord
@@ -163,9 +162,8 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     *  Calculate the time that has passed 
+     *  Calculate the time that has passed
      * since you received the last notification
-     *
      * @return string $day + $hours + $minutes + $seconds
      */
     public static function timeReminders()
@@ -193,8 +191,7 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Returns the user profile image 
-     *
+     * Returns the user profile image
      * @return img || null
      */
     public static function getImg()
@@ -250,9 +247,8 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     *  Returns the antiquity of the user since he was registered 
+     *  Returns the antiquity of the user since he was registered
      * in the web application
-     *
      * @return string
      */
     public static function getAntiquity($id)
@@ -296,16 +292,16 @@ class Users extends \yii\db\ActiveRecord
     
     /**
      * Returns an alert of the type and content passed by parameters
-     *
      * @return boolean
      */
     public static function builderAlert($type, $title, $message)
-    {?><?= ToastAlert::widget([
+    {
+        ?><?= ToastAlert::widget([
         'options'   => [],
         'heading'   => $title,
         'text'      => $message,
         'type'      => $type,
-    ])?><?php
+        ])?><?php
         return true;
     }
 }

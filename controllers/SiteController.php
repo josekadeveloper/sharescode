@@ -93,7 +93,7 @@ class SiteController extends Controller
 
     /**
      *  Logout action.
-     *  If the user is less than one day old at the end of the session, 
+     *  If the user is less than one day old at the end of the session,
      * they will be given a questionnaire in order to improve the website.
      *
      * @return Response
@@ -138,7 +138,7 @@ class SiteController extends Controller
                     $puntuation_total = [];
                     foreach (Votes::find()->all() as $key) {
                         foreach ($key as $k => $v) {
-                            if ($k === "puntuation") {
+                            if ($k === 'puntuation') {
                                 $v = intval($v);
                                 array_push($puntuation_total, $v);
                             }
