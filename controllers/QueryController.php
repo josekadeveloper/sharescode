@@ -79,8 +79,11 @@ class QueryController extends Controller
         $users_id = Yii::$app->user->id;
         $date_created = $this->formatDate();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->explanation = $this->changeToHtml($model->explanation);
+            if ($model->save()) {
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('create', [
@@ -100,12 +103,16 @@ class QueryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->explanation = $this->changeToTextPlain($model->explanation);
         $users_id = Yii::$app->user->id;
         $date_created = $this->formatDate();
 
         if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['index']);
+            if ($model->load(Yii::$app->request->post())) {
+                $model->explanation = str_replace("\n", "<br>", $model->explanation);
+                if ($model->save()) {
+                    return $this->redirect(['index']);
+                }
             }
     
             return $this->render('update', [
@@ -209,5 +216,31 @@ class QueryController extends Controller
         $dt = $dt->format('d-m-Y H:i:s');
 
         return $dt;
+    }
+
+    /**
+     * Change plain text to Html code
+     *
+     * @return string
+     */
+    public function changeToHtml($content) {
+        $content = str_replace(" ", "&nbsp", $content);
+        $content = str_replace(">", "&gt", $content);
+        $content = str_replace("<", "&lt", $content);
+        $content = str_replace("\n", "<br>", $content);
+        return $content;
+    }
+
+    /**
+     * Change Html code to plain text
+     *
+     * @return string
+     */
+    public function changeToTextPlain($content) {
+        $content = str_replace("<br>", "\n", $content);
+        $content = str_replace("&nbsp", " ", $content);
+        $content = str_replace("&gt", ">", $content);
+        $content = str_replace("&lt", "<", $content);
+        return $content;
     }
 }

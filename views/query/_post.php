@@ -549,7 +549,7 @@ if (!Yii::$app->user->isGuest) {
                                 </div>
                                 <hr>
                                 <?php if (!Yii::$app->user->isGuest): ?>
-                                    <?php if ($answer->users_id === Yii::$app->user->id || Yii::$app->user->identity->is_admin === true): ?>
+                                    <?php if ($answer->users_id === Yii::$app->user->id): ?>
                                         <!-- Delete or update answer -->
                                         <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
                                         <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">
@@ -596,7 +596,7 @@ if (!Yii::$app->user->isGuest) {
                                 </div>
                                 <hr>
                                 <?php if (!Yii::$app->user->isGuest): ?>
-                                    <?php if ($answer->users_id === Yii::$app->user->id || Yii::$app->user->identity->is_admin === true): ?>
+                                    <?php if ($answer->users_id === Yii::$app->user->id): ?>
                                         <!-- Delete or update answer -->
                                         <button type="button" id="delete-<?= $answer->id ?>" class="btn btn-danger btn-sm delete"><i class="fas fa-minus-circle"></i> Delete</button>
                                         <button type="button" id="update-<?= $answer->id ?>" class="btn btn-primary btn-sm update" data-toggle="modal" data-target="#ex-<?= $answer->id ?>">

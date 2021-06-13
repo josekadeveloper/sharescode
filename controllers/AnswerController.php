@@ -84,8 +84,10 @@ class AnswerController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -108,10 +110,7 @@ class AnswerController extends Controller
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
             $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
-            $content = str_replace(" ", "&nbsp", $content);
-            $content = str_replace(">", "&gt", $content);
-            $content = str_replace("<", "&lt", $content);
-            $content = str_replace("\n", "<br>", $content);
+            $content = $this->changeToHtml($content);
             $sending_user_id = Query::findOne(['id' => $id])['users_id'];
 
             $model = new Answer([
@@ -125,7 +124,6 @@ class AnswerController extends Controller
 
             if ($model->save()) {
                 $this->createReminder($id, $sending_user_id);
-                $this->sendReminder($id, $sending_user_id);
             }
 
             $answer_id = $model->id;
@@ -175,6 +173,7 @@ class AnswerController extends Controller
         if (Yii::$app->request->isAjax) {
             $id = Yii::$app->request->post('id');
             $model = $this->findModel($id);
+            $model->content = $this->changeToTextPlain($model->content);
             $users_id = Yii::$app->user->id;
             $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
             $sending_user_id = Query::findOne(['id' => $query_id])['users_id'];
@@ -184,10 +183,7 @@ class AnswerController extends Controller
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
             $date_created = $this->formatDate();
             $content = Yii::$app->request->post('content');
-            $content = str_replace(" ", "&nbsp", $content);
-            $content = str_replace(">", "&gt", $content);
-            $content = str_replace("<", "&lt", $content);
-            $content = str_replace("\n", "<br>", $content);
+            $content = $this->changeToHtml($content);
             
             $model->content = $content;
             $model->date_created = $date_created;
@@ -198,7 +194,6 @@ class AnswerController extends Controller
 
             if ($model->save()) {
                 $this->createReminder($query_id, $sending_user_id);
-                $this->sendReminder($id, $sending_user_id);
             }
 
             $answer_id = $model->id;
@@ -473,30 +468,6 @@ class AnswerController extends Controller
     }
 
     /**
-     *  The user will be notified by email that they 
-     * have received a reminder
-     * @param integer $query_id && $users_id
-     */
-    protected function sendReminder($query_id, $users_id)
-    {
-        $model = Portrait::findOne(['id' => $users_id]);
-        $body = 'To see your notifications click here: '
-            . Html::a (
-                'View notifications',
-                Url::to([
-                    'query/view',
-                    'id' => $query_id,
-                ], true)
-            );
-        Yii::$app->mailer->compose()
-            ->setTo($model->email)
-            ->setFrom(Yii::$app->params['smtpUsername'])
-            ->setSubject('View reminder')
-            ->setHtmlBody($body)
-            ->send();
-    }
-
-    /**
      * Finds the Reminder model based on its primary key and users_id.
      * If the model is not found, a null.
      * @param integer $id && $users_id
@@ -704,5 +675,31 @@ class AnswerController extends Controller
                 '</div>' .
             '</div>';
         }
+    }
+    
+    /**
+     * Change plain text to Html code
+     *
+     * @return string
+     */
+    public function changeToHtml($content) {
+        $content = str_replace(" ", "&nbsp", $content);
+        $content = str_replace(">", "&gt", $content);
+        $content = str_replace("<", "&lt", $content);
+        $content = str_replace("\n", "<br>", $content);
+        return $content;
+    }
+
+    /**
+     * Change Html code to plain text
+     *
+     * @return string
+     */
+    public function changeToTextPlain($content) {
+        $content = str_replace("<br>", "\n", $content);
+        $content = str_replace("&nbsp", " ", $content);
+        $content = str_replace("&gt", ">", $content);
+        $content = str_replace("&lt", "<", $content);
+        return $content;
     }
 }
