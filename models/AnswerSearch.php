@@ -46,9 +46,12 @@ class AnswerSearch extends Answer
      */
     public function search($params)
     {
-        $query = Answer::find()
-                    ->joinWith('query t')
-                    ->joinWith('user.portrait p');
+        if (Yii::$app->user->id) {
+            $query = Answer::find()
+                ->where(['answer.users_id' => Yii::$app->user->id])
+                ->joinWith('query t')
+                ->joinWith('user.portrait p');
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
