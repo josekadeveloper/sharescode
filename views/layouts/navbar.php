@@ -22,9 +22,6 @@ use yii\helpers\Html;
             <li class="nav-item d-none d-sm-inline-block">
                     <?= Html::a('My Portrait', ['/portrait/view', 'id' => Yii::$app->user->id], ['class' => 'nav-link']) ?>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                    <?= Html::a('Users Profiles', ['portrait/index'], ['class' => 'nav-link']) ?>
-            </li>
         <?php endif ?>
         <li class="nav-item d-none d-sm-inline-block">
             <?= Html::a('Contact', ['site/contact'], ['class' => 'nav-link']) ?>

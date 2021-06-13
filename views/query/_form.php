@@ -5,7 +5,7 @@ use yii\bootstrap4\ActiveForm;
 
 ?>
 <div class="row justify-content-center">
-    <div class="query-form formulario col-md-4" style="margin-bottom: 17.1vw;">
+    <div class="query-form form col-md-4">
 
         <?php $form = ActiveForm::begin(); ?>
 

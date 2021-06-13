@@ -120,10 +120,425 @@ a.desc:after {
     color: var(--danger);
 }
 
-.formulario {
+/* MY CSS */
+
+.wrapper {
+    background-color: #f4f6f9;
+}
+
+.fullscreen-modal .modal-dialog {
+    margin: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+}
+
+@media (min-width: 300px) {
+    /* Index */
+    #search {
+        width: auto !important;
+    }
+    .card-tools {
+        padding-right: 30px;
+        padding-top: 25px;
+    } 
+    .fullscreen-modal .modal-dialog {
+      width: 300px !important;
+    }
+    .modal {
+        height: 50% !important;
+    }
+
+    /* Login */
+    .login {
+        margin-top: 35vw; 
+    }
+    .main-footer {
+        margin-top: 17vw; 
+    }
+
+    /* Form */
+    .form {
+        padding: 30vw;
+        text-align: center;
+    }
+
+    .form h3 {
+        font-size: 25px;
+    }
+
+    .form #return {
+        margin-bottom: 25px;
+    }
+
+    /* Table User Portrait */
+    #firstTable {
+        display: inline-table;
+        width: 50%;
+    }
+
+    #firstTable {
+        font-size: 11px;
+    }
+
+    /* Form User Potrait */
+    .form-potrait {
+        padding: 30vw;
+        text-align: center;
+    }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 30vw;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .form-assessment h3 {
+        font-size: 17px;
+    }
+
+    .form-assessment h5 {
+        font-size: 17px;
+    }
+
+    #votes-typ {
+        display: inline;
+        width: 200px;
+        margin-left: -80%;
+        margin-top: 20%;
+        margin-bottom: 20%;
+    }
+
+    #votes-suggesting {
+        display: inline;
+        width: 200px;
+        margin-left: -80%;
+        margin-top: 20%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 27vw;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 18vw;
+        text-align: center;
+        font-size: 15px;
+    }      
+}
+
+@media (min-width: 375px) {
+    /* Assessment */
+    #votes-typ {
+        margin-left: -55%;
+    }
+
+    #votes-suggesting {
+        margin-left: -55%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 22vw;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 17vw;
+    }    
+}
+
+@media (min-width: 425px) {
+    /* Assessment */
+    #votes-typ {
+        margin-left: -38%;
+    }
+
+    #votes-suggesting {
+        margin-left: -38%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 15vw;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 14vw;
+    }    
+}
+
+@media (min-width: 768px) {
+    /* Index */
+    .fullscreen-modal .modal-dialog {
+      width: 750px !important;
+    }
+    .modal {
+        height: 50% !important;
+    }
+    /* Login */
+    .login {
+        margin-top: 20vw;
+    }
+    .main-footer {
+        margin-top: 7vw;
+    }
+
+    /* Form */
+    .form {
+        padding: 18vw;
+        text-align: center;
+    }
+
+    /* Table User Portrait */
+    #firstTable {
+        display: inline-table;
+        width: 50%;
+    }
+
+    #firstTable {
+        font-size: 18px;
+    }
+
+    /* Form User Potrait */
+    .form-potrait {
+        padding: 15vw;
+        text-align: center;
+    }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 15vw;
+        text-align: center;
+        font-size: 18px;
+    }
+    
+    .form-assessment h3 {
+        font-size: 18px;
+    }
+    
+    .form-assessment h5 {
+        font-size: 17px;
+    }
+    
+    #votes-typ {
+        width: 450px;
+        margin-left: 0%;
+        margin-top: 8%;
+        margin-bottom: 0%;
+    }
+    
+    #votes-suggesting {
+        width: 450px;
+        margin-left: 0%;
+        margin-top: 0%;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 18vw;
+        font-size: 18px;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 10vw;
+        font-size: 16px;
+    }    
+}
+
+@media (min-width: 992px) {
+    /* Index */
+    .fullscreen-modal .modal-dialog {
+      width: 970px !important;
+    }
+    .modal {
+        height: 30% !important;
+        margin-left: 15%;
+        margin-top: 15%;
+        padding: 0px !important;
+    }
+    /* Login */
+    .login {
+        margin-top: 20vw; 
+    }
+    .main-footer {
+        margin-top: 6vw;
+    }
+
+    /* Form */
+    .form {
+        padding: 13vw;
+        text-align: center;
+    }
+
+    /* Table User Portrait */
+    #firstTable {
+        display: inline-table;
+        width: 50%;
+    }
+
+    /* Form User Potrait */
+    .form-potrait {
+        padding: 8vw;
+        text-align: center;
+    }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 10vw;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 13vw;
+    }
+    
+    /* Form Votes */
+    .form-votes {
+        padding: 8vw;
+        font-size: 18px;
+    }      
+}
+
+@media (min-width: 1400px) {
+    /* Index */
+    .fullscreen-modal .modal-dialog {
+       width: 1200px !important;
+    }
+    .modal {
+        height: 30% !important;
+        margin-left: 35%;
+        margin-top: 15%;
+        padding: 0px !important;
+    }
+    /* Login */
+    .login {
+        margin-top: 15vw; 
+    }
+    .main-footer {
+        margin-top: 4vw;
+    }
+
+    /* Form */
+    .form {
+        padding: 7vw;
+        text-align: center;
+    }
+
+    /* Table User Portrait */
+    #firstTable {
+        display: inline-table;
+        width: 50%;
+    }
+
+    /* Form User Potrait */
+    .form-potrait {
+        padding: 7vw;
+        text-align: center;
+    }
+
+    /* Search Index */
+    .search {
+        margin-left: 120px;
+    }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 7vw;
+    }
+
+    /* Form Contact */
+    .form-contact {
+        padding: 7vw;
+    }
+    
+    /* Form Votes */
+    .form-votes {
+        padding: 7vw;
+    }    
+}
+
+@media (min-width: 1800px) {
+    /* Index */
+    .fullscreen-modal .modal-dialog {
+       width: 1500px !important;
+    }
+    .modal {
+        height: 30% !important;
+        width: 50% !important;
+        margin-left: 35%;
+        margin-top: 15%;
+        padding: 0px !important;
+    }
+    /* Login */
+    .login {
+        margin-top: 10vw; 
+    }
+    .main-footer {
+        margin-top: 3vw;
+    }
+
+    /* Form */
+    .form {
+        padding: 5.5vw;
+        text-align: center;
+    }
+
+    /* Table User Portrait */
+    #firstTable {
+        display: inline-table;
+        width: 50%;
+    }
+
+    /* Form User Potrait */
+    .form-potrait {
+        padding: 3.8vw;
+        text-align: center;
+    }
+
+    /* Assessment */
+    .form-assessment {
+        padding: 5.5vw;
+    }
+
+    #votes-typ {
+        margin-top: 0%;
+    }
+
+    /* Form Votes */
+    .form-votes {
+        padding: 3.5vw;
+    }     
+}
+
+/* Index */
+.index {
     padding: 6vw;
-    margin-bottom: 7vw;
     text-align: center;
+    justify-content: center;
+    padding-top: 100px !important;
+}
+
+#search {
+    width: 20vw;
+}
+
+.index button {
+    height: 37px;
+    margin-top: 33px;
+}
+
+.empty {
+    font-size: large;
+    text-align: center;
+    padding-right: 5%;
 }
 
 .img-answer {
@@ -131,21 +546,8 @@ a.desc:after {
     margin-top: -10px;
 }
 
-.modal {
-    height: 30% !important;
-    width: 50% !important;
-    margin-left: 35%;
-    margin-top: 15%;
-    padding: 0px !important;
-}
-
 .send {
     margin-top: 5px;
-}
-
-.empty {
-    text-align: center;
-    margin: 5%;
 }
 
 @keyframes mark-best-answer {
@@ -179,7 +581,6 @@ a.desc:after {
 
 #firstTable {
     font-family: 'Open Sans', sans-serif;
-    width: 750px;
     border-collapse: collapse;
     border: 3px solid #44475C;
     margin: 10px 10px 0 10px;
@@ -203,13 +604,4 @@ a.desc:after {
 .email {
     background-color: #999;
     border-radius: 5px solid black;
-}
-  
-.search {
-    padding-top: 100px !important;
-}
-
-.search button {
-    height: 37px;
-    margin-top: 33px;
 }

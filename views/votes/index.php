@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use hail812\adminlte3\yii\grid\ActionColumn as GridActionColumn;
 
 ?>
-<div class="container-fluid justify-content-center formulario">
+<div class="container-fluid justify-content-center form-votes">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <?php if ($old_assessment > 20 && $old_assessment < 40): ?>
@@ -75,6 +75,9 @@ use hail812\adminlte3\yii\grid\ActionColumn as GridActionColumn;
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
+                        ],
+                        'options' => [
+                            'class' => 'table table-responsive',
                         ]
                     ]); ?>
                 </div>

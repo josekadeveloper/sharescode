@@ -3,13 +3,9 @@
 use app\models\Portrait;
 use yii\widgets\DetailView;
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Votes', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
 
-<div class="container-fluid justify-content-center formulario">
+<div class="container-fluid justify-content-center form">
     <div class="card">
         <div class="card-body">
             <div class="row">

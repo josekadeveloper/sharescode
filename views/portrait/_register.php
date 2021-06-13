@@ -30,18 +30,12 @@ $validation = <<<EOT
         })
         .done(function (data) {
             if (data.find) {
-                /*alert('encontrado');*/
                 $('#nickname').show();
                 $('#nickname').html('Error: nickname is already in use');
                 $('#nickname').addClass('text-danger');
-                /*$('#portrait-nickname').removeClass('form-control is-valid');
-                $('#portrait-nickname').addClass('form-control is-invalid');*/
             } else {
-                /*alert('no encontrado');*/
                 $('#nickname').html(data.nickname);
                 $('#nickname').hide();
-                /*$('#portrait-nickname').removeClass('form-control is-invalid');
-                $('#portrait-nickname').addClass('form-control is-valid');*/
             }
         });
     });
@@ -109,7 +103,7 @@ $sex = ['Men' => 'Men',
         'Woman' => 'Woman'];
 ?>
 <div class="row justify-content-center">
-    <div class="users-form formulario col-md-4">
+    <div class="users-form form col-md-4">
 
         <?php $form = ActiveForm::begin(); ?>
 

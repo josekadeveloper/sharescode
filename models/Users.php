@@ -66,16 +66,6 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Queries]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getQueries()
-    {
-        return $this->hasMany(Query::class, ['users_id' => 'id'])->inverseOf('users');
-    }
-
-    /**
      * Gets query for [[Answers]].
      *
      * @return \yii\db\ActiveQuery
@@ -86,6 +76,56 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Dislikes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDislikes()
+    {
+        return $this->hasMany(Dislikes::class, ['users_id' => 'id'])->inverseOf('users');
+    }
+
+    /**
+     * Gets query for [[Likes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLikes()
+    {
+        return $this->hasMany(Likes::class, ['users_id' => 'id'])->inverseOf('users');
+    }
+
+    /**
+     * Gets query for [[Portrait]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPortrait()
+    {
+        return $this->hasOne(Portrait::class, ['id' => 'id'])->inverseOf('us');
+    }
+
+    /**
+     * Gets query for [[Prestiges]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPrestiges()
+    {
+        return $this->hasMany(Prestige::class, ['users_id' => 'id'])->inverseOf('users');
+    }
+
+    /**
+     * Gets query for [[Queries]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getQueries()
+    {
+        return $this->hasMany(Query::class, ['users_id' => 'id'])->inverseOf('users');
+    }
+
+    /**
      * Gets query for [[Reminders]].
      *
      * @return \yii\db\ActiveQuery
@@ -93,6 +133,16 @@ class Users extends \yii\db\ActiveRecord
     public function getReminders()
     {
         return $this->hasMany(Reminder::class, ['users_id' => 'id'])->inverseOf('users');
+    }
+
+    /**
+     * Gets query for [[Votes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVotes()
+    {
+        return $this->hasMany(Votes::class, ['users_id' => 'id'])->inverseOf('users');
     }
 
     /**

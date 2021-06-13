@@ -3,9 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$this->title = 'Recovery Password';
 ?>
-<div class="portrait formulario">
+<div class="portrait form">
     <div class="col-md-12">
         <h3><strong>¿Did you forget your password?</strong></h3>
         <hr>
@@ -20,7 +19,7 @@ $this->title = 'Recovery Password';
                     ->textInput(['maxlength' => true, 'placeholder' => 'Email'])
                     ->label(false) ?>
 
-                    <div class="float-right col-md-6 col-xs-8 pr-0">
+                    <div class="float-right col-md-12 pr-0">
                         <div class="form-group">
                             <?= Html::submitButton('Restore password', ['class' => 'btn btn-success']) ?>
                         </div>

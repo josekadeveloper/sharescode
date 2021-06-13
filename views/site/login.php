@@ -6,7 +6,7 @@ $url_register = Url::to(['/portrait/register']);
 $url_recovery = Url::to(['/portrait/recovery-pass']);
 ?>
 <div class="row justify-content-center">
-    <div class="card col-md-6" style="margin-top: 10vw; margin-bottom: 16vw;">
+    <div class="card col-md-6 login">
         <div class="card-body login-card-body">
             <p class="login-box-msg">Sign in to start your session</p>
 
