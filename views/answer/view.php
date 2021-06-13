@@ -1,9 +1,6 @@
 <?php
 
 use yii\bootstrap4\Html;
-use yii\widgets\DetailView;
-
-\yii\web\YiiAsset::register($this);
 
 ?>
 <div class="row justify-content-center">
@@ -18,11 +15,14 @@ use yii\widgets\DetailView;
                 ],
             ]) ?>
         </p>
-        <?= DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                'content',
-            ],
-        ]) ?>
+        <!-- /.card-body -->
+        <div class="card-footer card-comments">
+            <div class="card-comment">
+                <div class="comment-text">
+                    <?= $model->content ?>
+                </div>
+            </div>
+            <!-- /.card-comment -->
+        </div>
     </div>
 </div>
