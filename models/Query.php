@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use DateTime;
+use DateTimeZone;
 use Yii;
 
 /**
@@ -146,5 +148,20 @@ class Query extends \yii\db\ActiveRecord
     public static function findTitleQuery($id)
     {
         return Query::findOne(['id' => $id])['title'];
+    }
+
+    /**
+     * Formats UTC dateTime to Europe dateTime
+     * @param object DateTime
+     * @return mixed string
+     */
+    public static function formatDate($dt)
+    {
+        $date_created = date($dt);
+        $dt = new DateTime($date_created);
+        $dt->setTimezone(new DateTimeZone('Europe/Madrid'));
+        $dt = $dt->format('d-m-Y H:i:s');
+
+        return $dt;
     }
 }

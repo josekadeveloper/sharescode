@@ -103,7 +103,7 @@ $sex = ['Men' => 'Men',
                 
             <?= $form->field($model, 'password')->passwordInput(['maxlength' => true])->label('Password Repeat')  ?>
 
-            <?= $form->field($model, 'date_register')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
+            <?= $form->field($model, 'date_register')->hiddenInput(['value' => date('d-m-Y H:i:s')])->label(false) ?>
 
             <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
             
