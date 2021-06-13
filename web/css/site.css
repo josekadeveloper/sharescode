@@ -600,8 +600,3 @@ a.desc:after {
     padding: 8px;
     border-bottom: 2px solid black;
 }
-
-.email {
-    background-color: #999;
-    border-radius: 5px solid black;
-}
