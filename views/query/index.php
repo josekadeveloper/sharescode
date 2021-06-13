@@ -15,7 +15,7 @@ $this->title = 'Sharecode App';
                 <input type="search" id="search" class="form-control" placeholder="Search" aria-label="Search" />
             </div>
             <button type="button" class="btn btn-primary">
-                <i class="fas fa-search"></i>
+                <em class="fas fa-search"></em>
             </button>
         </div>
     </div>

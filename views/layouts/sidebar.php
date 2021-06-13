@@ -7,7 +7,7 @@ use yii\helpers\Html;
 <aside class="main-sidebar sidebar-dark-primary elevation-4 position-fixed">
     <!-- Brand Logo -->
     <a href=<?= Yii::$app->homeUrl ?> class="brand-link">
-        <?= Html::img('@web/img/sharecode.svg', ['class'=> 'brand-image img-circle mt-1'], ['style' => 'opacity: 0.8']) ?>
+        <?= Html::img('@web/img/sharecode.svg', ['class'=> 'brand-image img-circle mt-1', 'alt' => 'logo'], ['style' => 'opacity: 0.8']) ?>
         <span class="brand-text font-weight-light"><?= Yii::$app->name ?></span>
     </a>
 
