@@ -108,7 +108,7 @@ class AnswerController extends Controller
             : $url = '@web/img/woman.svg';
             $img_response = Html::img($url, ['class'=> 'img-answer']);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
-            $date_created = $this->formatDate();
+            $date_created = $this->date();
             $content = Yii::$app->request->post('content');
             $content = $this->changeToHtml($content);
             $sending_user_id = Query::findOne(['id' => $id])['users_id'];
@@ -152,7 +152,7 @@ class AnswerController extends Controller
                             '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton,
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, $deleteButton,
                                                      $updateButton, '', '', $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
@@ -181,7 +181,7 @@ class AnswerController extends Controller
             $username = $model_portrait->nickname;
             $img = Portrait::devolverImg($model_portrait);
             $urlPortrait = Url::toRoute(['portrait/view', 'id' => $users_id]);
-            $date_created = $this->formatDate();
+            $date_created = $this->date();
             $content = Yii::$app->request->post('content');
             $content = $this->changeToHtml($content);
             
@@ -220,7 +220,7 @@ class AnswerController extends Controller
                             '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, $deleteButton, 
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, $deleteButton, 
                                                      $updateButton, '', '', $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
                 'reminders' => $this->builderReminders(),
@@ -327,7 +327,7 @@ class AnswerController extends Controller
                              '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, '', 
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, '', 
                                                      '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
             ]);
@@ -391,7 +391,7 @@ class AnswerController extends Controller
                              '</button>';
 
             return $this->asJson([
-                'response' => $this->builderResponse($img, $urlPortrait, $username, $date_created, $content, '', 
+                'response' => $this->builderResponse($img, $urlPortrait, $username, Query::formatDate($date_created), $content, '', 
                                                      '', $likeButton, $dislikeButton, $likes, $dislikes, $answer_id),
                 'answer_id' => $answer_id,
             ]);
@@ -459,7 +459,7 @@ class AnswerController extends Controller
     protected function createReminder($query_id, $users_id)
     {
         $name_query = Query::findOne(['id' => $query_id])['title'];
-        $date_created = $this->formatDate();
+        $date_created = $this->date();
         $reminder = new Reminder(['title' => 'Se ha respondido a una de tus consultas', 
                                   'dispatch' => "Se ha respondido a la consulta $name_query",
                                   'date_created' => $date_created,
@@ -490,11 +490,10 @@ class AnswerController extends Controller
      * @param integer string
      * @return mixed string
      */
-    protected function formatDate()
+    protected function date()
     {
         $date_created = date('Y-m-d H:i:s');
         $dt = new DateTime($date_created, new DateTimeZone('UTC'));
-        $dt->setTimezone(new DateTimeZone('Europe/Madrid'));
         $dt = $dt->format('d-m-Y H:i:s');
 
         return $dt;

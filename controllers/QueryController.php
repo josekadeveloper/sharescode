@@ -77,7 +77,7 @@ class QueryController extends Controller
     {
         $model = new Query();
         $users_id = Yii::$app->user->id;
-        $date_created = $this->formatDate();
+        $date_created = $this->date();
 
         if ($model->load(Yii::$app->request->post())) {
             $model->explanation = $this->changeToHtml($model->explanation);
@@ -105,7 +105,7 @@ class QueryController extends Controller
         $model = $this->findModel($id);
         $model->explanation = $this->changeToTextPlain($model->explanation);
         $users_id = Yii::$app->user->id;
-        $date_created = $this->formatDate();
+        $date_created = $this->date();
 
         if ($this->findOwnQuery($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
             if ($model->load(Yii::$app->request->post())) {
@@ -208,11 +208,10 @@ class QueryController extends Controller
      * @param integer string
      * @return mixed string
      */
-    protected function formatDate()
+    protected function date()
     {
         $date_created = date('Y-m-d H:i:s');
         $dt = new DateTime($date_created, new DateTimeZone('UTC'));
-        $dt->setTimezone(new DateTimeZone('Europe/Madrid'));
         $dt = $dt->format('d-m-Y H:i:s');
 
         return $dt;

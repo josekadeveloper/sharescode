@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Query;
 use yii\bootstrap4\Html;
 use yii\helpers\Url;
 
@@ -7,6 +8,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js', ['positi
 
 $date = new DateTime($model->date_register);
 $date = $date->format('d-m-Y H:i:s');
+$date = Query::formatDate($date);
 
 $js = <<<EOT
     var firstTable = new Vue({

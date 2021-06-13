@@ -491,7 +491,7 @@ if (!Yii::$app->user->isGuest) {
                     <?= $img ?>
                 </div>
                     <span class="username"><a href=<?= $urlPortrait ?>><?= Html::encode($username) ?></a></span>
-                    <span class="description">Created ago - <?= date("d/m/Y H:i:s", strtotime($model->date_created)) ?> </span>
+                    <span class="description">Created ago - <?= Query::formatDate($model->date_created) ?> </span>
             </div>
         <!-- /.user-block -->
         <div class="card-tools">
@@ -543,7 +543,7 @@ if (!Yii::$app->user->isGuest) {
                                 <div class="comment-text">
                                     <span class="username">
                                         <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                                    <span class="text-muted float-right"><?= date("d/m/Y H:i:s", strtotime($answer->date_created)) ?></span>
+                                    <span class="text-muted float-right"><?= Query::formatDate($answer->date_created) ?></span>
                                     </span><!-- /.username -->
                                     <?= $answer->content ?>
                                 </div>
@@ -590,7 +590,7 @@ if (!Yii::$app->user->isGuest) {
                                 <div class="comment-text">
                                     <span class="username">
                                         <a href=<?= Answer::findUserPortrait($answer->users_id) ?>><?= Answer::findUserName($answer->users_id) ?></a>
-                                    <span class="text-muted float-right"><?= date("d/m/Y H:i:s", strtotime($answer->date_created)) ?></span>
+                                    <span class="text-muted float-right"><?= Query::formatDate($answer->date_created) ?></span>
                                     </span><!-- /.username -->
                                     <?= $answer->content ?>
                                 </div>
