@@ -28,10 +28,9 @@ use yii\helpers\Html;
         </li>
     </ul>
 
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-        <!-- Notifications Dropdown Menu -->
-        <div id="notifications">
+    <!-- Notifications Dropdown Menu -->
+    <div id="notifications">
+        <ul class="navbar-nav mr-5">
             <li class="nav-item dropdown">
             <?php if (!Yii::$app->user->isGuest): ?>
                 <a class="nav-link" data-toggle="dropdown" href="#">
@@ -44,13 +43,16 @@ use yii\helpers\Html;
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <span class="dropdown-header"><?= $notifications_no_read ?> Notifications</span>
                     <div class="dropdown-divider"></div>
-                    <a href=<?= $urlReminder ?> class="dropdown-item">
+                    <a href="<?= $urlReminder ?>" class="dropdown-item">
                         <i class="fas fa-envelope mr-2"></i><?= $notifications_no_read ?> new answers
                         <span class="float-right text-muted text-sm"><?= $notifications_time ?></span>
                     </a>
                 </div>
             </li>
-        </div>
+        </ul>
+    </div>
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
         <?php if (!Yii::$app->user->isGuest): ?>
             <li class="nav-item">
                 <?= Html::a('<i class="fas fa-sign-out-alt"></i>', ['/site/logout'], ['data-method' => 'post', 'class' => 'nav-link']) ?>

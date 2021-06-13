@@ -73,7 +73,7 @@ use yii\helpers\Html;
                         <?= $img ?>
                     </div>
                     <div class="info">
-                        <a href=<?= $urlPortrait ?> class="d-block"><?= $nickname ?></a>
+                        <a href="<?= $urlPortrait ?>" class="d-block"><?= $nickname ?></a>
                     </div>
                 </div>
             <nav class="mt-2">

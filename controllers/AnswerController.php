@@ -544,27 +544,29 @@ class AnswerController extends Controller
             $notifications_time = Users::timeReminders();
             $urlReminder = Url::to(['reminder/index']);
             return
-            '<li class="nav-item dropdown">' .
-                '<a class="nav-link" data-toggle="dropdown" href="#">'.
-                    '<i class="far fa-bell"></i>'.
-                    '<span class="badge badge-warning navbar-badge">'.
-                        $notifications_no_read .
-                    '</span>'.
-                '</a>'.
-                '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">' . 
-                    '<span class="dropdown-header">' .
-                        $notifications_no_read . ' Notifications' .
-                    '</span>' .  
-                    '<div class="dropdown-divider"></div>' .
-                    '<a href=' . $urlReminder . ' class="dropdown-item">' .
-                        '<i class="fas fa-envelope mr-2"></i>' .
-                            $notifications_no_read . ' new answers' .
-                        '<span class="float-right text-muted text-sm">' .
-                            $notifications_time .
-                        '</span>' .
-                    '</a>' . 
-                '</div>' .
-            '</li>';
+            '<ul class="navbar-nav ml-5">' .
+                '<li class="nav-item dropdown">' .
+                    '<a class="nav-link" data-toggle="dropdown" href="#">'.
+                        '<i class="far fa-bell"></i>'.
+                        '<span class="badge badge-warning navbar-badge">'.
+                            $notifications_no_read .
+                        '</span>'.
+                    '</a>'.
+                    '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">' . 
+                        '<span class="dropdown-header">' .
+                            $notifications_no_read . ' Notifications' .
+                        '</span>' .  
+                        '<div class="dropdown-divider"></div>' .
+                        '<a href=' . $urlReminder . ' class="dropdown-item">' .
+                            '<i class="fas fa-envelope mr-2"></i>' .
+                                $notifications_no_read . ' new answers' .
+                            '<span class="float-right text-muted text-sm">' .
+                                $notifications_time .
+                            '</span>' .
+                        '</a>' . 
+                    '</div>' .
+                '</li>' .
+            '</ul>';
         }
     }
 
