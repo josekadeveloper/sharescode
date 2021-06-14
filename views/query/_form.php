@@ -15,8 +15,6 @@ use yii\bootstrap4\ActiveForm;
 
         <?= $form->field($model, 'date_created')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
 
-        <?= $form->field($model, 'is_closed')->checkbox()->label(false) ?>
-
         <?= $form->field($model, 'users_id')->hiddenInput(['value' => $users_id])->label(false)  ?>
 
         <div class="form-group">

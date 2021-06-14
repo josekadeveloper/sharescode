@@ -19,7 +19,6 @@ class QuerySearch extends Query
         return [
             [['id', 'users_id'], 'integer'],
             [['title', 'explanation', 'date_created'], 'safe'],
-            [['is_closed'], 'boolean'],
         ];
     }
 
@@ -61,7 +60,6 @@ class QuerySearch extends Query
         $query->andFilterWhere([
             'id' => $this->id,
             'date_created' => $this->date_created,
-            'is_closed' => $this->is_closed,
             'users_id' => $this->users_id,
         ]);
 

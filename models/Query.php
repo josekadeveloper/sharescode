@@ -13,7 +13,6 @@ use Yii;
  * @property string $title
  * @property string $explanation
  * @property string $date_created
- * @property bool|null $is_closed
  * @property int|null $users_id
  *
  * @property Answer[] $answers
@@ -37,7 +36,6 @@ class Query extends \yii\db\ActiveRecord
             [['title', 'explanation', 'date_created'], 'required'],
             [['explanation'], 'string'],
             [['date_created'], 'safe'],
-            [['is_closed'], 'boolean'],
             [['users_id'], 'default', 'value' => null],
             [['users_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
@@ -55,7 +53,6 @@ class Query extends \yii\db\ActiveRecord
             'title' => 'Title',
             'explanation' => 'Explanation',
             'date_created' => 'Date Created',
-            'is_closed' => 'Is Closed',
             'users_id' => 'User',
         ];
     }

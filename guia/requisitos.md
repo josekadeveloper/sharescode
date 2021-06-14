@@ -415,9 +415,9 @@
 | **Entrega**     | v3             |
 | **Incidencia**  | [46](https://github.com/joseckk/sharescode/issues/46) |
 
-| **R47**     | **Guía básica**         |
+| **R47**     | **Integrar el plugin ToastAlert**         |
 | --------------: | :------------------- |
-| **Descripción** | Esta guía dispondrá de unos pasos básicos para darle al usuario la información necesaria para hacer uso del sitio web.             |
+| **Descripción** | Se cambiara los típicos setFlash que trae implementado el propio Yii Framework por unos mensajes emergentes llamados ToastAlert, que dotaran mayor visualización de cara al usuario.             |
 | **Prioridad**   | Opcional           |
 | **Tipo**        | Funcional                |
 | **Complejidad** | Media         |
@@ -435,7 +435,7 @@
 
 | **R49**     | **Crear perfil del usuario**         |
 | --------------: | :------------------- |
-| **Descripción** | Los usuarios dispondrán de un perfil al que podrán acceder todos los usuarios de la aplicación, que mostrara; su nombre (name_portrait), apellidos (last_name), fecha de alta (data_register), email, repository of Github (o cualquier sistema de control de versiones), prestigio (prestigie_port), sexo (sex), avatar y el id del usuario (us_id).             |
+| **Descripción** | Los usuarios dispondrán de un perfil al que podrán acceder todos los usuarios de la aplicación, que mostrara; su id (que es clave primaria y a la vez ajena a el id de users), una varibale booleana is_admin que comprobara si el usuario es admin, su nombre (nickname), contraseña (password), fecha de alta (data_register), email, repository of Github (o cualquier sistema de control de versiones), prestigio (prestige_port), sexo (sex), un token_pass para recuperar la contraseña, y el avatar.             |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Funcional                |
 | **Complejidad** | Fácil         |
@@ -460,9 +460,9 @@
 | **Entrega**     | v1             |
 | **Incidencia**  | [51](https://github.com/joseckk/sharescode/issues/51) |
 
-| **R52**     | **Añadir foto al perfil de usuario**         |
+| **R52**     | **Integrar el plugin CodeMirror**         |
 | --------------: | :------------------- |
-| **Descripción** | Se podrá añadir una foto al perfil del usuario.             |
+| **Descripción** | Para darle personalidad a la aplicación web y que el usuario pueda customizar sus respuestas se usará el plugin CodeMirror.             |
 | **Prioridad**   | Opcional           |
 | **Tipo**        | Funcional                |
 | **Complejidad** | Media         |
@@ -507,7 +507,7 @@
 
 | **R57**     | **Crear consulta**         |
 | --------------: | :------------------- |
-| **Descripción** | El usuario podrá crear una consulta en el foro, que estará formada por; su título (title), descripción (explanation), fecha de creación (date_created) , una variable booleana que determinara si esa consulta se ha solucionado o no (is_closed) y el id del usuario (us_id) que la creó.             |
+| **Descripción** | El usuario podrá crear una consulta en el foro, que estará formada por; su id, su título (title), descripción (explanation), fecha de creación (date_created) y el id del usuario (users_id) que la creó.             |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Funcional                |
 | **Complejidad** | Fácil         |
@@ -534,7 +534,7 @@
 
 | **R60**     | **Crear respuesta**         |
 | --------------: | :------------------- |
-| **Descripción** | El usuario podrá responder a una consulta, esta respuesta está formada por; su contenido (content), el id de la consulta que va a responder (query_id) y el id del usuario que la crea (us_id).             |
+| **Descripción** | El usuario podrá responder a una consulta, esta respuesta está formada por; su id, su contenido (content), la cantidad de likes (integer), la cantidad de dislikes(integer), el id de la consulta que va a responder (query_id) y el id del usuario que la crea (users_id).          |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Funcional                |
 | **Complejidad** | Fácil         |
@@ -561,7 +561,7 @@
 
 | **R63**     | **Crear notificación**         |
 | --------------: | :------------------- |
-| **Descripción** | Cuando un usuario responde una consulta de otro usuario a este se le enviará una notificación, formada por; un mensaje (dispatch) y el id del usuario que la va a recibir (us_id).             |
+| **Descripción** | Cuando un usuario responde una consulta de otro usuario a este se le enviará una notificación, formada por; su id, su título (title), un mensaje (dispatch), fecha de creación (date_created), una variable booleana que determina si ha sido leida (is_read) y el id del usuario que la va a recibir (users_id).             |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Funcional                |
 | **Complejidad** | Fácil         |
@@ -595,7 +595,7 @@
 | **Entrega**     | v3             |
 | **Incidencia**  | [66](https://github.com/joseckk/sharescode/issues/66) |
 
-| **R67**     | **Incluir el widget WebSocket que incluye la librería PHP Ratchet**         |
+| **R67**     | **Generar y eliminar las notificaciones de forma asíncrona con Ajax**         |
 | --------------: | :------------------- |
 | **Descripción** | Para que el usuario reciba las notificaciones en tiempo real.             |
 | **Prioridad**   | Opcional           |
@@ -667,9 +667,9 @@
 | **Entrega**     | v3             |
 | **Incidencia**  | [74](https://github.com/joseckk/sharescode/issues/74) |
 
-| **R75**     | **El administrador podrá ver las visitas del sitio web**         |
+| **R75**     | **Crear un buscador global de consultas**         |
 | --------------: | :------------------- |
-| **Descripción** | El administrador dispondrá de un apartado privado con un balance de las visitas que está teniendo su sitio web.             |
+| **Descripción** | En la aplicación web se deberá crear un buscador global de consultas que flitre ese listado por medio de jQuery.             |
 | **Prioridad**   | Opcional           |
 | **Tipo**        | Funcional                |
 | **Complejidad** | Media         |
@@ -696,7 +696,7 @@
 
 | **R78**     | **Users**         |
 | --------------: | :------------------- |
-| **Descripción** | De los usuarios se almacenará su nickname, contraseña (password) y una variable booleana para saber si el usuario creado es admin (is_admin), que por defecto será “false”.              |
+| **Descripción** | De los usuarios se almacenará su id y una variable booleana que determina si sus datos se han eliminado de la base de datos (is_deleted).              |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Información                |
 | **Complejidad** | Fácil         |
@@ -705,7 +705,7 @@
 
 | **R79**     | **Portrait**         |
 | --------------: | :------------------- |
-| **Descripción** | De los perfiles se almacenará  su nombre (name_portrait), apellidos (last_name), fecha de alta (data_register), email, repository of Github (o cualquier sistema de control de versiones), prestigio (prestigie_port), sexo (sex), avatar y el id del usuario (us_id).             |
+| **Descripción** | Los usuarios dispondrán de un perfil al que podrán acceder todos los usuarios de la aplicación, que mostrara; su id (que es clave primaria y a la vez ajena a el id de users), una varibale booleana is_admin que comprobara si el usuario es admin, su nombre (nickname), contraseña (password), fecha de alta (data_register), email, repository of Github (o cualquier sistema de control de versiones), prestigio (prestige_port), sexo (sex), un token_pass para recuperar la contraseña, y el avatar.           |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Información                |
 | **Complejidad** | Fácil         |
@@ -714,7 +714,7 @@
 
 | **R80**     | **Query**         |
 | --------------: | :------------------- |
-| **Descripción** | De las consultas se almacenará su título (title), descripción (explanation), fecha de creación (date_created) , una variable booleana que determinara si esa consulta se ha solucionado o no (is_closed) y el id del usuario (us_id) que la creó.             |
+| **Descripción** | El usuario podrá crear una consulta en el foro, que estará formada por; su id, su título (title), descripción (explanation), fecha de creación (date_created) y el id del usuario (users_id) que la creó.             |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Información                |
 | **Complejidad** | Fácil         |
@@ -723,7 +723,7 @@
 
 | **R81**     | **Prestige**         |
 | --------------: | :------------------- |
-| **Descripción** | Del prestigio se almacenará su tipo de prestigio (type_prestige), antigüedad (antiquity), puntuación (score) y el id del perfil (portrait_id).             |
+| **Descripción** | Del prestigio se almacenará su id, su título (title), su antigüedad (antiquity), puntuación (puntuation), el id que apunta al tipo de prestigio (type_prestige_id), y el id del usuario (users_id).             |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Información                |
 | **Complejidad** | Fácil         |
@@ -732,7 +732,7 @@
 
 | **R82**     | **Answer**         |
 | --------------: | :------------------- |
-| **Descripción** | De las respuestas se almacenará su contenido (content), el id de la consulta que va a responder (query_id) y el id del usuario que la crea (us_id).             |
+| **Descripción** | El usuario podrá responder a una consulta, esta respuesta está formada por; su id, su contenido (content), la cantidad de likes (integer), la cantidad de dislikes(integer), el id de la consulta que va a responder (query_id) y el id del usuario que la crea (users_id).             |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Información                |
 | **Complejidad** | Fácil         |
@@ -741,7 +741,7 @@
 
 | **R83**     | **Reminder**         |
 | --------------: | :------------------- |
-| **Descripción** | De las notificaciones se almacenará un mensaje (dispatch) y el id del usuario que la va a recibir (us_id).             |
+| **Descripción** | Cuando un usuario responde una consulta de otro usuario a este se le enviará una notificación, formada por; su id, su título (title), un mensaje (dispatch), fecha de creación (date_created), una variable booleana que determina si ha sido leida (is_read) y el id del usuario que la va a recibir (users_id).             |
 | **Prioridad**   | Importante           |
 | **Tipo**        | Información                |
 | **Complejidad** | Fácil         |
@@ -799,12 +799,12 @@
 | (**R44**) Cerrar sesión | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [44](https://github.com/joseckk/sharescode/issues/44) |
 | (**R45**) Correo de confirmación | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [45](https://github.com/joseckk/sharescode/issues/45) |
 | (**R46**) Recuperación de contraseña | Opcional | Funcional | Media | v3 | | **Incidencia**  | [46](https://github.com/joseckk/sharescode/issues/46) |
-| (**R47**) Guía básica | Opcional | Funcional | Media | v3 | | **Incidencia**  | [47](https://github.com/joseckk/sharescode/issues/47) |
+| (**R47**) Integrar el plugin ToastAlert | Opcional | Funcional | Media | v3 | | **Incidencia**  | [47](https://github.com/joseckk/sharescode/issues/47) |
 | (**R48**) Control de acceso | Importante | Funcional | Media | v2 | | **Incidencia**  | [48](https://github.com/joseckk/sharescode/issues/48) |
 | (**R49**) Crear perfil del usuario | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [49](https://github.com/joseckk/sharescode/issues/49) |
 | (**R50**) Modificar perfil del usuario | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [50](https://github.com/joseckk/sharescode/issues/50) |
 | (**R51**) Borrar perfil del usuario | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [51](https://github.com/joseckk/sharescode/issues/51) |
-| (**R52**) Añadir foto al perfil de usuario | Opcional | Funcional | Media | v2 | | **Incidencia**  | [52](https://github.com/joseckk/sharescode/issues/52) |
+| (**R52**) Integrar el plugin CodeMirror | Opcional | Funcional | Media | v2 | | **Incidencia**  | [52](https://github.com/joseckk/sharescode/issues/52) |
 | (**R53**) Crear prestigio | Importante | Funcional | Fácil | v2 | | **Incidencia**  | [53](https://github.com/joseckk/sharescode/issues/53) |
 | (**R54**) Modificar prestigio | Importante | Funcional | Fácil | v2 | | **Incidencia**  | [54](https://github.com/joseckk/sharescode/issues/54) |
 | (**R55**) Borrar prestigio | Importante | Funcional | Fácil | v2 | | **Incidencia**  | [55](https://github.com/joseckk/sharescode/issues/55) |
@@ -819,7 +819,7 @@
 | (**R64**) Modificar notificación | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [64](https://github.com/joseckk/sharescode/issues/64) |
 | (**R65**) Borrar notificación | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [65](https://github.com/joseckk/sharescode/issues/65) |
 | (**R66**) Incluir componente con Vue.js | Importante | Funcional | Difícil | v3 | | **Incidencia**  | [66](https://github.com/joseckk/sharescode/issues/66) |
-| (**R67**) Incluir el widget WebSocket que incluye la librería PHP Ratchet | Opcional | Funcional | Media | v3 | | **Incidencia**  | [67](https://github.com/joseckk/sharescode/issues/67) |
+| (**R67**) Generar y eliminar notificaciones de forma asíncrona con Ajax | Opcional | Funcional | Media | v3 | | **Incidencia**  | [67](https://github.com/joseckk/sharescode/issues/67) |
 | (**R68**) Añadir imágenes | Opcional | Funcional | Media | v2 | | **Incidencia**  | [68](https://github.com/joseckk/sharescode/issues/68) |
 | (**R69**) Añadir video | Opcional | Funcional | Media | v2 | | **Incidencia**  | [69](https://github.com/joseckk/sharescode/issues/69) |
 | (**R70**) Breve encuesta sobre el sitio web. | Opcional | Funcional | Media | v3 | | **Incidencia**  | [70](https://github.com/joseckk/sharescode/issues/70) |
@@ -827,7 +827,7 @@
 | (**R72**) El administrador podrá modificar a los usuarios | Importante | Funcional | Fácil | v3 | | **Incidencia**  | [72](https://github.com/joseckk/sharescode/issues/72) |
 | (**R73**) El administrador podrá borrar a los usuarios | Importante | Funcional | Fácil | v3 | | **Incidencia**  | [73](https://github.com/joseckk/sharescode/issues/73) |
 | (**R74**) El administrador podrá borrar consultas | Importante | Funcional | Fácil | v3 | | **Incidencia**  | [74](https://github.com/joseckk/sharescode/issues/74) |
-| (**R75**) El administrador podrá ver las visitas del sitio web | Opcional | Funcional | Media | v3 | | **Incidencia**  | [75](https://github.com/joseckk/sharescode/issues/75) |
+| (**R75**) Crear un buscador global de consultas | Opcional | Funcional | Media | v3 | | **Incidencia**  | [75](https://github.com/joseckk/sharescode/issues/75) |
 | (**R76**) El administrador podrá eliminar respuestas | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [76](https://github.com/joseckk/sharescode/issues/76) |
 | (**R77**) El administrador podrá borrar un perfil | Importante | Funcional | Fácil | v1 | | **Incidencia**  | [77](https://github.com/joseckk/sharescode/issues/77) |
 | (**R78**) Users | Importante | Información | Fácil | v1 | | **Incidencia**  | [78](https://github.com/joseckk/sharescode/issues/78) |
