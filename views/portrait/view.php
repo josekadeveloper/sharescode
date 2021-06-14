@@ -50,11 +50,11 @@ $url_prestige = Url::to(['/prestige/view', 'id' => $model->id]);
         <p id="img-portrait">
             <?= $img = $model->devolverImg($model) ?>
         </p>
-        <table id="firstTable">
+        <table id="firstTable" itemscope itemtype="http://schema.org/Person">
             <tbody v-for="row in rows">
                 <tr>
                     <td class="title">Nickname</td>
-                    <td>{{row.nickname}}</td>
+                    <td itemprop="additionalName">{{row.nickname}}</td>
                 </tr>
                 <tr>
                     <td class="title">Date Register</td>
@@ -62,15 +62,15 @@ $url_prestige = Url::to(['/prestige/view', 'id' => $model->id]);
                 </tr>
                 <tr>
                     <td class="title">E-mail</td>
-                    <td>{{row.email}}</td>
+                    <td itemprop="email">{{row.email}}</td>
                 </tr>
                 <tr>
                     <td class="title">Repository</td>
-                    <td>{{row.repository}}</td>
+                    <td itemprop="memberOf">{{row.repository}}</td>
                 </tr>
                 <tr>
                     <td class="title">Prestige Port</td>
-                    <td><a href="<?= $url_prestige ?>">{{row.prestige_port}}</a></td>
+                    <td itemprop="hasCredential"><a href="<?= $url_prestige ?>">{{row.prestige_port}}</a></td>
                 </tr>
                 <tr>
                     <td class="title">Sex</td>
