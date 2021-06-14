@@ -56,7 +56,6 @@ CREATE TABLE query
   , title           varchar(255) NOT NULL
   , explanation     text         NOT NULL
   , date_created    timestamp    NOT NULL DEFAULT current_timestamp
-  , is_closed       boolean
   , users_id        bigint       REFERENCES users (id) ON DELETE CASCADE
 );
 
