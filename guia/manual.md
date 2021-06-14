@@ -120,13 +120,13 @@ Esta página es solo accesible para los administradores, cuenta con una tabla qu
 ### Página "Create Users"
 Esta página es solo accesible para los administradores y solo hay que rellenar el formulario.
 
-![Create Users](images/manual/create-users.png)
+![Create Users](images/manual/portrait-create.png)
 
 ***
 
 ### Página "Register"
 Esta página es accesible por el usuario invitado y solo hay que rellenar el formulario.
 
-![Register](images/manual/register.png)
+![Register](images/manual/portrait-register.png)
 
 ***
