@@ -52,8 +52,67 @@
         <h1>Instrucciones de instalación y despliegue <span id="instrucciones-de-instalacion-y-despliegue"></span><a href="#instrucciones-de-instalacion-y-despliegue" class="hashlink">&para;</a></h1>
 <div class="toc"><ol><li><a href="#en-local">En local</a></li>
 <li><a href="#en-la-nube">En la nube</a></li></ol></div>
-<h2>En local <span id="en-local"></span><a href="#en-local" class="hashlink">&para;</a></h2><p>Explicar.</p>
-<h2>En la nube <span id="en-la-nube"></span><a href="#en-la-nube" class="hashlink">&para;</a></h2><p>Explicar.</p>
+<h2>En local <span id="en-local"></span><a href="#en-local" class="hashlink">&para;</a></h2><h4>Requisitos previos: <span id="requisitos-previos"></span><a href="#requisitos-previos" class="hashlink">&para;</a></h4><ul>
+<li>PHP 7.3.0 ó superior</li>
+<li>PostgreSQL</li>
+<li>Composer</li>
+<li>Git</li>
+</ul>
+<h4>Instalación: <span id="instalacion"></span><a href="#instalacion" class="hashlink">&para;</a></h4><ol>
+<li><p>Clonamos el proyecto:</p>
+<pre><code class="hljs php">$ git <span class="hljs-keyword">clone</span> https:<span class="hljs-comment">//github.com/joseckk/sharescode.git</span>
+</code></pre>
+</li>
+<li><p>Nos movemos a la raiz del proyecto y ejecutamos el siguiente comando:</p>
+<p> <code> $ composer install
+</code></p>
+</li>
+<li><p>Creamos la base de datos e intyectamos con los scripts, dentro de la raiz del proyecto ejecutamos los siguientes comandos:</p>
+<p> <code> $ db/create.sh
+ $ db/load.sh
+</code></p>
+</li>
+<li><p>Modificamos el archivo <strong>.env.example</strong> y lo guardamos como <strong>.env</strong> con las siguentes variables de entorno:</p>
+<ul>
+<li><code>SMTP_PASS=clave de aplicación de correo</code></li>
+</ul>
+</li>
+<li><p>Cambiamos la dirección de correo en:
+<code>config/params.php</code></p>
+</li>
+<li><p>Ejectumos la aplicación desde la raiz del proyecto con el siguiente comando:</p>
+<p> <code>  $ make serve
+</code></p>
+</li>
+<li><p>Abrimos el navegador con la siguiente dirección:
+<code>http://localhost:8080/</code></p>
+</li>
+</ol>
+<h2>En la nube <span id="en-la-nube"></span><a href="#en-la-nube" class="hashlink">&para;</a></h2><h4>Requisitos previos: <span id="requisitos-previos"></span><a href="#requisitos-previos" class="hashlink">&para;</a></h4><ul>
+<li>Heroku CLI (<a href="https://devcenter.heroku.com/articles/heroku-cli">https://devcenter.heroku.com/articles/heroku-cli</a>)</li>
+</ul>
+<h4>Instalación: <span id="instalacion"></span><a href="#instalacion" class="hashlink">&para;</a></h4><ol>
+<li><p>Crear cuenta en heroku.com</p>
+</li>
+<li><p>Iniciar sesión en Heroku y crear una apliación.</p>
+</li>
+<li><p>Introducir las mismas variables de entorno que usamos en local, pero añadiendo además la de 'YII_ENV=prod' para indicar que estamos en producción y no en desarrollo.</p>
+</li>
+<li><p>Añadir a la aplicación el <em>add-on</em> Heroku Postgres.</p>
+</li>
+<li><p>Iniciar sesión en heroku desde la terminal:</p>
+<p> <code> $ heroku login
+</code></p>
+</li>
+<li><p>Inyectamos la base de datos:</p>
+<p> <code> $ heroku psql &lt; db/sharecode.sql
+</code></p>
+</li>
+<li><p>Sincronizar el proyecto con GitHub, y seleccionar en que rama queremos el despliegue:</p>
+<p> <code> $ git push heroku master
+</code></p>
+</li>
+</ol>
         <div class="toplink"><a href="#" class="h1" title="go to top"><span class="glyphicon glyphicon-arrow-up"></a></div>
     </div>
 </div>
@@ -62,7 +121,7 @@
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Mon, 14 Jun 2021 22:50:24 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Mon, 14 Jun 2021 22:54:38 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script>jQuery(function ($) {
