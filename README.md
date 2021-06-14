@@ -5,7 +5,7 @@ Proyecto integrado del ciclo formativo de Desarrollo de Aplicaciones Web imparti
 Se centrara sobre todo en ayudar al usuario potencial, ya que va a dar la facilidad suficiente para solventar cualquier duda de programación. Por ejemplo; A utilizar cualquier estructura de algún lenguaje de programación, o bien una breve solución a cualquier error producido tanto en el entorno cliente como el entorno servidor.
 
 * [Documentacion](https://joseckk.github.io/sharescode)
-* [Despliegue en heroku](https://sharescode.herokuapp.com)
+* [Despliegue en heroku](https://sharexcode.herokuapp.com)
 
 Alumno: José Carlos De La Rosa Methvin
 
