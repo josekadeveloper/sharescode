@@ -147,7 +147,7 @@ VALUES (false, 'jose', crypt('jose', gen_salt('bf', 10)), '2021-05-12 20:30:00',
 INSERT INTO portrait (is_admin, nickname, password, date_register, email, repository, prestige_port, sex)
 VALUES (false, 'javi', crypt('javi', gen_salt('bf', 10)), '2021-06-12 22:10:00', 'javier@gmail.com', 'https://github.com/javier', 'Junior', 'Men');
 
---- Tipos de prestigios ---
+--- Tipos de prestigio ---
 INSERT INTO type_prestige (prestige, score)
 VALUES ('Initiate', 0),
        ('Regular', 32),
