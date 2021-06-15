@@ -124,21 +124,6 @@ class Answer extends \yii\db\ActiveRecord
     }
 
     /**
-     * Check if when you delete the answer you have
-     * to delete the notifications as well
-     * @param integer $answer_id
-     * @return mixed string || null
-     */
-    public static function checkAnswer($answer_id)
-    {
-        $query_id = Answer::findOne(['id' => $answer_id])['query_id'];
-
-        return Query::findOne([
-            'id' => $query_id
-        ])['users_id'];
-    }
-
-    /**
      *  Check the best-scored answer
      * @param integer $query_id, $answer_id
      * @return mixed boolean || null

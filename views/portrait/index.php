@@ -1,32 +1,30 @@
 <?php
 
-use app\models\Query;
 use yii\grid\GridView;
-
+use hail812\adminlte3\yii\grid\ActionColumn as GridActionColumn;
 ?>
 <div class="row justify-content-center">
     <div class="portrait-index form col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="query/index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Portraits List</li>
+            </ol>
+        </nav>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'columns' => [
                 'nickname',
-                [
-                    'label' => 'Date Register',
-                    'value' => function ($dataProvider) {
-                        foreach ($dataProvider as $key => $value) {
-                            if ($key === 'date_register') {
-                                return Query::formatDate($value);
-                            }
-                        }
-                    },
-                ],
                 'date_register:date',
                 'email:email',
                 'repository:url',
                 'prestige_port',
                 'sex',
-                ['class' => 'yii\grid\ActionColumn'],
+                [
+                    'class' => GridActionColumn::class,
+                    'template' => '{view}',
+                ],
             ],
             'options' => [
                 'class' => 'table table-responsive',

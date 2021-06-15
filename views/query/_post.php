@@ -98,7 +98,7 @@ $createAnswer = <<<EOT
             newAnswer.hide();
             $('#answers-$model->id').append(newAnswer);
             newAnswer.fadeIn('fast');
-            $('#modals-$model->id').append(data.modal);
+            $('#modals-'+data.answer_id).append(data.modal);
 
             let deleteButton = $('#delete-' + data.answer_id);
             let updateButton = $('#update-' + data.answer_id);
@@ -129,19 +129,19 @@ $createAnswer = <<<EOT
             updateButton.click(function(ev) {
                 ev.preventDefault();
                 let id = data.answer_id;
-
-                var cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
+                console.log("codemirror-modal-"+id);
+                console.log(document.getElementById("codemirror-modal-"+id, {}));
+                var cmd = new CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
                 cmd.setOption("theme", "abbott");
-
+            
                 $('#select-modal-'+id).change(function(){
                     if ($('#form-codemirror-modal-'+id).find('.img-push').children()[1] != undefined) {
                         $('#form-codemirror-modal-'+id).find('.img-push').children()[1].remove();
-                    }     
-                    let cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
-
+                    }
+                    let cmd = new CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
                     cmd.setSize(380, 300);
                     
-                    var modeInput = document.getElementById("select-modal-"+id)
+                    var modeInput = document.getElementById("select-modal-"+id);
                     var index  = modeInput.selectedIndex;
                     let theme = modeInput.options[index].text.toLowerCase();
                     cmd.setOption("theme", theme);

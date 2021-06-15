@@ -172,8 +172,6 @@ class AnswerController extends Controller
             $model = $this->findModel($id);
             $model->content = $this->changeToTextPlain($model->content);
             $users_id = Yii::$app->user->id;
-            $query_id = Answer::find()->where(['id' => $id])->one()['query_id'];
-            $sending_user_id = Query::findOne(['id' => $query_id])['users_id'];
             $model_portrait = $this->findPortrait($users_id);
             $username = $model_portrait->nickname;
             $img = Portrait::devolverImg($model_portrait);
@@ -189,9 +187,7 @@ class AnswerController extends Controller
             $model->dislikes = 0;
             $dislikes = 0 . ' dislikes';
 
-            if ($model->save()) {
-                $this->createReminder($query_id, $sending_user_id);
-            }
+            $model->save();
 
             $answer_id = $model->id;
             
@@ -234,12 +230,7 @@ class AnswerController extends Controller
         if (Yii::$app->request->isAjax) {
             $id = Yii::$app->request->post('id');
             $users_id = Yii::$app->user->id;
-
             if ($this->findOwnAnswer($id, $users_id) || Yii::$app->user->identity->is_admin === true) {
-                $reminder_id = Reminder::checkReminder($id);
-                $model_reminder = $this->findReminder($reminder_id);
-                $model_reminder->delete();
-
                 $this->findModel($id)->delete();
 
                 return $this->asJson([
@@ -539,7 +530,6 @@ class AnswerController extends Controller
             $notifications_time = Users::timeReminders();
             $urlReminder = Url::to(['reminder/index']);
             return
-            '<ul class="navbar-nav ml-5">' .
                 '<li class="nav-item dropdown">' .
                     '<a class="nav-link" data-toggle="dropdown" href="#">' .
                         '<i class="far fa-bell"></i>' .
@@ -560,8 +550,7 @@ class AnswerController extends Controller
                             '</span>' .
                         '</a>' .
                     '</div>' .
-                '</li>' .
-            '</ul>';
+                '</li>';
         }
     }
 

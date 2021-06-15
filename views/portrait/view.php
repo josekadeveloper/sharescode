@@ -33,6 +33,12 @@ $url_prestige = Url::to(['/prestige/view', 'id' => $model->id]);
 ?>
 <div class="row justify-content-center">
     <div class="portrait-view form-potrait col-md-12">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="query/index">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Portrait</li>
+        </ol>
+    </nav>
     <?php if (Yii::$app->user->id): ?>
         <?php if ($model->id == $user_id || $model_portrait->is_admin === true): ?>
             <p>

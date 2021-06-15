@@ -28,18 +28,18 @@ use yii\helpers\Html;
         </li>
     </ul>
 
-    <!-- Notifications Dropdown Menu -->
-    <div id="notifications">
-        <ul class="navbar-nav mr-5">
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+        <?php if (!Yii::$app->user->isGuest): ?>
+        <!-- Notifications Dropdown Menu -->
+        <div id="notifications">
             <li class="nav-item dropdown">
-            <?php if (!Yii::$app->user->isGuest): ?>
                 <a class="nav-link" data-toggle="dropdown" href="#">
                     <em class="far fa-bell"></em>
                     <?php if ($notifications_no_read !== 0): ?>
                         <span class="badge badge-warning navbar-badge"><?= $notifications_no_read ?></span>
                     <?php endif ?>
                 </a>
-            <?php endif ?>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <span class="dropdown-header"><?= $notifications_no_read ?> Notifications</span>
                     <div class="dropdown-divider"></div>
@@ -49,11 +49,7 @@ use yii\helpers\Html;
                     </a>
                 </div>
             </li>
-        </ul>
-    </div>
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-        <?php if (!Yii::$app->user->isGuest): ?>
+        </div>
             <li class="nav-item">
                 <?= Html::a('<em class="fas fa-sign-out-alt"></em>', ['/site/logout'], ['data-method' => 'post', 'class' => 'nav-link', 'alt' => 'logout']) ?>
             </li>

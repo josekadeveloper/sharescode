@@ -46,7 +46,7 @@
 
 **HTML**
 
-![Validación HTML](images/anexos/validationTML.png)
+![Validación HTML](images/anexos/validationHTML.png)
 
 **CSS**
 

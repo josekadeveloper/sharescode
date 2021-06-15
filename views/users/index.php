@@ -10,7 +10,12 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row justify-content-center">
     <div class="users-index form col-md-6">
-
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="query/index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Users List</li>
+            </ol>
+        </nav>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,

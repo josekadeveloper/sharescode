@@ -9,7 +9,12 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row justify-content-center">
     <div class="site-contact form-contact col-md-9">
-
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="query/index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+            </ol>
+        </nav>
         <?php if (Yii::$app->session->hasFlash('contactFormSubmitted')): ?>
 
             <div class="alert alert-success">
