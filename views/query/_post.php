@@ -139,7 +139,23 @@ $createAnswer = <<<EOT
                         $('#form-codemirror-modal-'+id).find('.img-push').children()[1].remove();
                     }
                     let cmd = new CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
-                    cmd.setSize(380, 300);
+                    
+                    if (screen.width < 1024) {
+                        cm.setSize(480, 300);
+                        if (screen.width < 400) {
+                            cm.setSize(280, 300);
+                        }
+                    } else {
+                        if (screen.width < 1280) {
+                            cm.setSize(630, 300);
+                        } 
+                        if (screen.width > 1280) {
+                            cm.setSize(730, 300);
+                        }
+                        if (screen.width >= 1920) {
+                            cm.setSize(1070, 300);
+                        }
+                    }
                     
                     var modeInput = document.getElementById("select-modal-"+id);
                     var index  = modeInput.selectedIndex;
@@ -259,7 +275,22 @@ $updateAnswer = <<<EOT
                 }     
                 let cmd = CodeMirror.fromTextArea(document.getElementById("codemirror-modal-"+id, {}));
 
-                cmd.setSize(380, 300);
+                if (screen.width < 1024) {
+                    cm.setSize(480, 300);
+                    if (screen.width < 400) {
+                        cm.setSize(280, 300);
+                    }
+                } else {
+                    if (screen.width < 1280) {
+                        cm.setSize(630, 300);
+                    } 
+                    if (screen.width > 1280) {
+                        cm.setSize(730, 300);
+                    }
+                    if (screen.width >= 1920) {
+                        cm.setSize(1070, 300);
+                    }
+                }
                 
                 var modeInput = document.getElementById("select-modal-"+id)
                 var index  = modeInput.selectedIndex;
