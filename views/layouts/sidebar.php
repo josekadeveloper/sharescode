@@ -90,8 +90,6 @@ use yii\helpers\Html;
                         ['label' => 'Create Query', 'icon' => 'fas fa-question-circle', 'url' => ['query/create'], 
                                                     'badge' => '<span class="right badge badge-success">New</span>'],
                         ['label' => 'Answers List', 'icon' => 'fad fa-reply-all', 'url' => ['answer/index']],
-                        ['label' => 'APP DEBUGER', 'header' => true],
-                        ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
                     ],
                 ]);
                 ?>

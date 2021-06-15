@@ -19,13 +19,13 @@ class AnswerSearch extends Answer
     {
         return [
             [['id', 'query_id', 'users_id'], 'integer'],
-            [['content', 'date_created', 'query.title', 'user.portrait.nickname'], 'safe'],
+            [['content', 'date_created', 'query.title'], 'safe'],
         ];
     }
 
     public function attributes()
     {
-        return array_merge(parent::attributes(), ['query.title', 'user.portrait.nickname']);
+        return array_merge(parent::attributes(), ['query.title']);
     }
 
     /**
@@ -49,8 +49,7 @@ class AnswerSearch extends Answer
         if (Yii::$app->user->id) {
             $query = Answer::find()
                 ->where(['answer.users_id' => Yii::$app->user->id])
-                ->joinWith('query t')
-                ->joinWith('user.portrait p');
+                ->joinWith('query t');
         }
 
         $dataProvider = new ActiveDataProvider([
@@ -60,12 +59,6 @@ class AnswerSearch extends Answer
         $dataProvider->sort->attributes['query.title'] = [
             'asc' => ['t.title' => SORT_ASC],
             'desc' => ['t.title' => SORT_DESC],
-            
-        ];
-
-        $dataProvider->sort->attributes['user.portrait.nickname'] = [
-            'asc' => ['p.nickname' => SORT_ASC],
-            'desc' => ['p.nickname' => SORT_DESC],
             
         ];
 
@@ -83,8 +76,7 @@ class AnswerSearch extends Answer
         ]);
 
         $query->andFilterWhere(['ilike', 'content', $this->content])
-              ->andFilterWhere(['ilike', 't.title', $this->getAttributes(['query.title'])])
-              ->andFilterWhere(['ilike', 'p.nickname', $this->getAttributes(['user.portrait.nickname'])]);
+              ->andFilterWhere(['ilike', 't.title', $this->getAttributes(['query.title'])]);
 
         return $dataProvider;
     }

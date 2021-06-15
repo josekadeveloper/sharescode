@@ -11,7 +11,6 @@ use yii\grid\GridView;
             'filterModel' => $searchModel,
             'columns' => [
                 'query.title',
-                'user.portrait.nickname',
                 ['class' => 'yii\grid\ActionColumn'],
             ],
             'options' => [
