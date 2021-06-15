@@ -128,9 +128,26 @@ CREATE TABLE assessment
 INSERT INTO users (is_deleted)
 VALUES (false);
 
+INSERT INTO users (is_deleted)
+VALUES (false);
+
+INSERT INTO users (is_deleted)
+VALUES (false);
+
+--- Usuario administrador ---
+
 INSERT INTO portrait (is_admin, nickname, password, date_register, email, repository, prestige_port, sex)
 VALUES (true, 'admin', crypt('admin', gen_salt('bf', 10)), '2021-04-12 19:10:00', 'jose@gmail.com', 'https://github.com/joseckk', 'Initiate', 'Men');
 
+--- Usuarios normales ---
+
+INSERT INTO portrait (is_admin, nickname, password, date_register, email, repository, prestige_port, sex)
+VALUES (false, 'jose', crypt('jose', gen_salt('bf', 10)), '2021-05-12 20:30:00', 'josemanue@gmail.com', 'https://github.com/josemanue', 'Regular', 'Men');
+
+INSERT INTO portrait (is_admin, nickname, password, date_register, email, repository, prestige_port, sex)
+VALUES (false, 'javi', crypt('javi', gen_salt('bf', 10)), '2021-06-12 22:10:00', 'javier@gmail.com', 'https://github.com/javier', 'Junior', 'Men');
+
+--- Tipos de prestigios ---
 INSERT INTO type_prestige (prestige, score)
 VALUES ('Initiate', 0),
        ('Regular', 32),
@@ -140,3 +157,9 @@ VALUES ('Initiate', 0),
 
 INSERT INTO prestige (title, antiquity, puntuation, type_prestige_id, users_id)
 VALUES ('Initiate', NULL, 0, 1, 1);
+
+INSERT INTO prestige (title, antiquity, puntuation, type_prestige_id, users_id)
+VALUES ('Regular', NULL, 88, 2, 2);
+
+INSERT INTO prestige (title, antiquity, puntuation, type_prestige_id, users_id)
+VALUES ('Junior', NULL, 149, 3, 3);
