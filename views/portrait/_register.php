@@ -104,6 +104,12 @@ $sex = ['Men' => 'Men',
 ?>
 <div class="row justify-content-center">
     <div class="users-form form col-md-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="query/index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Register</li>
+            </ol>
+        </nav>
 
         <?php $form = ActiveForm::begin(); ?>
 

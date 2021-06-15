@@ -530,7 +530,6 @@ class AnswerController extends Controller
             $notifications_time = Users::timeReminders();
             $urlReminder = Url::to(['reminder/index']);
             return
-            '<ul class="navbar-nav ml-5">' .
                 '<li class="nav-item dropdown">' .
                     '<a class="nav-link" data-toggle="dropdown" href="#">' .
                         '<i class="far fa-bell"></i>' .
@@ -551,8 +550,7 @@ class AnswerController extends Controller
                             '</span>' .
                         '</a>' .
                     '</div>' .
-                '</li>' .
-            '</ul>';
+                '</li>';
         }
     }
 
